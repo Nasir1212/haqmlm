@@ -1,13 +1,17 @@
-<header class="main-header header-style-one">
+<header class="main-header header-style-one pc_screen">
 
     <!-- Main box -->
     <div class="main-box">
         
-        <div class="logo-box">
-            <div class="logo"><a href="{{ route('public_index')}}"><img src="{{ asset('/assets/logo.png') }}" ></a></div>
+        <div class="logo-box pc_screen">
+            <div class="logo">
+                <a href="{{ route('public_index')}}">
+                    <img src="{{ asset('/assets/logo.png') }}" >
+                    <p>Bangladesh</p>
+                </a></div>
         </div>
         <div class="right_part">
-            <div class="w-100 dsk">   
+            <div class="w-100 dsk pc_screen">   
                 <form action="{{ route('product_check_and_display')}}" method="post" class="w-100">
                     @csrf
                     <div class="btn-group w-100" > 
@@ -164,7 +168,11 @@
             <div class="inner-container">
                 <!--Logo-->
                 <div class="logo">
-                   <a href="{{ route('public_index') }}" title=""><img src="{{ asset('assets/logo.png') }}" alt="" title=""></a>
+                   <a href="{{ route('public_index') }}" title="">
+                    <img src="{{ asset('assets/logo.png') }}" alt="" title="">
+
+                </a>
+              
                 </div>
 
                 <!--Right Col-->
@@ -189,8 +197,12 @@
 </header>
 @php   $dt =  current_select_dealer();  @endphp
 @if($dt != '')
-<section class="text-center mb-2">
+<section class="text-center mb-2 pc_screen">
    {!! $dt !!}
+</section>
+
+<section class="mobile_header">
+
 </section>
 @endif
 <style>

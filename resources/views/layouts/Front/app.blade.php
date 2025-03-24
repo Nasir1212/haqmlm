@@ -41,6 +41,43 @@ strong{
 font-family: __SolaimanLipi_b8d676 !important;
 
 }
+.header_dealer_container{
+    display: flex;
+    justify-content: center;
+    margin-block: 11px;
+}
+@media screen and (max-width: 767px) {
+
+    .pc_screen {
+    display: none;
+}
+
+    .header_dealer_container {
+    display: block;
+}
+.dealer_name {
+    font-weight: bolder;
+    color: black;
+    font-size: 27px;
+}
+.dealer_address {
+    font-size: 17px;
+    font-weight: bold;
+    color: black;
+}
+.dealer_phone {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ui-btn-outer{
+     /* display:  none !important; */
+}
+
+}
+
+
+
 		</style>
 </head>
 

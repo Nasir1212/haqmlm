@@ -1,13 +1,13 @@
 <?php return array (
   'intervention/image' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Intervention\\Image\\ImageServiceProvider',
-    ),
     'aliases' => 
     array (
       'Image' => 'Intervention\\Image\\Facades\\Image',
+    ),
+    'providers' => 
+    array (
+      0 => 'Intervention\\Image\\ImageServiceProvider',
     ),
   ),
   'laravel/breeze' => 
@@ -40,13 +40,13 @@
   ),
   'mckenziearts/laravel-notify' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Mckenziearts\\Notify\\LaravelNotifyServiceProvider',
-    ),
     'aliases' => 
     array (
       'Notify' => 'Mckenziearts\\Notify\\Facades\\LaravelNotify',
+    ),
+    'providers' => 
+    array (
+      0 => 'Mckenziearts\\Notify\\LaravelNotifyServiceProvider',
     ),
   ),
   'nesbot/carbon' => 
@@ -79,13 +79,13 @@
   ),
   'spatie/laravel-ignition' => 
   array (
-    'providers' => 
-    array (
-      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
-    ),
     'aliases' => 
     array (
       'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
+    ),
+    'providers' => 
+    array (
+      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
     ),
   ),
 );
