@@ -48,8 +48,11 @@ font-family: __SolaimanLipi_b8d676 !important;
     justify-content: center;
     margin-block: 11px;
 }
+
+@if(Auth::check())
+
 .mobile_header{
-    display: none !important;
+    display: none ;
 }
 
 @media screen and (max-width: 375px) {
@@ -57,7 +60,18 @@ font-family: __SolaimanLipi_b8d676 !important;
 }
 @media screen and (max-width: 767px) {
     .mobile_header{
-    display: block;
+    justify-content: space-between;
+    margin: 0px 12px 0px 12px;
+    display: flex !important;
+    height: 67px;
+    position: sticky;
+    overflow: hidden;
+    top: 0px;
+    bottom: 0;
+    z-index: 10000000;
+    background: white;
+    width: 94%;
+    left: 0;
 }
 
 
@@ -90,25 +104,29 @@ font-family: __SolaimanLipi_b8d676 !important;
     width: 50px;
     height: 50px;
 }
-.m_logo p {
-    font-size: 11px;
-    font-weight: bold;
-    padding: 0;
-    margin: 0;
+.m_logo .m_country {
+	font-size: 11px;
+	font-weight: bold;
+	padding: 0;
+	margin: 0;
+	color: red;
+	transform: translateY(-9px);
 }
-
+.auth_container {
+	transform: translateY(6px);
+}
 .m_shop_heading_container h3{
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     text-align: center;
     margin-top: 12px;
-    margin-bottom: 2px;
+    margin-bottom: 0px;
     color: #1e521e;
 }
 .m_shop_heading_container h5{
     font-size: 12px;
     text-align: center;
-    margin-bottom: 2px;
+    margin-bottom: 0px;
     color: green;
 
 }
@@ -119,29 +137,24 @@ font-family: __SolaimanLipi_b8d676 !important;
     text-align: center;
 }
 .notify_burgur_icon_container {
-    width: 73px;
-    transform: translateX(23px);
+	width: 66px;
+	transform: translateX(23px);
 }
-
 
 .auth_notify_container {
-    display: flex;
-    flex-direction: column-reverse;
-    justify-content: space-evenly;
+	display: flex;
+	flex-direction: column-reverse;
+	justify-content: space-evenly;
+	margin-right: 2px;
 }
-
 .auth_container a {
     font-size: 12px;
     font-weight: bold;
 }
 
-.mobile_header {
-    justify-content: space-between;
-    margin: 0px 12px 0px 12px;
-}
 
 }
-
+@endif
 
 		</style>
 </head>
