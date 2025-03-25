@@ -26,7 +26,9 @@
 			
 body{
 font-family: __SolaimanLipi_b8d676 !important;
-
+/* max-width: 1280px;
+width: 100%;
+margin: 0 auto; */
 }
 h1,h2,h3,h4,h5,h6{
 font-family: __SolaimanLipi_b8d676 !important;
@@ -46,7 +48,18 @@ font-family: __SolaimanLipi_b8d676 !important;
     justify-content: center;
     margin-block: 11px;
 }
+.mobile_header{
+    display: none !important;
+}
+
+@media screen and (max-width: 375px) {
+ 
+}
 @media screen and (max-width: 767px) {
+    .mobile_header{
+    display: block;
+}
+
 
     .pc_screen {
     display: none;
@@ -70,12 +83,64 @@ font-family: __SolaimanLipi_b8d676 !important;
     font-weight: bold;
 }
 
-.ui-btn-outer{
-     /* display:  none !important; */
+
+
+.m_logo a img {
+    border: none;
+    width: 50px;
+    height: 50px;
 }
+.m_logo p {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+}
+
+.m_shop_heading_container h3{
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 2px;
+    color: #1e521e;
+}
+.m_shop_heading_container h5{
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 2px;
+    color: green;
 
 }
 
+.m_shop_heading_container h6{
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+}
+.notify_burgur_icon_container {
+    width: 73px;
+    transform: translateX(23px);
+}
+
+
+.auth_notify_container {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: space-evenly;
+}
+
+.auth_container a {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.mobile_header {
+    justify-content: space-between;
+    margin: 0px 12px 0px 12px;
+}
+
+}
 
 
 		</style>

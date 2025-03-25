@@ -201,7 +201,43 @@
    {!! $dt !!}
 </section>
 
-<section class="mobile_header">
+<section class="mobile_header d-flex">
+
+    <div class="m_logo_container">
+        <div class="m_logo">
+            <a href="{{ route('public_index') }}">
+            <img src="{{ asset('/assets/logo.png') }}" alt="">
+            </a>
+            <p>Bangladesh</p>
+        </div>
+    </div>
+
+    <div class="m_shop_heading_container">
+        <h3>Ahmadia Herbal Center</h3>
+        <h5>Badamtall, Chandainish,Chittagong</h5>
+        <h6>Call for Manager 018904924544</h6>
+    </div>
+
+    <div class="auth_notify_container">
+        <div class="auth_container">
+            <div>
+                <a href="">Login</a>|<a href="">Registation</a>
+            </div>
+        </div>
+        <div class="notify_burgur_icon_container d-flex justify-content-between ">
+            <div class="notify_icon">
+               <a href=""> <i class="fa-solid fa-shopping-cart"></i> </a>
+            </div>
+            <div>
+                <a href=""> <i class="fa-solid fa-bell"></i> </a>
+            </div>
+            <div>
+              <a href=""> <i class="icon lnr-icon-bars"></i> </a>
+            </div>
+        </div>
+
+        
+    </div>
 
 </section>
 @endif
@@ -222,7 +258,8 @@
         }
          .dsk{
         display:block !important;
-    } 
+    }
+     
     }
     
 </style>
