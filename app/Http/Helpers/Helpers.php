@@ -66,6 +66,29 @@ function current_select_dealer()
         
     }
 
+    function m_current_select_dealer(){
+        if(Auth::check()){
+            $gsd = global_user_data();
+             $selected_dealer = DealerSelection::where('user_id', $gsd->id)->with('dealer')->first();
+             
+             if ($selected_dealer) {
+                
+                 $rs = <<<HTML
+                 <h3> {$selected_dealer->dealer->name} </h3>
+                 <h5> {$selected_dealer->dealer->full_address}</h5>
+                 <h6> {$selected_dealer->dealer->phone }</h6>
+                 
+                 HTML ;
+                 return $rs;
+             } else {
+                 return '';
+             }
+             }else{
+                 return '';
+         }
+             
+    }
+
  function fileDelete($image_path){
         if (file_exists($image_path)) {
             @unlink($image_path);

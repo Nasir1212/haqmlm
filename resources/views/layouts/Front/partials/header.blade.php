@@ -215,19 +215,20 @@
     </div>
 
     <div class="m_shop_heading_container">
-        <h3>Ahmadia Herbal Center</h3>
-        <h5>Badamtall, Chandainish,Chittagong</h5>
-        <h6>Call for Manager 018904924544</h6>
+       @if(m_current_select_dealer() != '')
+        {!! m_current_select_dealer() !!}
+       @endif
     </div>
 
     <div class="auth_notify_container">
         <div class="auth_container">
+            @if (Route::has('login'))
             <div>
-                <a href="">Login</a>|<a href="">Registation</a>
+                @auth
+                    <a href="{{ url('/dashboard') }}" >My Dashboard</a> 
+                @endauth
             </div>
-            {{-- <div>
-                <a href="">My Dashboard</a>
-            </div> --}}
+        @endif
         </div>
         <div class="notify_burgur_icon_container d-flex justify-content-between ">
             <div class="notify_icon">
@@ -237,14 +238,16 @@
                 <a href=""> <i style="color:green" class="fa-solid fa-bell"></i> </a>
             </div>
             <div>
-              <a href=""> <i class="icon lnr-icon-bars"></i> </a>
+              <a class="mobile_nav_icon"> <i class="icon lnr-icon-bars"></i> </a>
             </div>
         </div>
 
         
     </div>
-
 </section>
+
+
+
 @endif
 
 <style>

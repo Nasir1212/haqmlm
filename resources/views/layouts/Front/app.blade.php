@@ -68,7 +68,7 @@ font-family: __SolaimanLipi_b8d676 !important;
     overflow: hidden;
     top: 0px;
     bottom: 0;
-    z-index: 10000000;
+    z-index: 8;
     background: white;
     width: 94%;
     left: 0;
@@ -137,10 +137,9 @@ font-family: __SolaimanLipi_b8d676 !important;
     text-align: center;
 }
 .notify_burgur_icon_container {
-	width: 66px;
-	transform: translateX(23px);
+    width: 66px;
+    transform: translateX(12px);
 }
-
 .auth_notify_container {
 	display: flex;
 	flex-direction: column-reverse;
@@ -152,6 +151,11 @@ font-family: __SolaimanLipi_b8d676 !important;
     font-weight: bold;
 }
 
+._mobile_popup {
+    position: static !important;
+    height: 23vh;
+   
+}
 
 }
 @endif

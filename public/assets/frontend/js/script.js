@@ -81,6 +81,10 @@ var THEMEMASCOT = {};
 			$('body').addClass('mobile-menu-visible');
 		});
 
+		$('.mobile_nav_icon').on('click', function() {
+			$('body').addClass('mobile-menu-visible');
+		});
+
 		//Menu Toggle Btn
 		$('.mobile-menu .menu-backdrop, .mobile-menu .close-btn').on('click', function() {
 			$('body').removeClass('mobile-menu-visible');
