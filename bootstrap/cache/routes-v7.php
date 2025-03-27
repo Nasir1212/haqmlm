@@ -102,7 +102,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::YqAOrQ8vK0IBOL7o',
+            '_route' => 'generated::x5WbRMWXIBRgQfRV',
           ),
           1 => NULL,
           2 => 
@@ -788,7 +788,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::1JTY7omMVrHCQRJG',
+            '_route' => 'generated::3Eqpbqs4jKESZo9z',
           ),
           1 => NULL,
           2 => 
@@ -5439,7 +5439,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::OTNsXtPxTZwCWleE',
+            '_route' => 'generated::zudCBpRjNpo1zcSx',
           ),
           1 => NULL,
           2 => 
@@ -5459,7 +5459,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::hg1HeZgpyjv7ppkg',
+            '_route' => 'generated::moN0QqFSki3Sam30',
           ),
           1 => NULL,
           2 => 
@@ -5479,7 +5479,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::R0GFmntqNaYR47N7',
+            '_route' => 'generated::BlO3OPXFjujCSibT',
           ),
           1 => NULL,
           2 => 
@@ -5516,7 +5516,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::xTK2265yDmmxhBKT',
+            '_route' => 'generated::uFOmK01qKq1Poa1y',
           ),
           1 => NULL,
           2 => 
@@ -5647,7 +5647,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::2Cf4xmPbmMfFEXba',
+            '_route' => 'generated::RA9hGyLuVDzN6L93',
           ),
           1 => NULL,
           2 => 
@@ -5777,7 +5777,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::1fzGCdT5rH8iAbTx',
+            '_route' => 'generated::Zv3Gkc3QqkpI5Dla',
           ),
           1 => NULL,
           2 => 
@@ -7170,7 +7170,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::YqAOrQ8vK0IBOL7o' => 
+    'generated::x5WbRMWXIBRgQfRV' => 
     array (
       'methods' => 
       array (
@@ -7187,13 +7187,13 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:77:"function (\\Illuminate\\Http\\Request $request) {
     return $request->user();
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"000000000000093d0000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"0000000000000b640000000000000000";}}',
         'namespace' => NULL,
         'prefix' => 'api',
         'where' => 
         array (
         ),
-        'as' => 'generated::YqAOrQ8vK0IBOL7o',
+        'as' => 'generated::x5WbRMWXIBRgQfRV',
       ),
       'fallback' => false,
       'defaults' => 
@@ -9008,7 +9008,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::1JTY7omMVrHCQRJG' => 
+    'generated::3Eqpbqs4jKESZo9z' => 
     array (
       'methods' => 
       array (
@@ -9029,7 +9029,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::1JTY7omMVrHCQRJG',
+        'as' => 'generated::3Eqpbqs4jKESZo9z',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19235,7 +19235,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::OTNsXtPxTZwCWleE' => 
+    'generated::zudCBpRjNpo1zcSx' => 
     array (
       'methods' => 
       array (
@@ -19251,13 +19251,13 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:51:"function () {
     \\Artisan::call(\'storage:link\');
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000009880000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"0000000000000baf0000000000000000";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::OTNsXtPxTZwCWleE',
+        'as' => 'generated::zudCBpRjNpo1zcSx',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19273,7 +19273,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::hg1HeZgpyjv7ppkg' => 
+    'generated::moN0QqFSki3Sam30' => 
     array (
       'methods' => 
       array (
@@ -19287,8 +19287,9 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'web',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:3070:"function () {
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:3238:"function () {
 
+  
     $setting = \\setting();
     $level = $setting->matrix_gen_check; // Get the current matrix level
     $total_member = $setting->set_gen_member; // Set the total number of members in a generation
@@ -19299,10 +19300,15 @@ app('router')->setCompiledRoutes(
     $elementsToMove = []; // Elements to be moved to the end of the array
 
     // Truncate the UserExtra table
-    \\App\\Models\\UserExtra::truncate();
+  // UserExtra::truncate();
 
     $lv = "lv_" . $level;
     foreach ($originalArray as $key => $user) {
+
+    echo  \\App\\Models\\User::where(\'id\',$user)->first(\'username\')."<br/>";
+
+   
+
         // Fetch the user\'s level data from MatrixLevel
         $check_level = \\App\\Models\\MatrixLevel::where(\'user_id\', $user)->first();
 
@@ -19330,7 +19336,7 @@ app('router')->setCompiledRoutes(
         }
     
 
-        // Check if the user is the root user (ID=1)
+       // Check if the user is the root user (ID=1)
         if ($user == 1) {
             $u = \\App\\Models\\User::find(1); // Fetch user with ID=1
             $extra = new \\App\\Models\\UserExtra(); // Create new UserExtra entry
@@ -19346,11 +19352,11 @@ app('router')->setCompiledRoutes(
             $extra->position = 0;
             $extra->parent_id = 0;
             $extra->user_name = $u->username;
-             $extra->save();
+            // $extra->save();
         }
 
-        // Update matrix level for the user
-        \\matrixLUpdate($user);
+      //  Update matrix level for the user
+     //  matrixLUpdate($user);
     }
 
     // Separate the elements to move and the rest
@@ -19360,28 +19366,30 @@ app('router')->setCompiledRoutes(
    // Iterate through the original array to collect elements
     foreach ($originalArray as $element) {
         if (\\in_array($element, $elementsToMove)) {
+              echo "Dis Matrix ".\\App\\Models\\User::where(\'id\',$element)->first(\'username\');
             $movingElements[] = $element; // Collect elements to move
         } else {
             $remainingElements[] = $element; // Collect remaining elements
         }
     }
+  
     
     // Merge remaining elements and moving elements  
     $rearrangedArray = \\array_merge($remainingElements, $movingElements);
-    \\processUsersInChunks($rearrangedArray);
+   //processUsersInChunks($rearrangedArray);
     echo "Success Run";
     // Process users in chunks
     // $this->processUsersInChunks($rearrangedArray);
     //    BonusBulkSenderJob::dispatch();
     // $this->info(\'Tree structure has been successfully updated.\');
 
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"0000000000000a830000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"0000000000000caa0000000000000000";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::hg1HeZgpyjv7ppkg',
+        'as' => 'generated::moN0QqFSki3Sam30',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19397,7 +19405,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::R0GFmntqNaYR47N7' => 
+    'generated::BlO3OPXFjujCSibT' => 
     array (
       'methods' => 
       array (
@@ -19420,13 +19428,13 @@ $exitCode = \\Artisan::call(\'optimize:clear\');
 $exitCode = \\Artisan::call(\'optimize\');
     echo "clear";
     // return what you want
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"0000000000000a850000000000000000";}}',
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"0000000000000cac0000000000000000";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::R0GFmntqNaYR47N7',
+        'as' => 'generated::BlO3OPXFjujCSibT',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19480,7 +19488,7 @@ $exitCode = \\Artisan::call(\'optimize\');
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::xTK2265yDmmxhBKT' => 
+    'generated::uFOmK01qKq1Poa1y' => 
     array (
       'methods' => 
       array (
@@ -19501,7 +19509,7 @@ $exitCode = \\Artisan::call(\'optimize\');
         'where' => 
         array (
         ),
-        'as' => 'generated::xTK2265yDmmxhBKT',
+        'as' => 'generated::uFOmK01qKq1Poa1y',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19740,7 +19748,7 @@ $exitCode = \\Artisan::call(\'optimize\');
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::2Cf4xmPbmMfFEXba' => 
+    'generated::RA9hGyLuVDzN6L93' => 
     array (
       'methods' => 
       array (
@@ -19761,7 +19769,7 @@ $exitCode = \\Artisan::call(\'optimize\');
         'where' => 
         array (
         ),
-        'as' => 'generated::2Cf4xmPbmMfFEXba',
+        'as' => 'generated::RA9hGyLuVDzN6L93',
       ),
       'fallback' => false,
       'defaults' => 
@@ -20081,7 +20089,7 @@ $exitCode = \\Artisan::call(\'optimize\');
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::1fzGCdT5rH8iAbTx' => 
+    'generated::Zv3Gkc3QqkpI5Dla' => 
     array (
       'methods' => 
       array (
@@ -20102,7 +20110,7 @@ $exitCode = \\Artisan::call(\'optimize\');
         'where' => 
         array (
         ),
-        'as' => 'generated::1fzGCdT5rH8iAbTx',
+        'as' => 'generated::Zv3Gkc3QqkpI5Dla',
       ),
       'fallback' => false,
       'defaults' => 

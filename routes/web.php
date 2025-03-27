@@ -634,6 +634,7 @@ Route::get('/link-storage', function () {
 
 Route::get('/test_matrix', function () {
 
+  
     $setting = setting();
     $level = $setting->matrix_gen_check; // Get the current matrix level
     $total_member = $setting->set_gen_member; // Set the total number of members in a generation
@@ -644,10 +645,15 @@ Route::get('/test_matrix', function () {
     $elementsToMove = []; // Elements to be moved to the end of the array
 
     // Truncate the UserExtra table
-    UserExtra::truncate();
+  // UserExtra::truncate();
 
     $lv = "lv_" . $level;
     foreach ($originalArray as $key => $user) {
+
+    echo  User::where('id',$user)->first('username')."<br/>";
+
+   
+
         // Fetch the user's level data from MatrixLevel
         $check_level = MatrixLevel::where('user_id', $user)->first();
 
@@ -675,7 +681,7 @@ Route::get('/test_matrix', function () {
         }
     
 
-        // Check if the user is the root user (ID=1)
+       // Check if the user is the root user (ID=1)
         if ($user == 1) {
             $u = User::find(1); // Fetch user with ID=1
             $extra = new UserExtra(); // Create new UserExtra entry
@@ -691,11 +697,11 @@ Route::get('/test_matrix', function () {
             $extra->position = 0;
             $extra->parent_id = 0;
             $extra->user_name = $u->username;
-             $extra->save();
+            // $extra->save();
         }
 
-        // Update matrix level for the user
-        matrixLUpdate($user);
+      //  Update matrix level for the user
+     //  matrixLUpdate($user);
     }
 
     // Separate the elements to move and the rest
@@ -705,15 +711,17 @@ Route::get('/test_matrix', function () {
    // Iterate through the original array to collect elements
     foreach ($originalArray as $element) {
         if (in_array($element, $elementsToMove)) {
+              echo "Dis Matrix ".User::where('id',$element)->first('username');
             $movingElements[] = $element; // Collect elements to move
         } else {
             $remainingElements[] = $element; // Collect remaining elements
         }
     }
+  
     
     // Merge remaining elements and moving elements  
     $rearrangedArray = array_merge($remainingElements, $movingElements);
-    processUsersInChunks($rearrangedArray);
+   //processUsersInChunks($rearrangedArray);
     echo "Success Run";
     // Process users in chunks
     // $this->processUsersInChunks($rearrangedArray);
