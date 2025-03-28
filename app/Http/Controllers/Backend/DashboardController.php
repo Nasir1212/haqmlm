@@ -327,21 +327,26 @@ public function account_balance_trans_manage(){
                 return back();
             }else{
               
-                $dt = Carbon::now()->subMonth();
+            //    $dt = Carbon::now()->subMonth(0);
+            //   dd($dt);
+                $dt = date('Y-m-d H:i:s');
 
-                $startDate = new Carbon($gsd->point_submit_date);
-                $today = Carbon::now()->subMonth();
+                // $startDate = new Carbon($gsd->point_submit_date);
                 
-                $months = $today->diffInMonths($startDate);
+                // $today = Carbon::now()->subMonth();
+                
+                // $months = $today->diffInMonths($startDate);
 
-                if ($months > 1) {
-                    $month = $months;
-                    $mc = $month * $setting->check_point;
-                    if($request->point < $mc){
-                        notify()->error('Due '. $month.' month require point is'.$mc);
-                        return back();
-                    }
-                }
+                // if ($months > 1) {
+                //     $month = $months;
+                //     $mc = $month * $setting->check_point;
+                //     if($request->point < $mc){
+                //         notify()->error('Due '. $month.' month require point is'.$mc);
+                //         return back();
+                //     }
+                // }
+
+
                 $prev_point = $gsd->point;
                 $gsd->point -= $request->point;
                 if($gsd->submit_check == 1){
