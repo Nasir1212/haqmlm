@@ -127,7 +127,10 @@ p, li, span {
 }
 .ap {
     margin-top: 32px;
+	color: green;
+    font-weight: bold
 }
+
 
 @media only screen and (max-width:767px){
     
@@ -161,10 +164,10 @@ p, li, span {
 			</div> 
 			<p class="user-name ap"><a href="#" class="unl">No User</a></p> 
 			@else
-			LSP 
-			@if (\Carbon\Carbon::parse($user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$user->user->submitted_point}}
-			@else 0 @endif
+
+		
+
+
 			<div class="@if($user->user->invest_status == 1) puser @else fuser @endif   user umd"  data-toggle="modal" data-rank="{{ $user->rank }}" data-left="{{$user->left}}" data-middle="{{$user->middle}}" data-right="{{$user->right}}" data-username="{{$user->user->username}}" data-target="#user_info">
 				
 				<img src="@if($user->user->user_pic != '') {{ url('/'.$user->user->user_pic_path.$user->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif"  alt="*" class="no-user @if($user->user->invest_status == 1) border-success @else  border-danger @endif">
@@ -178,7 +181,11 @@ p, li, span {
 			 	    <a href="{{ route('user_tree',['id'=> $user->user->username])}}" class="unl ml-2">
 			 	    
 			 	     {{ $user->user->username }}</a> <br>
-					 {{ $user->user->submitted_point }} Pv
+
+					  LSP 
+					  @if (\Carbon\Carbon::parse($user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+					  {{formatAmount($user->user->submitted_point)}}
+					  @else 0 @endif
 					</p>
 			@endif
 			<span class="line">
@@ -197,17 +204,17 @@ p, li, span {
 			 </div> 
 			 <p class="user-name ap"><a href="#" class="unl">No User</a></p>
 			 @else
-			 LSP 
-				@if (\Carbon\Carbon::parse($left_user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-				{{$left_user->user->submitted_point}}
-				@else 0 @endif
+			
 			<div class="@if($left_user->user->invest_status == 1) puser @else fuser @endif user umd"  data-toggle="modal" data-rank="{{ $left_user->rank }}" data-left="{{$left_user->left}}" data-middle="{{$left_user->middle}}" data-right="{{$left_user->right}}" data-username="{{$left_user->user->username}}"  data-target="#user_info">
 				<img src="@if($left_user->user->user_pic != '') {{ url('/'.$left_user->user->user_pic_path.$left_user->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 			
 			 </div> 
 			 	<p class="user-name ap">
 				    <a href="{{ route('user_tree',['id'=> $left_user->user->username])}}" class="unl">{{ $left_user->user->username }}</a> 
-					<br> {{ $left_user->user->submitted_point }} Pv
+					<br>  LSP 
+					@if (\Carbon\Carbon::parse($left_user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+					{{formatAmount($left_user->user->submitted_point)}}
+					@else 0 @endif
 				    </p>
 			@endif
 			 <span class="line">
@@ -225,17 +232,18 @@ p, li, span {
 			 </div> 
 			 <p class="user-name ap"><a href="#" class="unl">No User</a></p>
 			 @else
-			 LSP 
-			 @if (\Carbon\Carbon::parse($middle_user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			 {{$middle_user->user->submitted_point}}
-			 @else 0 @endif
+			
 			<div class="@if($middle_user->user->invest_status == 1) puser @else fuser @endif user umd"  data-toggle="modal" data-rank="{{ $middle_user->rank }}" data-left="{{$middle_user->left}}" data-middle="{{$middle_user->middle}}" data-right="{{$middle_user->right}}" data-username="{{$middle_user->user->username}}"  data-target="#user_info">
 				<img src="@if($middle_user->user->user_pic != '') {{ url('/'.$middle_user->user->user_pic_path.$middle_user->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 			
 			 </div> 
 			 	<p class="user-name ap">
 				    <a href="{{ route('user_tree',['id'=> $middle_user->user->username])}}" class="unl">{{ $middle_user->user->username }}</a> 
-				   <br> {{ $middle_user->user->submitted_point }} Pv
+				   <br> 
+				   LSP 
+			 @if (\Carbon\Carbon::parse($middle_user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+			 {{formatAmount($middle_user->user->submitted_point)}}
+			 @else 0 @endif
 				</p>
 			@endif
 			 <span class="line">
@@ -253,10 +261,7 @@ p, li, span {
 			 </div> 
 			 <p class="user-name ap"><a href="#" class="unl">No User</a></p>
 			 @else
-			 LSP 
-			 @if (\Carbon\Carbon::parse($right_user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			 {{$right_user->user->submitted_point}}
-			 @else 0 @endif
+			
 			 <div class="@if($right_user->user->invest_status == 1) puser @else fuser @endif user umd"  data-toggle="modal" data-rank="{{ $right_user->rank }}" data-left="{{$right_user->left}}" data-middle="{{$right_user->middle}}" data-right="{{$right_user->right}}" data-username="{{$right_user->user->username}}"  data-target="#user_info">
 				 <img src="@if($right_user->user->user_pic != '') {{ url('/'.$right_user->user->user_pic_path.$right_user->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 				
@@ -264,7 +269,11 @@ p, li, span {
 			  </div> 
 			   <p class="user-name ap">
 				      <a href="{{ route('user_tree',['id'=> $right_user->user->username])}}" class="unl">{{ $right_user->user->username }}</a> 
-					 <br> {{ $right_user->user->submitted_point }} Pv
+					 <br> 
+					 LSP 
+					 @if (\Carbon\Carbon::parse($right_user->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+					 {{formatAmount($right_user->user->submitted_point)}}
+					 @else 0 @endif
 					</p> 
 			 @endif
 			 <span class="line">
@@ -284,17 +293,18 @@ p, li, span {
 			 </div> 
 			 <p class="user-name ap"><a href="#" class="unl">No User</a></p>
 			@else
-			LSP 
-			@if (\Carbon\Carbon::parse($left_user_left->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$left_user_left->user->submitted_point}}
-			@else 0 @endif
+			
 			<div class="@if($left_user_left->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px" data-toggle="modal" data-rank="{{ $left_user_left->rank }}" data-left="{{$left_user_left->left}}" data-middle="{{$left_user_left->middle}}" data-right="{{$left_user_left->right}}" data-username="{{$left_user_left->user->username}}"  data-target="#user_info">
 				<img src="@if($left_user_left->user->user_pic != '') {{ url('/'.$left_user_left->user->user_pic_path.$left_user_left->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 			
 			 </div> 
 			 	<p class="user-name ap">
 				    <a href="{{ route('user_tree',['id'=> $left_user_left->user->username])}}" class="unl">{{ $left_user_left->user->username }}</a>
-					<br> {{ $left_user_left->user->submitted_point }} Pv
+					<br>
+					LSP 
+			@if (\Carbon\Carbon::parse($left_user_left->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+			{{formatAmount($left_user_left->user->submitted_point)}}
+			@else 0 @endif
 				    </p>
 			@endif
 		</div>
@@ -308,17 +318,18 @@ p, li, span {
 			 </div> 
 			 <p class="user-name ap"><a href="#" class="unl">No User</a></p>
 			@else
-			LSP 
-			@if (\Carbon\Carbon::parse($left_user_middle->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$left_user_middle->user->submitted_point}}
-			@else 0 @endif
+			
 			<div class="@if($left_user_middle->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px" data-toggle="modal" data-rank="{{ $left_user_middle->rank }}" data-left="{{$left_user_middle->left}}" data-middle="{{$left_user_middle->middle}}" data-right="{{$left_user_middle->right}}" data-username="{{$left_user_middle->user->username}}"  data-target="#user_info">
 				<img src="@if($left_user_middle->user->user_pic != '') {{ url('/'.$left_user_middle->user->user_pic_path.$left_user_middle->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 			
 			 </div> 
 			 	<p class="user-name ap">
 				    <a href="{{ route('user_tree',['id'=> $left_user_middle->user->username])}}" class="unl">{{ $left_user_middle->user->username }}</a>
-					<br> {{ $left_user_middle->user->submitted_point }} Pv
+					<br> 
+					LSP 
+			@if (\Carbon\Carbon::parse($left_user_middle->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+			{{formatAmount($left_user_middle->user->submitted_point)}}
+			@else 0 @endif
 				    </p>
 			@endif
 		</div>
@@ -333,10 +344,7 @@ p, li, span {
 			 </div> 
 			
 			@else 
-			LSP 
-			@if (\Carbon\Carbon::parse($left_user_right->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$left_user_right->user->submitted_point}}
-			@else 0 @endif
+		
 
 			<div class="@if($left_user_right->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px" data-toggle="modal" data-rank="{{ $left_user_right->rank }}" data-left="{{$left_user_right->left}}" data-middle="{{$left_user_right->middle}}" data-right="{{$left_user_right->right}}" data-username="{{$left_user_right->user->username}}"  data-target="#user_info">
 				<img src="@if($left_user_right->user->user_pic != '') {{ url('/'.$left_user_right->user->user_pic_path.$left_user_right->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
@@ -344,7 +352,11 @@ p, li, span {
 			 </div> 
 			 <p class="user-name ap">
 				    <a href="{{ route('user_tree',['id'=> $left_user_right->user->username])}}" class="unl">{{ $left_user_right->user->username }}</a>
-				    <br> {{ $left_user_right->user->submitted_point }} Pv
+				    <br> 
+					LSP 
+					@if (\Carbon\Carbon::parse($left_user_right->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+					{{formatAmount($left_user_right->user->submitted_point)}}
+					@else 0 @endif
 				    </p>
 			@endif 
 			
@@ -361,10 +373,7 @@ p, li, span {
 				 <p class="user-name ap"><a href="#" class="unl">No User</a></p>       
 				@else
 
-				LSP 
-			@if (\Carbon\Carbon::parse($middle_user_left->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$middle_user_left->user->submitted_point}}
-			@else 0 @endif
+				
 				<div class="@if($middle_user_left->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px" data-toggle="modal" data-rank="{{ $middle_user_left->rank }}" data-left="{{$middle_user_left->left}}" data-middle="{{$middle_user_left->middle}}" data-right="{{$middle_user_left->right}}" data-username="{{$middle_user_left->user->username}}"  data-target="#user_info">
 					<img src="@if($middle_user_left->user->user_pic != '') {{ url('/'.$middle_user_left->user->user_pic_path.$middle_user_left->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 				
@@ -372,7 +381,11 @@ p, li, span {
 					<p class="user-name ap">
 						
 						 <a href="{{ route('user_tree',['id'=> $middle_user_left->user->username])}}" class="unl">{{ $middle_user_left->user->username }}</a>
-						 <br> {{ $middle_user_left->user->submitted_point }} Pv
+						 <br>
+						 LSP 
+			@if (\Carbon\Carbon::parse($middle_user_left->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+			{{formatAmount($middle_user_left->user->submitted_point)}}
+			@else 0 @endif
 						</p>
 				@endif
 				</div> 
@@ -385,10 +398,7 @@ p, li, span {
 					 </div> 
 					 <p class="user-name ap"><a href="#" class="unl">No User</a></p>       
 					@else
-					LSP 
-			@if (\Carbon\Carbon::parse($middle_user_middle->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$middle_user_middle->user->submitted_point}}
-			@else 0 @endif
+				
 
 					<div class="@if($middle_user_middle->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px" data-toggle="modal" data-rank="{{ $middle_user_middle->rank }}" data-left="{{$middle_user_middle->left}}" data-middle="{{$middle_user_middle->middle}}" data-right="{{$middle_user_middle->right}}" data-username="{{$middle_user_middle->user->username}}"  data-target="#user_info">
 						<img src="@if($middle_user_middle->user->user_pic != '') {{ url('/'.$middle_user_middle->user->user_pic_path.$middle_user_middle->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
@@ -397,7 +407,11 @@ p, li, span {
 						<p class="user-name ap">
 							
 							 <a href="{{ route('user_tree',['id'=> $middle_user_middle->user->username])}}" class="unl">{{ $middle_user_middle->user->username }}</a>
-							 <br> {{ $middle_user_middle->user->submitted_point }} Pv
+							 <br>
+							 LSP 
+							 @if (\Carbon\Carbon::parse($middle_user_middle->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+							 {{formatAmount($middle_user_middle->user->submitted_point)}}
+							 @else 0 @endif
 							</p>
 					@endif
 					</div> 
@@ -410,10 +424,7 @@ p, li, span {
 						 </div> 
 						 <p class="user-name ap"><a href="#" class="unl">No User</a></p>       
 						@else
-						LSP 
-			@if (\Carbon\Carbon::parse($middle_user_right->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$middle_user_right->user->submitted_point}}
-			@else 0 @endif
+					
 						<div class="@if($middle_user_right->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px"  data-toggle="modal" data-rank="{{ $middle_user_right->rank }}" data-left="{{$middle_user_right->left}}" data-middle="{{$middle_user_right->middle}}" data-right="{{$middle_user_right->right}}" data-username="{{$middle_user_right->user->username}}"  data-target="#user_info">
 							<img src="@if($middle_user_right->user->user_pic != '') {{ url('/'.$middle_user_right->user->user_pic_path.$middle_user_right->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 						
@@ -421,7 +432,11 @@ p, li, span {
 							<p class="user-name ap">
 								
 								 <a href="{{ route('user_tree',['id'=> $middle_user_right->user->username])}}" class="unl">{{ $middle_user_right->user->username }}</a>
-								 <br> {{ $middle_user_right->user->submitted_point }} Pv
+								 <br>
+								 LSP 
+								 @if (\Carbon\Carbon::parse($middle_user_right->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+								 {{formatAmount($middle_user_right->user->submitted_point)}}
+								 @else 0 @endif
 								</p>
 						@endif
 						</div> 
@@ -441,10 +456,7 @@ p, li, span {
 			 </div> 
 			 <p class="user-name ap"><a href="#" class="unl">No User</a></p>       
 			@else
-			LSP 
-			@if (\Carbon\Carbon::parse($right_user_left->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$right_user_left->user->submitted_point}}
-			@else 0 @endif
+		
 			<div class="@if($right_user_left->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px"  data-toggle="modal" data-rank="{{ $right_user_left->rank }}"  data-left="{{$right_user_left->left}}" data-middle="{{$right_user_left->middle}}" data-right="{{$right_user_left->right}}" data-username="{{$right_user_left->user->username}}"  data-target="#user_info">
 				<img src="@if($right_user_left->user->user_pic != '') {{ url('/'.$right_user_left->user->user_pic_path.$right_user_left->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 			
@@ -452,7 +464,11 @@ p, li, span {
 				<p class="user-name ap">
 				    
 				     <a href="{{ route('user_tree',['id'=> $right_user_left->user->username])}}" class="unl">{{ $right_user_left->user->username }}</a>
-					 <br> {{ $right_user_left->user->submitted_point }} Pv
+					 <br>
+					 LSP 
+					 @if (\Carbon\Carbon::parse($right_user_left->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+					 {{formatAmount($right_user_left->user->submitted_point)}}
+					 @else 0 @endif
 					</p>
 			@endif
 			</div> 
@@ -466,10 +482,7 @@ p, li, span {
 				 </div> 
 				 <p class="user-name ap"><a href="#" class="unl">No User</a></p>       
 				@else
-				LSP 
-			@if (\Carbon\Carbon::parse($right_user_middle->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$right_user_middle->user->submitted_point}}
-			@else 0 @endif
+			
 				<div class="@if($right_user_middle->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px"  data-toggle="modal" data-rank="{{ $right_user_middle->rank }}" data-left="{{$right_user_middle->left}}" data-middle="{{$right_user_middle->middle}}" data-right="{{$right_user_middle->right}}" data-username="{{$right_user_middle->user->username}}"  data-target="#user_info">
 					<img src="@if($right_user_middle->user->user_pic != '') {{ url('/'.$right_user_middle->user->user_pic_path.$right_user_middle->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
 				
@@ -477,7 +490,11 @@ p, li, span {
 					<p class="user-name ap">
 						
 						 <a href="{{ route('user_tree',['id'=> $right_user_middle->user->username])}}" class="unl">{{ $right_user_middle->user->username }}</a>
-						 <br> {{ $right_user_middle->user->submitted_point }} Pv
+						 <br> 
+						 LSP 
+						 @if (\Carbon\Carbon::parse($right_user_middle->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+						 {{formatAmount($right_user_middle->user->submitted_point)}}
+						 @else 0 @endif
 						</p>
 				@endif
 			</div> 
@@ -493,10 +510,6 @@ p, li, span {
 			<p class="user-name ap"><a href="#" class="unl">No User</a></p> 
 			@else
 
-			LSP 
-			@if (\Carbon\Carbon::parse($right_user_right->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
-			{{$right_user_right->user->submitted_point}}
-			@else 0 @endif
 
 			<div class="@if($right_user_right->user->invest_status == 1) puser @else fuser @endif user umd" style="height:90px"  data-toggle="modal" data-rank="{{ $right_user_right->rank }}"  data-left="{{$right_user_right->left}}" data-middle="{{$right_user_right->middle}}" data-right="{{$right_user_right->right}}" data-username="{{$right_user_right->user->username}}"  data-target="#user_info">
 				<img src="@if($right_user_right->user->user_pic != '') {{ url('/'.$right_user_right->user->user_pic_path.$right_user_right->user->user_pic)}} @else {{ asset('assets/sq-logo.png')}} @endif" alt="*" class="no-user">
@@ -505,7 +518,12 @@ p, li, span {
 			<p class="user-name ap">
 				    
 				      <a href="{{ route('user_tree',['id'=> $right_user_right->user->username])}}" class="unl">{{ $right_user_right->user->username }}</a>
-					  <br> {{ $right_user_right->user->submitted_point }} Pv
+					  <br> 
+					  
+			LSP 
+			@if (\Carbon\Carbon::parse($right_user_right->user->point_submit_date )->gt(\Carbon\Carbon::now()->subDays(7)))
+			{{formatAmount($right_user_right->user->submitted_point)}}
+			@else 0 @endif
 					</p>
 			@endif         
 		 </div>
