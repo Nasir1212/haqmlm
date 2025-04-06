@@ -198,8 +198,8 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\framework/cache/data',
-        'lock_path' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\framework/cache/data',
+        'path' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\framework/cache/data',
+        'lock_path' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -372,13 +372,13 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\app',
+        'root' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\app',
         'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\app/public',
+        'root' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\app/public',
         'url' => 'https://haqmultishop.com//storage',
         'visibility' => 'public',
         'throw' => false,
@@ -398,7 +398,7 @@
     ),
     'links' => 
     array (
-      'D:\\nasir\\web\\hms\\haqmlm\\public\\storage' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\app/public',
+      'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\public\\storage' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\app/public',
     ),
   ),
   'hashing' => 
@@ -437,14 +437,14 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\logs/laravel.log',
+        'path' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\logs/laravel.log',
         'level' => 'debug',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\logs/laravel.log',
+        'path' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
         'replace_placeholders' => true,
@@ -509,7 +509,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\logs/laravel.log',
+        'path' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -576,7 +576,7 @@
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'D:\\nasir\\web\\hms\\haqmlm\\resources\\views/vendor/mail',
+        0 => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -688,7 +688,7 @@
     'lifetime' => '59000000',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\framework/sessions',
+    'files' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -708,9 +708,9 @@
   array (
     'paths' => 
     array (
-      0 => 'D:\\nasir\\web\\hms\\haqmlm\\resources\\views',
+      0 => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\resources\\views',
     ),
-    'compiled' => 'D:\\nasir\\web\\hms\\haqmlm\\storage\\framework\\views',
+    'compiled' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm\\storage\\framework\\views',
   ),
   'image' => 
   array (
@@ -815,7 +815,7 @@
     array (
     ),
     'enable_runnable_solutions' => NULL,
-    'remote_sites_path' => 'D:\\nasir\\web\\hms\\haqmlm',
+    'remote_sites_path' => 'I:\\Nasir_Personal_Project\\haqmlm\\haqmlm',
     'local_sites_path' => '',
     'housekeeping_endpoint_prefix' => '_ignition',
     'settings_file_path' => '',

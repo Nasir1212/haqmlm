@@ -234,6 +234,9 @@ public function Transaction_report_sheet(Request $request){
                     if($trx_cond == 'auto_point_submit_history'){
                         $transactions = Transaction::where('remark','auto_pv_submit')->where('user_id',$user->id)->with('userdata')->latest('id')->paginate(20);
                     }
+                    if($trx_cond == 'self_point_submit_history'){
+                        $transactions = Transaction::where('remark','self_pv_submit')->with('userdata')->latest('id')->paginate(20);
+                    }
                     if($trx_cond == 'refer_bonus'){
                         $transactions = ReferBonusTransaction::where('user_id',$user->id)->with('userdata')->latest('id')->paginate(20);
                     }
@@ -267,9 +270,11 @@ public function Transaction_report_sheet(Request $request){
                 
             }else{
                 $user = [];
+             
                 if($trx_cond == 'working_bonus'){
                     $transactions = WgbTransaction::with('userdata')->latest('id')->paginate(20);
                 }
+
              if($trx_cond == 'sponsor_bonus'){
                     $transactions = SpbTransaction::with('userdata')->latest('id')->paginate(20);
                 }
@@ -284,6 +289,11 @@ public function Transaction_report_sheet(Request $request){
                 if($trx_cond == 'auto_point_submit_history'){
                     $transactions = Transaction::where('remark','auto_pv_submit')->with('userdata')->latest('id')->paginate(20);
                 }
+                
+                if($trx_cond == 'self_point_submit_history'){
+                    $transactions = Transaction::where('remark','self_pv_submit')->with('userdata')->latest('id')->paginate(20);
+                }
+
 
                 if($trx_cond == 'refer_bonus'){
                     $transactions = ReferBonusTransaction::with('userdata')->latest('id')->paginate(20);
@@ -377,6 +387,9 @@ public function Transaction_report_sheet(Request $request){
                 } 
                 if($trx_cond == 'auto_point_submit_history'){
                     $transactions = Transaction::where('remark','auto_pv_submit')->where('user_id',$gsd->id)->with('userdata')->latest('id')->paginate(20);
+                }
+                if($trx_cond == 'self_point_submit_history'){
+                    $transactions = Transaction::where('remark','self_pv_submit')->with('userdata')->latest('id')->paginate(20);
                 }
                 if($trx_cond == 'refer_bonus'){
                     $transactions = ReferBonusTransaction::where('user_id',$gsd->id)->with('userdata')->latest('id')->paginate(20);

@@ -56,9 +56,9 @@
 							<a href="{{ route('Transaction_list',['remark'=>'life_tile_insentive']) }}" class="btn btn-dark mb-2">Life time Incentive</a>
 							<a href="{{ route('Transaction_list',['remark'=>'qualify_yearly_bonus']) }}" class="btn btn-dark mb-2">Qualify Yearly Bonus</a>
 							<a href="{{ route('Transaction_list',['remark'=>'death_benefit']) }}" class="btn btn-dark mb-2">Death Benefit</a>
-							{{-- <a href="{{ route('Transaction_list',['remark'=>'point_history']) }}" class="btn btn-dark mb-2">Point History</a> --}}
+							<a href="{{ route('Transaction_list',['remark'=>'point_history']) }}" class="btn btn-dark mb-2">Point History</a>
 							<a href="{{ route('Transaction_list',['remark'=>'auto_point_submit_history']) }}" class="btn btn-dark mb-2">Auto Point Submit History</a>
-							<a href="{{ route('Transaction_list',['remark'=>'point_history']) }}" class="btn btn-dark mb-2">Self Point Submit History</a>
+							<a href="{{ route('Transaction_list',['remark'=>'self_point_submit_history']) }}" class="btn btn-dark mb-2">Self Point Submit History</a>
                         <hr>
 @if ($monthly_income_part == 0)
 @if ($userinfo == 1)

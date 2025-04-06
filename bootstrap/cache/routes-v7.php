@@ -102,7 +102,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::UvTLMoer78NQHW52',
+            '_route' => 'generated::sPwyay2CBAg6iud6',
           ),
           1 => NULL,
           2 => 
@@ -788,7 +788,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::69kc8Iab59XdSzLs',
+            '_route' => 'generated::3CiLhFp4AAFn2q3J',
           ),
           1 => NULL,
           2 => 
@@ -5439,7 +5439,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::rQMv1R4pckusvUql',
+            '_route' => 'generated::HrvjwV3ELLgOHa6s',
           ),
           1 => NULL,
           2 => 
@@ -5459,7 +5459,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::VFKxrzyLAJT0hAPw',
+            '_route' => 'generated::8WkCv3CBCN8zHk2S',
           ),
           1 => NULL,
           2 => 
@@ -5479,7 +5479,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::lKvXm7cqFY1i8OEf',
+            '_route' => 'generated::LJ6NY8pmfUGtEdPq',
           ),
           1 => NULL,
           2 => 
@@ -5516,7 +5516,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::nKxwLuRKbPqtIQXV',
+            '_route' => 'generated::mNGUgqMUMJdPpAFz',
           ),
           1 => NULL,
           2 => 
@@ -5647,7 +5647,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::FI2IgnZ0KgODcv3Y',
+            '_route' => 'generated::uijq2o5MZ0uJgNwz',
           ),
           1 => NULL,
           2 => 
@@ -5777,7 +5777,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::R0s9Bfy1BDCvzASc',
+            '_route' => 'generated::upePozTjBcyZ9slF',
           ),
           1 => NULL,
           2 => 
@@ -7170,7 +7170,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::UvTLMoer78NQHW52' => 
+    'generated::sPwyay2CBAg6iud6' => 
     array (
       'methods' => 
       array (
@@ -7193,7 +7193,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::UvTLMoer78NQHW52',
+        'as' => 'generated::sPwyay2CBAg6iud6',
       ),
       'fallback' => false,
       'defaults' => 
@@ -9008,7 +9008,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::69kc8Iab59XdSzLs' => 
+    'generated::3CiLhFp4AAFn2q3J' => 
     array (
       'methods' => 
       array (
@@ -9029,7 +9029,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::69kc8Iab59XdSzLs',
+        'as' => 'generated::3CiLhFp4AAFn2q3J',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19235,7 +19235,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::rQMv1R4pckusvUql' => 
+    'generated::HrvjwV3ELLgOHa6s' => 
     array (
       'methods' => 
       array (
@@ -19257,7 +19257,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::rQMv1R4pckusvUql',
+        'as' => 'generated::HrvjwV3ELLgOHa6s',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19273,7 +19273,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::VFKxrzyLAJT0hAPw' => 
+    'generated::8WkCv3CBCN8zHk2S' => 
     array (
       'methods' => 
       array (
@@ -19386,7 +19386,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::VFKxrzyLAJT0hAPw',
+        'as' => 'generated::8WkCv3CBCN8zHk2S',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19402,7 +19402,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::lKvXm7cqFY1i8OEf' => 
+    'generated::LJ6NY8pmfUGtEdPq' => 
     array (
       'methods' => 
       array (
@@ -19431,7 +19431,7 @@ $exitCode = \\Artisan::call(\'optimize\');
         'where' => 
         array (
         ),
-        'as' => 'generated::lKvXm7cqFY1i8OEf',
+        'as' => 'generated::LJ6NY8pmfUGtEdPq',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19485,7 +19485,7 @@ $exitCode = \\Artisan::call(\'optimize\');
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::nKxwLuRKbPqtIQXV' => 
+    'generated::mNGUgqMUMJdPpAFz' => 
     array (
       'methods' => 
       array (
@@ -19506,7 +19506,7 @@ $exitCode = \\Artisan::call(\'optimize\');
         'where' => 
         array (
         ),
-        'as' => 'generated::nKxwLuRKbPqtIQXV',
+        'as' => 'generated::mNGUgqMUMJdPpAFz',
       ),
       'fallback' => false,
       'defaults' => 
@@ -19745,7 +19745,7 @@ $exitCode = \\Artisan::call(\'optimize\');
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::FI2IgnZ0KgODcv3Y' => 
+    'generated::uijq2o5MZ0uJgNwz' => 
     array (
       'methods' => 
       array (
@@ -19766,7 +19766,7 @@ $exitCode = \\Artisan::call(\'optimize\');
         'where' => 
         array (
         ),
-        'as' => 'generated::FI2IgnZ0KgODcv3Y',
+        'as' => 'generated::uijq2o5MZ0uJgNwz',
       ),
       'fallback' => false,
       'defaults' => 
@@ -20086,7 +20086,7 @@ $exitCode = \\Artisan::call(\'optimize\');
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::R0s9Bfy1BDCvzASc' => 
+    'generated::upePozTjBcyZ9slF' => 
     array (
       'methods' => 
       array (
@@ -20107,7 +20107,7 @@ $exitCode = \\Artisan::call(\'optimize\');
         'where' => 
         array (
         ),
-        'as' => 'generated::R0s9Bfy1BDCvzASc',
+        'as' => 'generated::upePozTjBcyZ9slF',
       ),
       'fallback' => false,
       'defaults' => 
