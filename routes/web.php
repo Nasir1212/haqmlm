@@ -742,5 +742,4 @@ $exitCode = Artisan::call('optimize');
 });
 
 
-
 require __DIR__.'/auth.php';

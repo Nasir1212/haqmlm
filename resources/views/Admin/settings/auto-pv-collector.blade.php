@@ -18,18 +18,17 @@
 					<div class="card-body">
 						<div class="table-responsive">
 							<div class="mb-4">
+							
 								<form action="{{ route('auto_pv_collector')}}" method="get">
 									@csrf
 									<input type="text" name="point" class="d-inline-block w-25 form-control" placeholder="point" value="{{ $cpoint }}">
 									<select name="point_type" class="d-inline-block w-25 form-control" id="point_type">
-										@if ($_GET['point_type'] == 'Normal')
-										<option value="Normal">Normal Point</option>
-										<option value="Lock">Lock Point</option>
-										@else
-										<option value="Lock">Lock Point</option>
-										<option value="Normal">Normal Point</option>
+									
+										<option value="Normal" @if ($_GET['point_type'] == 'Normal') selected="true"  @endif>Normal Point</option>
+										<option value="Lock" @if ($_GET['point_type'] == 'Lock') selected="true"  @endif>Lock Point</option>
+										<option value="sps_date" @if ($_GET['point_type'] == 'sps_date') selected="true"  @endif>Self Sub  Point</option>
 										
-										@endif
+										
 										
 									</select>
 									<button type="submit" class="btn btn-info">Check User</button>
@@ -41,14 +40,10 @@
 										@csrf
 										<input type="text" name="point" class="d-inline-block w-25 form-control" placeholder="point" value="{{ $cpoint }}">
 										<select name="point_type" class="d-inline-block w-25 form-control" id="point_type">
-											@if ($_GET['point_type'] == 'Normal')
-											<option value="Normal">Normal Point</option>
-											<option value="Lock">Lock Point</option>
-											@else
-											<option value="Lock">Lock Point</option>
-											<option value="Normal">Normal Point</option>
+											<option value="Normal" @if ($_GET['point_type'] == 'Normal') selected="true"  @endif>Normal Point</option>
+											<option value="Lock" @if ($_GET['point_type'] == 'Lock') selected="true"  @endif>Lock Point</option>
+											<option value="sps_date" @if ($_GET['point_type'] == 'sps_date') selected="true"  @endif>Self Sub  Point</option>
 											
-											@endif
 											
 										</select>
 										<button type="submit" class="btn btn-info">Confirm Action</button>

@@ -15,6 +15,7 @@ use App\Models\SponsorGenCondition;
 use App\Models\NonWorkingGenCondition;
 use App\Models\NonWorkingMatrixCondition;
 use App\Models\RankCondition;
+use App\Models\userSelfSubmitPoint;
 use App\Models\Transaction;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
@@ -23,17 +24,28 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Image;
+
 class SettingsController extends Controller
 {
 
     public function auto_pv_collector(Request $request){
+      
         $gsd = global_user_data();
         if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
           $cpoint = setting()->check_point;
        if($request->point_type == 'Normal'){
            $users = User::where('point', '>=', $request->point)->where('distribute_status',0)->latest('id')->where('submit_check',0)->paginate(20);
-       }else{
+       }elseif($request->point_type == 'Lock'){
            $users = User::where('lock_point', '>=', $request->point)->where('distribute_status',0)->latest('id')->where('submit_check',0)->paginate(20);
+       }else{
+        $page_title = "Auto collector find out users";
+        $users = userSelfSubmitPoint::select('user_self_submit_point.*', 'users.name', 'users.email','users.username','users.point_submit_date','users.id', )
+        ->join('users', 'user_self_submit_point.user_id', '=', 'users.id') // Join with users table
+        ->latest('user_self_submit_point.id')
+        ->paginate(20);
+            return view('Admin.settings.auto-pv-collector',compact('cpoint','page_title','users','gsd'));
+
+            dd($users);
        }
         
             
@@ -202,7 +214,7 @@ class SettingsController extends Controller
 
     public function bonus_sender_form(){
         $gsd = global_user_data();
-        
+       // dd(User::where('id',1)->latest('id')->paginate(40));
         if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
             $users = User::where('distribute_status',1)->latest('id')->paginate(40);
             $page_title = "Bonus Sending User List";

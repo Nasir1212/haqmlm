@@ -84,6 +84,61 @@
 	
 </div>
 @endif
+
+@if(isset($transactions[0]) && $transactions[0]->remark == 'self_pv_submit')
+<table class="table custom-table table-bordered table-striped m-0">
+								
+	<thead>
+		<tr>
+			<th>SPS Date</th>
+			<th>User</th>
+			<th>Transaction</th>
+			<th>Points</th>
+			<th>Prev Points</th>
+			<th>Remark</th>
+			<th>Details</th>
+		</tr>
+	</thead>
+	<tbody>
+		
+		@foreach ( $transactions as $transaction )
+			<tr>
+				<td>{{ $transaction->created_at }}</td>
+				<td>
+					<?php if(isset($transaction->userdata)){ ?>
+						<a class="btn btn-info" href="{{ route('userdt',['username'=>$transaction->userdata->username])}}">{{ $transaction->userdata->username }}</a> 
+					<?php } ?>
+					
+				</td>
+				<td>{{ $transaction->trx }}</td>
+				<td>{{ $transaction->amount}}
+					@if($gsd->id == 1)
+				@if($transaction->remark == 'auto_pv_submit')
+				<form action="{{ route('auto_pv_collection_back_action') }}" method="post">
+				    @csrf
+					<input type="hidden" name="id" value="{{ $transaction->id }}"> 
+					<input type="hidden" name="single" value="1"> 
+					<input type="hidden" name="date" value="{{ $transaction->created_at->format('Y-m-d') }}">
+					<input type="hidden" name="user_id" value="{{ $transaction->user_id}}"> 
+					<button class="btn btn-warning">Back</button>
+				</form>
+				@endif
+				@endif
+				</td>
+				<td>{{ $transaction->post_balance}}</td>
+				<td>{{ $transaction->remark}}</td>
+				<td>{{ $transaction->details }}</td>
+			</tr>
+		@endforeach
+	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="5" class="text-center"></td>
+		</tr>
+	</tfoot>
+</table>
+{{ $transactions->links() }}
+@else
 <table class="table custom-table table-bordered table-striped m-0">
 								
 	<thead>
@@ -98,6 +153,7 @@
 		</tr>
 	</thead>
 	<tbody>
+		
 		@foreach ( $transactions as $transaction )
 			<tr>
 				<td>{{ $transaction->created_at }}</td>
@@ -136,6 +192,7 @@
 </table>
 
 {{ $transactions->links() }}
+@endif
 @elseif ($monthly_income_part == 2)
 @if (auth()->user()->id == 1)
 <h3>Point History Filter With Date</h3>

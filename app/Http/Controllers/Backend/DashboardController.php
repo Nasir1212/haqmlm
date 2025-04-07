@@ -19,6 +19,7 @@ use App\Models\UserExtra;
 use App\Models\Withdraw;
 use App\Models\WithdrawSetting;
 use App\Jobs\CallTreeMakeCommandJob;
+use App\Models\userSelfSubmitPoint;
 
 
 
@@ -327,42 +328,30 @@ public function account_balance_trans_manage(){
                 return back();
             }else{
               
-            //    $dt = Carbon::now()->subMonth(0);
-            //   dd($dt);
                 $dt = date('Y-m-d H:i:s');
-
-                // $startDate = new Carbon($gsd->point_submit_date);
-                
-                // $today = Carbon::now()->subMonth();
-                
-                // $months = $today->diffInMonths($startDate);
-
-                // if ($months > 1) {
-                //     $month = $months;
-                //     $mc = $month * $setting->check_point;
-                //     if($request->point < $mc){
-                //         notify()->error('Due '. $month.' month require point is'.$mc);
-                //         return back();
-                //     }
-                // }
-
 
                 $prev_point = $gsd->point;
                 $gsd->point -= $request->point;
-                if($gsd->submit_check == 1){
-                    $gsd->submitted_point += $request->point;
-                }else{
-                   $gsd->submitted_point = $request->point;
-                }
-          
-                $gsd->distribute_status = 1;
-                $gsd->submit_check = 1;
 
-               
-                
-                $gsd->total_submitted_point += $request->point;
+                // if($gsd->submit_check == 1){
+                //     $gsd->submitted_point += $request->point;
+                // }else{
+                //    $gsd->submitted_point = $request->point;
+                // }
+
+          
+                 $gsd->distribute_status = 0;
+                $gsd->submit_check = 1;                
+                // $gsd->total_submitted_point += $request->point;
+
                 $gsd->point_submit_date = $dt;
                 $gsd->save();
+
+                $user_self = new userSelfSubmitPoint();
+                $user_self->user_id = $gsd->id;
+                $user_self->point  = $request->point;
+                $user_self->created_at =   $dt ;
+                $user_self->save();
 
                 $ph = new PointSubmitHistory();
                 $ph->point = $request->point;
