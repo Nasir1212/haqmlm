@@ -166,6 +166,7 @@ ul li:first-child::before {
     border-left: 1px solid #ccc;
     width: 2px;
     height: 20px;
+    display: none;
 }
 li .aa{
     display:inline-block;

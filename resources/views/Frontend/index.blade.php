@@ -334,13 +334,11 @@ form#dealerForm {
     border: 1px solid #000;
 }
 .section_latest {
-        height: 220px;
-     
-      position:relative; 
-      overflow:hidden;
-
-      z-index: 7;
-    }
+    height: 130px;
+    position: relative;
+    overflow: hidden;
+    z-index: 7;
+}
     
     .photobanner {
       position:absolute; 
@@ -353,12 +351,11 @@ form#dealerForm {
       display: flex;
     }
     
-    .photobanner img {    
-   
-      border: 1px solid #000;
-      margin: 10px 10px;
-    }
-    
+    .photobanner img {
+    border: 1px solid #000;
+    margin: 10px 10px;
+    height: 120px;
+}
     @keyframes bannermove {
       0% {
           transform: translate(0, 0);

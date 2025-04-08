@@ -629,6 +629,7 @@ Route::get('/run-tree-child-arranger', [QueueController::class, 'tree_child_sett
 
 Route::get('/link-storage', function () {
     Artisan::call('storage:link');
+    return "Storage linked successfully!";
 });
 
 

@@ -77,13 +77,13 @@
 										<th>User</th>
 										<th>Email-phone</th>
                                         <th>Point</th>
-                                        <th>Point Submit Date</th>
+                                        <th>Point Collect Date</th>
 										<th>Joined At</th>
 										
 									</tr>
 								</thead>
 								<tbody>
-									@dd($users)
+									
 									@foreach ( $users as $user)
 								
 									<?php $point += $user->submitted_point; ?>
@@ -92,9 +92,8 @@
 											- {{ $user->id }}
 										@endif</td>
 										<td>{{ $user->email }} <br> {{ $user->phone }}</td>
-                                        <td>{{ $user->submitted_point }}</td>
-                                        {{-- <td>{{$user->admin_recollect_date == null? $user->point_submit_date:$user->admin_recollect_date }}</td> --}}
-										<td>{{ $user->admin_recollect_date }}</td>
+                                        <td>{{ formatAmount($user->submitted_point) }}</td>
+										<td> {{ $user->point_submit_date }} </td>
 										<td>{{ $user->created_at }}</td>
 									</tr>
 									@endforeach

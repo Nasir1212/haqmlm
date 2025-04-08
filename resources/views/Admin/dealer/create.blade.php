@@ -14,7 +14,7 @@
             <div class="row g-3">
           
             <div class="col-md-6 col-12">
-                <label for="name" class="form-label">Name</label>
+                <label for="name" class="form-label">Shop name</label>
                 <div class="input-group">
                     <input type="text" class="form-control border-start-0" id="name" name="name" placeholder="Name">
                 </div>
@@ -22,7 +22,7 @@
               <div class="col-md-6 col-12">
                 <label for="phone" class="form-label">Phone</label>
                 <div class="input-group">
-                    <input type="text" class="form-control border-start-0" id="phone" name="phone" placeholder="Phone">
+                    <input type="text" class="form-control border-start-0" id="phone" name="phone" value="Call for Manager " placeholder="Call for Manager">
                 </div>
             </div>
             <div class="col-md-6 col-12">
@@ -55,10 +55,16 @@
             </select>
         </div>
     </div>
-            <div class="col-md-12 col-12">
+            <div class="col-md-6 col-12">
                 <label for="location_type" class="form-label">Address</label>
                 <div class="input-group">
                     <input type="text" class="form-control border-start-0" id="address" name="address" placeholder="address">
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <label for="location_type" class="form-label">Country</label>
+                <div class="input-group">
+                    <input type="text" class="form-control border-start-0" id="country" name="country" placeholder="Country">
                 </div>
             </div>
             

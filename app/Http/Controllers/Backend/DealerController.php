@@ -41,7 +41,8 @@ class DealerController extends Controller
     public function index(){
         $gsd = global_user_data();
          if ($gsd->id == 1 || permission_checker($gsd->role_info,'dealer_manage') == 1){
-            $dealers = Dealer::where('user_id', '!=', 1)->with('ref','user')->latest('id')->get();
+             $dealers = Dealer::where('user_id', '!=', 1)->with('ref','user')->latest('id')->get();
+            
             return view('Admin.dealer.index',compact('dealers','gsd'));
          }
     }
@@ -68,6 +69,7 @@ class DealerController extends Controller
         $dealer->name = $request->name;
         $dealer->status = $request->status;
         $dealer->full_address = $request->address;
+        $dealer->country = $request->country;
 
         $dealer->save();
         notify()->success('Dealer Create submitted !');
@@ -101,6 +103,7 @@ class DealerController extends Controller
         $dealer->email = $request->email;
         $dealer->name = $request->name;
         $dealer->status = $request->status;
+        $dealer->country = $request->country;
         $dealer->save();
         notify()->success('Update submitted!');
         return back();

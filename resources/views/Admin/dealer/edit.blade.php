@@ -45,26 +45,33 @@
             </div>
           
           
-           <div class="col-md-12 col-12">
+           <div class="col-md-6 col-12">
                 <label for="location_type" class="form-label">Address</label>
                 <div class="input-group">
                     <input type="text" class="form-control border-start-0" id="address" name="address" value="{{ $dealer->full_address }}">
                 </div>
             </div>
+           <div class="col-md-6 col-12">
+                <label for="location_type" class="form-label">Country</label>
+                <div class="input-group">
+                    <input type="text" class="form-control border-start-0" id="country" name="country" value="{{ $dealer->country }}">
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <label for="status" class="form-label">Publication Status</label>
+                <div class="input-group">
+                    <select class="form-select form-select-md form-control" id="status" name="status" >
+                        <option @selected($dealer->status == 'Draft') value="Draft">Draft</option>
+                        <option @selected($dealer->status == 'Active') value="Active">Active</option>
+                        <option @selected($dealer->status == 'Disable') value="Disable">Disable</option>
+                     
+                    </select>
+                </div>
+            </div>
         </div>
        
 <div class="row g-3">
-    <div class="col-12">
-        <label for="status" class="form-label">Publication Status</label>
-        <div class="input-group">
-            <select class="form-select form-select-md form-control" id="status" name="status" >
-                <option @selected($dealer->status == 'Draft') value="Draft">Draft</option>
-                <option @selected($dealer->status == 'Active') value="Active">Active</option>
-                <option @selected($dealer->status == 'Disable') value="Disable">Disable</option>
-             
-            </select>
-        </div>
-    </div>
+   
    
   <input type="hidden" name="parent_id" id="parent_id" value="">
   <input type="hidden" name="dealer_id" id="dealer_id" value="{{ $dealer->id }}">

@@ -41,11 +41,12 @@ class SettingsController extends Controller
         $page_title = "Auto collector find out users";
         $users = userSelfSubmitPoint::select('user_self_submit_point.*', 'users.name', 'users.email','users.username','users.point_submit_date','users.id', )
         ->join('users', 'user_self_submit_point.user_id', '=', 'users.id') // Join with users table
+        ->where('user_self_submit_point.is_admin_point_collect',0)
         ->latest('user_self_submit_point.id')
         ->paginate(20);
             return view('Admin.settings.auto-pv-collector',compact('cpoint','page_title','users','gsd'));
 
-            dd($users);
+           
        }
         
             
@@ -93,17 +94,19 @@ class SettingsController extends Controller
             }
             $gsd->total_submitted_point  += $user_submitted_point->point;
             $gsd->distribute_status = 1;
-            $gsd->submit_check = 1;  
+            $gsd->submit_check = 1; 
+            $gsd->point_submit_date = date('Y-m-d H:i:s'); 
             $gsd->save();
+           
 
-         $trns =   Transaction::where('user_id',$user_submitted_point->user_id)->where('created_at',$user_submitted_point->created_at)->where('admin_recollect_date',null)->first(); 
+         $trns = Transaction::where('user_id',$user_submitted_point->user_id)->where('created_at',$user_submitted_point->created_at)->where('admin_recollect_date',null)->first(); 
             if($trns != null){
                 $trns->admin_recollect_date = Carbon::now();
                 $trns->save();
             }
         
         }
-        userSelfSubmitPoint::truncate();
+       userSelfSubmitPoint::truncate();
         notify()->success('Self Sub Point Collection Complete');
         return back();
 
@@ -241,17 +244,17 @@ class SettingsController extends Controller
         $gsd = global_user_data();
        // dd(User::where('id',1)->latest('id')->paginate(40));
         if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
-          // $users = User::where('distribute_status',1)->latest('id')->paginate(40);
-          $users = User::select('users.*', 'transactions.admin_recollect_date')
-          ->leftJoin('transactions', function ($join) {
-              $join->on('users.id', '=', 'transactions.user_id')
-                   ->on('users.point_submit_date', '=', 'transactions.admin_recollect_date')
-                   ->where('transactions.remark', 'self_pv_submit'); // Move condition inside leftJoin
-                  // ->where('users.point_submit_date', '=', 'transactions.created_at'); // Move condition inside leftJoin
-          })
-          ->where('users.distribute_status', 1)
-          ->latest('users.id')
-          ->paginate(40);
+           $users = User::where('distribute_status',1)->latest('id')->paginate(40);
+        //   $users = User::select('users.*', 'transactions.admin_recollect_date')
+        //   ->leftJoin('transactions', function ($join) {
+        //       $join->on('users.id', '=', 'transactions.user_id')
+        //            ->on('users.point_submit_date', '=', 'transactions.admin_recollect_date')
+        //            ->where('transactions.remark', 'self_pv_submit'); // Move condition inside leftJoin
+        //           // ->where('users.point_submit_date', '=', 'transactions.created_at'); // Move condition inside leftJoin
+        //   })
+        //   ->where('users.distribute_status', 1)
+        //   ->latest('users.id')
+        //   ->paginate(40);
             
         
             $page_title = "Bonus Sending User List";

@@ -135,7 +135,7 @@ $latest_products = Product::select('products.*', 'product_owners.qty as owner_qt
         $sliders = Slider::where('status',1)->latest('id')->get();
         $highlight_products = HighLightProduct::orderBy("id")->with('product')->get();
         
-        $dealers = Dealer::latest('id')->get();
+        $dealers = Dealer::where('status','Active')->latest('id')->get();
         $divisions = BdLocation::where('division',1)->get();
 
       return  view('Frontend.index', compact('divisions','dealers','selected_dealer','highlight_products','latest_brands','latest_categories','latest_products','gsd','c_products','wsp_products','sliders'));

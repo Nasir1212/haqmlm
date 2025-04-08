@@ -22,7 +22,69 @@
             background: #e5faff;
         }
 
+        .inv_title{
+            font-size:23px;
+        }
+        .inv_address{
+            font-size:13px;
+        }
+        .inv_company_name{
+            font-weight:1000;
+            margin-bottom:3px
+        }
+        .inv_help_line{
+            font-size: 19px;
+        }
+        .inv_img{
+            width:100px;
+        }
+        @media (max-width: 576px) {
+            .inv_title{
+            font-size: 13px;
+            margin: 0;
 
+            }
+
+            .inv_company_name{
+            font-size: 22px;
+            margin-bottom:0px
+            }
+            .inv_help_line{
+            font-size: 13px;
+            margin-bottom: 0px;
+            }
+
+            .inv_address{
+            font-size: 7px;
+            font-weight: bold;
+            margin: 0;
+            padding: 0;
+            }
+
+            .inv_img{
+            width: 65px;
+            }
+
+            .inv_user_data .user_id, .inv_user_data .name, .inv_user_data .address, .inv_user_data .text-primary {
+            font-size: 12px;
+            margin: 0px;
+            }
+
+            .inv_order_info h6 {
+            font-size: 10px;
+            }
+
+
+            .inv_order_table td, .inv_order_table th {
+            font-size: 9px;
+            }
+
+            .inv_user_data .address  {
+            font-size: 9px;
+
+            }
+
+         }
         
     </style>
 
@@ -49,33 +111,31 @@
             
         </div>
                           
-        <table class="w-100 mb-3">
+        <table class="w-100 mb-0">
             <tr>
                 <td>   
-                    <h1 style="font-weight:1000;margin-bottom:3px">{{ $setting->company_name }}</h1>
-                    <h5 style="font-size:23px;"><strong>Off/Online Digital Affiliate Shop</strong></h5>
-                    <h5 style="font-size:13px;">{{ $setting->company_address }}</h5> 
-                    <h4 style="font-size:19px"><strong>Help-line: {{ $setting->company_helpline }}</strong></h4>
+                    <h1 style="" class="inv_company_name">{{ $setting->company_name }}</h1>
+                    <h5 style="" class="inv_title"><strong>Off/Online Digital Affiliate Shop</strong></h5>
+                    <h5 style="" class="inv_address">{{ $setting->company_address }}</h5> 
+                    <h4 style="" class="inv_help_line"><strong>Help-line: {{ $setting->company_helpline }}</strong></h4>
                 </td>
                 <td style="text-align: right">  
-                    <img src="{{ asset('/assets/logo.png') }}" style="width:100px">
+                    <img class="inv_img" src="{{ asset('/assets/logo.png') }}" style="">
                 </td>
             </tr>
         </table>
 
-        <table class="w-100 mb-2">
+        <table class="w-100 mb-2 inv_user_data">
             <tr>
                 <td>
-                    <div><strong>User ID: {{$order->user->username }}</strong></div>
-                    <div><strong>Name: {{$order->user->name }}</strong></div>
-                    <div><strong>Address: {{ $user_address->city.' '.$user_address->state.' '.$user_address->country }}</strong></div>
+                    {{-- {"house_holding":null,"country":"--","city":"--","state":"--","upzila":null,"village":null,"zip_code":null} --}}
+                    <div class="user_id"><strong>User ID: {{$order->user->username }}</strong></div>
+                    <div class="name"><strong>Name: {{$order->user->name }}</strong></div>
+                    <div class="address"><strong>Address: {{ $user_address->village.' '.$user_address->zip_code.' '.$user_address->upzila .' '.$user_address->city }}</strong></div>
                     <div class="text-primary"><strong>www.haqmultishop.com</strong></div>
                 </td>
-                <td style="text-align: right" >  
-
-                    <br> 
-                     
-                   
+                <td style="text-align: right" class="inv_order_info" >  
+                    <br>                    
                     <h6 class="text-dark"> #{{ $order->id }}</h6>
                    
                     <h6 class="text-dark">{{ $order->created_at }}</h6>
@@ -86,7 +146,7 @@
             </tr>
         </table>
        
-        <table class="table border mt-2 plist m-0">
+        <table class="table border mt-2 plist m-0 inv_order_table">
             <thead>
                 <tr class="bg-light" style="color:#000 !important">
                     <th>S/N</th>
@@ -135,7 +195,7 @@
         
         <br><br><br>
         <div class="w-100 mt-4" style="text-align: right">
-            <h2 class="d-inline-block ml-auto" style="width:150px;border-top:1px solid black;color:#767474;">Signature</h2>
+            <h6 class="d-inline-block ml-auto" style="width:150px;color:#7674746b;">Signature</h6>
         </div>
     </div>
 </body>

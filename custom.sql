@@ -7,3 +7,13 @@ CREATE TABLE user_self_submit_point (
 
 ALTER TABLE transactions 
 ADD COLUMN admin_recollect_date DATETIME NULL;
+
+ALTER TABLE user_self_submit_point 
+ADD COLUMN is_admin_point_collect TINYINT DEFAULT 0;
+
+ALTER TABLE user_self_submit_point
+ADD COLUMN admin_recollect_date DATETIME NULL;
+
+ALTER TABLE dealers
+ADD COLUMN country VARCHAR(250) NULL;
+

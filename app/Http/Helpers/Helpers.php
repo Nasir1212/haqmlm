@@ -47,6 +47,16 @@ function dealer_check()
     }
 }
 
+function global_delar(){
+    if(Auth::check()){
+        $gsd = global_user_data();
+     return $selected_dealer = DealerSelection::where('user_id', $gsd->id)->with('dealer')->first();
+    }else{
+        return null;
+    }
+
+}
+
 function current_select_dealer()
 {
    if(Auth::check()){

@@ -359,7 +359,7 @@ public function account_balance_trans_manage(){
                 $ph->created_at = $dt;
                 $ph->updated_at = $dt;
                 $ph->save();
-                $dd = 'selft point submit';
+                $dd = 'self point submit';
                  trxCreate($request->point,$prev_point,$gsd->point,$gsd->id,'self_pv_submit',$dd,'-','N',"M");
                 notify()->success('Point Submit Success');
                 return back();
