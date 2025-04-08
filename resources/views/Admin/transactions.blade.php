@@ -91,6 +91,7 @@
 	<thead>
 		<tr>
 			<th>SPS Date</th>
+			<th>Date</th>
 			<th>User</th>
 			<th>Transaction</th>
 			<th>Points</th>
@@ -104,6 +105,7 @@
 		@foreach ( $transactions as $transaction )
 			<tr>
 				<td>{{ $transaction->created_at }}</td>
+				<td>{{ $transaction->admin_recollect_date }}</td>
 				<td>
 					<?php if(isset($transaction->userdata)){ ?>
 						<a class="btn btn-info" href="{{ route('userdt',['username'=>$transaction->userdata->username])}}">{{ $transaction->userdata->username }}</a> 

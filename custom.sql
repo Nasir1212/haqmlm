@@ -4,3 +4,6 @@ CREATE TABLE user_self_submit_point (
     point VARCHAR(100) NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE transactions 
+ADD COLUMN admin_recollect_date DATETIME NULL;

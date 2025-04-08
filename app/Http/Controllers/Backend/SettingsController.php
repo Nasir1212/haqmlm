@@ -79,12 +79,37 @@ class SettingsController extends Controller
        // $now = Carbon::today();
        if($request->point_type == 'Normal'){
         $users = User::where('point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
-       }else{
+       }elseif($request->point_type == 'Lock'){
         $users = User::where('lock_point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
+       }else{
+       
+        $user_submitted_points  = userSelfSubmitPoint::all();
+        foreach($user_submitted_points as $user_submitted_point){
+            $gsd = User::where('id',$user_submitted_point->user_id)->first();
+            if($gsd->submit_check == 1){
+                $gsd->submitted_point += $user_submitted_point->point;
+            }else{
+               $gsd->submitted_point = $user_submitted_point->point;
+            }
+            $gsd->total_submitted_point  += $user_submitted_point->point;
+            $gsd->distribute_status = 1;
+            $gsd->submit_check = 1;  
+            $gsd->save();
+
+         $trns =   Transaction::where('user_id',$user_submitted_point->user_id)->where('created_at',$user_submitted_point->created_at)->where('admin_recollect_date',null)->first(); 
+            if($trns != null){
+                $trns->admin_recollect_date = Carbon::now();
+                $trns->save();
+            }
+        
+        }
+        userSelfSubmitPoint::truncate();
+        notify()->success('Self Sub Point Collection Complete');
+        return back();
+
        }
-    //   dd($users);
-     //   $users = User::where('point', '>=', 400)->whereYear('point_submit_date',$now->year)->whereMonth('point_submit_date',$now->month)->where('distribute_status',0)->get();
-        $today = Carbon::today();
+    
+     $today = Carbon::today();
         $amount = $point;
         foreach ($users as $key => $user) {
             if($request->point_type == 'Normal'){
@@ -216,7 +241,19 @@ class SettingsController extends Controller
         $gsd = global_user_data();
        // dd(User::where('id',1)->latest('id')->paginate(40));
         if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
-            $users = User::where('distribute_status',1)->latest('id')->paginate(40);
+          // $users = User::where('distribute_status',1)->latest('id')->paginate(40);
+          $users = User::select('users.*', 'transactions.admin_recollect_date')
+          ->leftJoin('transactions', function ($join) {
+              $join->on('users.id', '=', 'transactions.user_id')
+                   ->on('users.point_submit_date', '=', 'transactions.admin_recollect_date')
+                   ->where('transactions.remark', 'self_pv_submit'); // Move condition inside leftJoin
+                  // ->where('users.point_submit_date', '=', 'transactions.created_at'); // Move condition inside leftJoin
+          })
+          ->where('users.distribute_status', 1)
+          ->latest('users.id')
+          ->paginate(40);
+            
+        
             $page_title = "Bonus Sending User List";
             return view('Admin.settings.bonus-sender-form',compact('page_title','users','gsd'));
         }else{

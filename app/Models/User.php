@@ -166,4 +166,9 @@ class User extends Authenticatable
     return $totalPoints;
 }
 
+public function transactions()
+{
+    return $this->hasMany(Transaction::class, 'user_id');
+}
+
 }

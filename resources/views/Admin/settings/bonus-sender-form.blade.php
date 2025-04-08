@@ -83,7 +83,9 @@
 									</tr>
 								</thead>
 								<tbody>
+									@dd($users)
 									@foreach ( $users as $user)
+								
 									<?php $point += $user->submitted_point; ?>
 									<tr>
 										<td>{{ $user->name }} <br> {{ $user->username }} @if ($gsd->id == 1)
@@ -91,7 +93,8 @@
 										@endif</td>
 										<td>{{ $user->email }} <br> {{ $user->phone }}</td>
                                         <td>{{ $user->submitted_point }}</td>
-                                        <td>{{ $user->point_submit_date }}</td>
+                                        {{-- <td>{{$user->admin_recollect_date == null? $user->point_submit_date:$user->admin_recollect_date }}</td> --}}
+										<td>{{ $user->admin_recollect_date }}</td>
 										<td>{{ $user->created_at }}</td>
 									</tr>
 									@endforeach
