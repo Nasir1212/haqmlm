@@ -17,7 +17,7 @@
                     <img src="{{ asset('/assets/logo.png') }}" >
                     
                 </a>
-                <p style="cursor: pointer">{{global_delar()->dealer->country}}</p>
+                <p style="cursor: pointer">{{global_delar()?->dealer?->country}}</p>
                
                
             </div>

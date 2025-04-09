@@ -333,16 +333,16 @@ public function account_balance_trans_manage(){
                 $prev_point = $gsd->point;
                 $gsd->point -= $request->point;
 
-                // if($gsd->submit_check == 1){
-                //     $gsd->submitted_point += $request->point;
-                // }else{
-                //    $gsd->submitted_point = $request->point;
-                // }
+                if($gsd->submit_check == 1){
+                    $gsd->submitted_point += 0;
+                }else{
+                   $gsd->submitted_point = 0;
+                }
 
           
                  $gsd->distribute_status = 0;
                 $gsd->submit_check = 1;                
-                // $gsd->total_submitted_point += $request->point;
+                $gsd->total_submitted_point += 0;
 
                 $gsd->point_submit_date = $dt;
                 $gsd->save();
