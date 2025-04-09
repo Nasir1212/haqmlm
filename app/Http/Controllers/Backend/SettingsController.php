@@ -64,19 +64,8 @@ class SettingsController extends Controller
     public function auto_pv_collection_action(Request $request){
          $gsd = global_user_data();
         if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
+            
             $point = $request->point;
-            if($point == ''){
-                notify()->error('Collection point not set !');
-                return back();
-            }
-            if($point == 0){
-                notify()->error('Collection point 0 not allow !');
-                return back();
-            }
-            if($request->point_type == ''){
-                notify()->error('Collection point type not set !');
-                return back();
-            }
        // $now = Carbon::today();
        if($request->point_type == 'Normal'){
         $users = User::where('point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
@@ -111,7 +100,19 @@ class SettingsController extends Controller
         return back();
 
        }
-    
+   
+            if($point == ''){
+                notify()->error('Collection point not set !');
+                return back();
+            }
+            if($point == 0){
+                notify()->error('Collection point 0 not allow !');
+                return back();
+            }
+       if($request->point_type == ''){
+        notify()->error('Collection point type not set !');
+        return back();
+    }
      $today = Carbon::today();
         $amount = $point;
         foreach ($users as $key => $user) {

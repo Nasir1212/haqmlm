@@ -74,8 +74,10 @@ class SiteController extends Controller
          $selected_dealer = '';
 
         $gsd = '';
+       
         if (Auth::check()) {
            $gsd = global_user_data();
+          
            $selected_dealer = DealerSelection::where('user_id', $gsd->id)->first();
            if(!$selected_dealer){
                $selected_dealer = new DealerSelection();

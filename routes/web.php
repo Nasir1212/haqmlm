@@ -564,15 +564,15 @@ Route::controller(PageController::class)->group(function () {
     });
 
 
-    Route::controller(SettingsController::class)->group(function () {
+        Route::controller(SettingsController::class)->group(function () {
         Route::get('/company-reserve-setting', 'company_reserve_setting')->name('company_reserve_setting'); 
         Route::post('/company-reserve-condition-create', 'company_reserve_condition_create')->name('company_reserve_condition_create'); 
         Route::post('/company-reserve-condition-update', 'company_reserve_condition_update')->name('company_reserve_condition_update'); 
         Route::get('/bonus-sender-form', 'bonus_sender_form')->name('bonus_sender_form'); 
         Route::get('/auto-pv-collector', 'auto_pv_collector')->name('auto_pv_collector'); 
         Route::post('/auto-pv-collection-action', 'auto_pv_collection_action')->name('auto_pv_collection_action'); 
-           Route::get('/auto-pv-collection-bull-back-action', 'auto_pv_collection_bullk_back_action')->name('auto_pv_collection_bullk_back_action'); 
-Route::post('/auto-pv-collection-back-action', 'auto_pv_collection_back_action')->name('auto_pv_collection_back_action'); 
+        Route::get('/auto-pv-collection-bull-back-action', 'auto_pv_collection_bullk_back_action')->name('auto_pv_collection_bullk_back_action'); 
+        Route::post('/auto-pv-collection-back-action', 'auto_pv_collection_back_action')->name('auto_pv_collection_back_action'); 
         Route::get('/withdraw-setting', 'withdraw_setting')->name('withdraw_setting'); 
         Route::post('/withdraw-setting-update', 'withdraw_setting_update')->name('withdraw_setting_update'); 
 
