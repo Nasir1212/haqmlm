@@ -809,9 +809,8 @@ $root_user->balance += $amount;
 $root_user->total_income += $amount;
 $root_user->save();
 out_bonus_history($root_user->id,$amount,'non_working_matrix','Bonus Get From level '.$conds[$gen-1]->level.' user - '.$down_user->username);
-trxCreate($amount,$prevpoint,$root_user->balance,$root_id,'non_working_matrix','Bonus Get From level '.$conds[$gen-1]->level.' user - '.$down_user->username,'+','N','NWMBT');
+trxCreate($amount,$prevpoint,$root_user->balance,$root_id,'non_working_matrix','Bonus Get From level '.$conds[$gen-1]->level.' user - '.$down_user->username.' LSP '.$down_user->submitted_point,'+','N','NWMBT');
 
-// echo "$root_id non_working_matrix from $down_user->username as Generation $gen and amount is $amount and point is $down_user->submitted_point";
 }
 }
 
@@ -829,54 +828,6 @@ function matrix_income($id)
    }
 
 }
-
-
-// function matrix_income($id)
-// {
-//     $flp = 0;
-//     $start = 0;
-//     $rootId = $id;
-//     $limit = NonWorkingMatrixCondition::all();
-    
-
-   
-//     while ($id != "" || $id != "0") {
-     
-//          if (isMatrixUserExtraIdExists($id,$flp)) {
-  
-             
-//             $posid = getPositionExtraId($id, $flp);
-         
-//             if ($posid == "0" || $posid == 0) {
-//                 break;
-//             }
-           
-//            if($flp == 0){
-//                $extra = UserExtra::where('user_id', $posid)->first();
-//            }else{
-//               $extra = UserExtra::where('id', $posid)->first(); 
-//            }
-           
-          
-           
-//             matrix_gen_income($extra->user_id, $limit, $start,$rootId);
-
-//             $start++;
-//             if(count($limit) == $start){
-//                 break;
-//             }else{
-//                 $id = $posid;
-//                 $flp++;
-                
-//             }
-            
-//         } else {
-//             break;
-            
-//         }
-//     }
-
-// }
 
 
 
@@ -978,85 +929,6 @@ function getValidDownlineByGeneration($userId, $generation = 1, &$generations = 
 }
 
 
-// function getRefIncomeInsert($root,$ref_id,$conds,$miss_count,$key,$point){
-  
-    
-//     $root_user = User::where('id', $root)->first('username');
-//     echo "<br/> $root_user <br/>";
-//     $user = User::where('id', $ref_id)->first();
-
-
-//     if ($user)
-//     {
-//         if($user->invest_status == 0 || $user->income_strike == 1){
-//             $miss_count +=1; 
-//             echo "False is $user->ref_id , $miss_count";
-//             return [$user->ref_id,$miss_count];
-//         }else{
-           
-//             $setting = setting();
-//             if($user->submit_check == 1){ 
-//                 $prev_balance = $user->balance;
-//                 $working_gen_amount = $point / 100 * $conds[$key]->amount;
-//                 $working_gen_amount -= $working_gen_amount / 100 * $setting->income_charge;
-
-//                 $user->balance += $working_gen_amount;
-//                 $user->total_income += $working_gen_amount;
-//                 $tremark = 'working_gen';
-                
-//                 $tdetails = "Get Working Generation from -- ".$root_user->username." -- and ";
-//                 // $user->save();
-
-//               //  out_bonus_history($user->id,$working_gen_amount,'working_gen',$tdetails);
-//                     // //   out_bonus($working_gen_amount);
-//                     echo "<br/>".$tdetails.$conds[$key]->level."<br/>";
-//                // trxCreate($working_gen_amount,$prev_balance,$user->balance,$user->id,$tremark,$tdetails.$conds[$key]->level,'+','N',"WGBT");
-//             }
-//             // print_r([$user->ref_id,$miss_count]);
-//             echo "User ID $user->ref_id and misscound $miss_count";
-//             return [$user->ref_id,$miss_count];
-//         }
-       
-           
-//     }
-//     else 
-//     {
-//         return [0,$miss_count];
-//     }
-// }
-
-// function getRefIncomeInsert($root, $ref_id, $conds, $miss_count, $key, $point) {
-    
-//     $root_user = User::where('id', $root)->first('username');
-//     $user = User::where('id', $ref_id)->first();
-
-//     if ($user) {
-//         // যদি ইউজার ইনভেস্ট না করে বা ব্লক থাকে, তাহলে সরাসরি তার রেফারার চেক করব
-//         if ($user->invest_status == 0 || $user->income_strike == 1 || $user->submit_check == 0) {
-//             $miss_count += 1; 
-//             return getRefIncomeInsert($root, $user->ref_id, $conds, $miss_count, $key, $point);
-//         }
-
-//         // ইউজার কোয়ালিফাই হলে ইনকাম যোগ করব
-//         $setting = setting();
-//         $prev_balance = $user->balance;
-//         $working_gen_amount = $point / 100 * $conds[$key]->amount;
-//         $working_gen_amount -= $working_gen_amount / 100 * $setting->income_charge;
-
-//         $user->balance += $working_gen_amount;
-//         $user->total_income += $working_gen_amount;
-//         $tremark = 'working_gen';
-//         $tdetails = "Get Working Generation from -- " . $root_user->username . " -- ";
-//         $user->save();
-
-//         out_bonus_history($user->id, $working_gen_amount, 'working_gen', $tdetails);
-//         trxCreate($working_gen_amount, $prev_balance, $user->balance, $user->id, $tremark, $tdetails . $conds[$key]->level, '+', 'N', "WGBT");
-
-//         return [$user->ref_id, $miss_count];
-//     } 
-
-//     return [0, $miss_count];
-// }
 
 
 
@@ -1078,11 +950,7 @@ function working_generation_income_with_refer($root_user, $conds){
             
                 $root_user->balance += $working_gen_amount;
                 $root_user->total_income += $working_gen_amount;
-                $tremark = 'working_gen';
-            
-               // $tdetails = "Get Working Generation from -- ".$root_user->username." -- and ";
-              //  $tdetails = "$root_user->username prev Blance  $prev_balance  Present blance is  ". $prev_balance+$working_gen_amount." Get Working Generation from -- ".$t['username']."  --  ".$conds[$key- 1]->level." Income is ".$working_gen_amount . " LSP  ".formatAmount($t['submitted_point'])." </br> ";
-            
+                $tremark = 'working_gen'; 
               $tdetails = " Get Working Generation from -- ".$t['username']."  --  ".$conds[$key- 1]->level."   LSP  ".formatAmount($t['submitted_point']);
           
              $root_user->save();
@@ -1095,85 +963,34 @@ function working_generation_income_with_refer($root_user, $conds){
     }
     
     
- 
-    // echo "<pre>";
-    // print_r($conds[1-1]->level);
-    // echo "</pre>";
-        // $miss_count = 0;
-        // $fire = 0;
-        // $mv = 0;
-    // while (count($conds) > 0) {
-     
-        // $mv = 0;
-        // $refid = getRefIncomeInsert($root,$refer_id,$conds,$miss_count,$fire,$point);
-      
-// dd($refid);
 
-        // if($refid[1] == 0){
-        //     $fire++;            
-        // }
-        
-        //     if ($refid[0] == 0) {
-                
-        //         break;
-        //     }else{
-        //         if($fire == count($conds)){
-        //             if($refid[1] >= count($conds)){
-        //                 break; 
-        //             }else{
-        //                 $fire = count($conds) - $refid[1];
-        //                 $mv = 1;
-        //             }
-                    
-        //         }
-
-        //         $refer_id = $refid[0];
-        //         if($mv == 1){
-        //             $miss_count = 0;
-        //         }else{
-        //             $miss_count = $refid[1];
-                   
-        //         }
-                
-           // }
-
-    //}
 }
 
 
 
-function getSponsorIncomeInsert($root,$ref_id,$conds,$miss_count,$key,$point){
+function getSponsorIncomeInsert($root,$down_user_id,$conds,$gen){
     // dd($conds[$key]);
     
-    $root_user = User::where('id', $root)->first('username');
-    $user = User::where('id', $ref_id)->first();
+    $user = User::where('id', $root)->first();
+    $down_user = User::where('id', $down_user_id)->first();
 
-    if ($user)
-    {
-        if($user->invest_status == 0 || $user->income_strike == 1){
-            $miss_count +=1; 
-
-            return [$user->sponsor_id,$miss_count];
-        }else{
-           
+    if ($user)    {
+        if($user->invest_status != 0 || $user->income_strike != 1){
+          
             $setting = setting();
             if($user->submit_check == 1){ 
                 $prev_balance = $user->balance;
-                $working_gen_amount = $point / 100 * $conds[$key]->amount;
-                $working_gen_amount -= $working_gen_amount / 100 * $setting->income_charge;
-
-                $user->balance += $working_gen_amount;
-                $user->total_income += $working_gen_amount;
+                $sponsor_amount = $user->submitted_point / 100 * $conds[$gen-1]->amount;
+                $sponsor_amount -= $sponsor_amount / 100 * $setting->income_charge;
+                $user->balance += $sponsor_amount;
+                $user->total_income += $sponsor_amount;
                 $tremark = 'sponsor_gen';
-                
-                $tdetails = "Get Sponsor Generation from -- ".$root_user->username." -- and ";
+                $tdetails = "Get Sponsor Generation from -- ".$down_user->username." --  ".$conds[$gen-1]->level." LSP $down_user->submitted_point";
                 $user->save();
-
-                out_bonus_history($user->id,$working_gen_amount,'sponsor_gen',$tdetails);
-             //   out_bonus($working_gen_amount);
-                trxCreate($working_gen_amount,$prev_balance,$user->balance,$user->id,$tremark,$tdetails.$conds[$key]->level,'+','N',"SPBT");
+                out_bonus_history($user->id,$sponsor_amount,'sponsor_gen',$tdetails);
+                trxCreate($sponsor_amount,$prev_balance,$user->balance,$user->id,$tremark,$tdetails,'+','N',"SPBT");
             }
-            return [$user->sponsor_id,$miss_count];
+          
         }
        
            
@@ -1184,64 +1001,43 @@ function getSponsorIncomeInsert($root,$ref_id,$conds,$miss_count,$key,$point){
     }
 }
 
-
-
-
-function sponsor_generation_income_with_sponsor($root,$refer_id,$point){
-    
-        $conds =  SponsorGenCondition::all();
-        $miss_count = 0;
-        $fire = 0;
-        $mv = 0;
-    while (count($conds) > 0) {
-        $mv = 0;
-        $refid = getSponsorIncomeInsert($root,$refer_id,$conds,$miss_count,$fire,$point);
-      
-
-
-        if($refid[1] == 0){
-            $fire++;            
-        }
-        
-            if ($refid[0] == 0) {
-                
-                break;
-            }else{
-                if($fire == count($conds)){
-                    if($refid[1] >= count($conds)){
-                        break; 
-                    }else{
-                        $fire = count($conds) - $refid[1];
-                        $mv = 1;
-                    }
-                    
-                }
-
-                $refer_id = $refid[0];
-                if($mv == 1){
-                    $miss_count = 0;
-                }else{
-                    $miss_count = $refid[1];
-                   
-                }
-                
-            }
-
+function getDownlineUsersByGenerationSps($sponsorId, $conds, $generation = 1, &$downline = []) 
+{
+   
+    $users = User::where('sponsor_id', $sponsorId)->get(); // Fetch direct downline users
+    foreach ($users as $user) {
+        // Store user details along with generation level
+        if($user->distribute_status == 1){
+        $downline[] = [
+            'user_id' => $user->id,
+            'user_name' => $user->username,
+            'sponsor_id' => $user->sponsor_id,
+            'generation' => $generation
+        ];
     }
+        // Recursive call for the next generation
+        if(count($conds) > $generation){
+            getDownlineUsersByGenerationSps($user->id,$conds, $generation + 1, $downline);
+        }
+    }
+
+    return $downline;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+function sponsor_generation_income_with_sponsor($root){
+    
+        $conds =  SponsorGenCondition::all();
+        $downlineUsers = getDownlineUsersByGenerationSps($root,$conds);
+        usort($downlineUsers, function ($a, $b) {
+            return $a['generation'] <=> $b['generation'] ?: $a['user_id'] <=> $b['user_id'];
+        });
+        
+        foreach($downlineUsers as $downlineUser){
+           getSponsorIncomeInsert($root,$downlineUser["user_id"],$conds,$downlineUser["generation"] );
+        }
+      
+}
 
 
 // rank bonus sender section end

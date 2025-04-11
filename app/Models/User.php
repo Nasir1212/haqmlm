@@ -112,6 +112,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class,'sponsor_id','id');
     }
+    public function downlineSps()
+    {
+        return $this->hasMany(User::class,'sponsor_id','id');
+    }
 
     public function downline()
     {

@@ -635,6 +635,82 @@ Route::get('/link-storage', function () {
 
 
 
+Route::get('/test_sponsor', function () {
+
+    $gsd = global_user_data(); // Fetch global user data
+    $setting = setting(); // Fetch settings
+    $users = User::where('distribute_status', 1)->get(); // Fetch users with distribute status = 1
+ 
+    foreach ($users as $user) {
+
+
+      
+    //     $users =  User::where('sponsor_id', $user->id)->get();
+    
+    
+    //    // $users = User::where('sponsor_id', $userId)->get();
+    //     foreach ($users as $user) {
+    //         if($user->distribute_status == 1){
+                
+    //             $downlineUsers[] = ['user_id'=>$user->id,'user_name'=>$user->username,'sponsor_id'=>$user->sponsor_id];
+              
+    //            // getDownlineUsersBySps($user->id, $downlineUsers); // Recursive call
+    //         }
+    //     }
+      
+    //     echo "<pre>";
+    //     print_r( $downlineUsers);
+    //     echo "<pre/>";
+    //     echo "<hr/>";
+    //    return $downlineUsers;
+      //  getDownlineUsersBySps($user->id);
+    //  working_generation_income_with_refer($user->id, $user->ref_id, $user->submitted_point) // it is death ;
+    
+       // working_generation_income_with_refer($user, $conds)  ;
+       sponsor_generation_income_with_sponsor($user->id);
+        //matrix_income($user->id);
+
+//         $dbcs = DirectBonusCondition::all();
+//         $ckv = 0;
+//         foreach ($dbcs as $dbc) {
+//             if ($user->submitted_point >= $dbc->point) {
+//                 $ckv++;
+//             }
+//         }
+       
+
+//         if($ckv > 0){
+           
+//              //  Calculate bonus
+//             $prevbalance = $user->balance;
+//             $dbcm = $user->submitted_point / 100 * $dbcs[$ckv - 1]->commission;
+//             $dbcm -= $dbcm / 100 * $setting->income_charge;
+
+//             // Update user balance and income
+//             $user->balance += $dbcm;
+//             $user->total_income += $dbcm;
+//             $user->save();
+
+//            // Log transaction
+//            out_bonus($dbcm);
+//            trxCreate($dbcm, $prevbalance, $user->balance, $user->id, 'direct_bonus', 'Direct bonus from submitted Point', '+', 'N', 'DBT'); 
+//         }
+
+    
+//      }
+
+//     // Reset submission checks
+//     $users = User::where('submit_check', 1)->get();
+//     foreach ($users as $user) {
+//         $user->submit_check = 0;
+//         $user->distribute_status = 0;
+//         $user->save();
+    }
+//     SendBonusSmsJob::dispatch();
+//    // Log success (or you can notify)
+//     Log::info('Point Bonus Send Success');
+});
+
 Route::get('/test_matrix', function () {
 
   

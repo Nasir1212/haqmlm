@@ -113,7 +113,7 @@
 					
 				</td>
 				<td>{{ $transaction->trx }}</td>
-				<td>{{ $transaction->amount}}
+				<td>{{ formatAmount($transaction->amount)}}
 					@if($gsd->id == 1)
 				@if($transaction->remark == 'auto_pv_submit')
 				<form action="{{ route('auto_pv_collection_back_action') }}" method="post">
@@ -166,7 +166,7 @@
 					
 				</td>
 				<td>{{ $transaction->trx }}</td>
-				<td>{{ $transaction->amount}}
+				<td>{{formatAmount($transaction->amount)}}
 					@if($gsd->id == 1)
 				@if($transaction->remark == 'auto_pv_submit')
 				<form action="{{ route('auto_pv_collection_back_action') }}" method="post">
@@ -180,7 +180,7 @@
 				@endif
 				@endif
 				</td>
-				<td>{{ $transaction->post_balance}}</td>
+				<td>{{ formatAmount($transaction->post_balance)}}</td>
 				<td>{{ $transaction->remark}}</td>
 				<td>{{ $transaction->details }}</td>
 			</tr>
