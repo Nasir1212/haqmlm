@@ -115,7 +115,7 @@
 
         
         
-        <h3 class="text-dark my-3">Products &nbsp;<i class="fa-solid fa-list"></i></h3>
+        <h5 class="text-dark my-3">Products</h5>
         <div class="row">
             @foreach ($latest_products as $product)
             <div class="col-12 col-md-3 mb-2">
@@ -202,9 +202,7 @@
    </nav> 
      @endif 
     
-</div>
-   
-   
+</div>   
 </div>
 
 <style>
@@ -225,7 +223,7 @@ form#dealerForm {
     background: #fff;
 }
 
-			.categories {
+.categories {
 
     border-radius: 5px;
     padding: 10px;
@@ -275,7 +273,7 @@ form#dealerForm {
     align-items: flex-end;
     justify-content: center;
     border-bottom: 2px solid black;
-    z-index: 50000;
+    z-index: 0;
     font-size: 13px;
 }
 

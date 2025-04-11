@@ -49,6 +49,11 @@ font-family: __SolaimanLipi_b8d676 !important;
     margin-block: 11px;
 }
 
+.mbl #mqfp{
+    
+    height: 40px !important;
+}
+
 @if(Auth::check())
 
 .mobile_header{
@@ -72,11 +77,12 @@ font-family: __SolaimanLipi_b8d676 !important;
     background: white;
     width: 94%;
     left: 0;
+    height: 90px;
 }
 
 
     .pc_screen {
-    display: none;
+    display: none !important;
 }
 
     .header_dealer_container {
@@ -145,6 +151,7 @@ font-family: __SolaimanLipi_b8d676 !important;
 	flex-direction: column-reverse;
 	justify-content: space-evenly;
 	margin-right: 2px;
+    height: 20px;
 }
 .auth_container a {
     font-size: 12px;
@@ -156,7 +163,24 @@ font-family: __SolaimanLipi_b8d676 !important;
     height: 23vh;
    
 }
-
+.mbl {
+    position: fixed;
+    top: 59px;
+    width: 94% !important;
+    left: 12px;
+    padding: 0;
+    overflow: hidden;
+}
+.mbl #mqfp{
+    padding: 4px 18px;
+    height: 23px !important;
+}
+.mbl button{
+    padding: 0px 13px;
+    height: 23px;
+    text-align: center;
+    font-size: 14px;
+}
 }
 @endif
 
