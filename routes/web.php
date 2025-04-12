@@ -563,7 +563,6 @@ Route::controller(PageController::class)->group(function () {
         Route::post('/balance-add-action', 'add_action')->name('balance_add_action'); 
     });
 
-
         Route::controller(SettingsController::class)->group(function () {
         Route::get('/company-reserve-setting', 'company_reserve_setting')->name('company_reserve_setting'); 
         Route::post('/company-reserve-condition-create', 'company_reserve_condition_create')->name('company_reserve_condition_create'); 
@@ -576,14 +575,10 @@ Route::controller(PageController::class)->group(function () {
         Route::get('/withdraw-setting', 'withdraw_setting')->name('withdraw_setting'); 
         Route::post('/withdraw-setting-update', 'withdraw_setting_update')->name('withdraw_setting_update'); 
 
-
         Route::get('/sponsor-gen-conditions', 'sponsor_gen_conditions')->name('sponsor_gen_conditions'); 
         Route::post('/sponsor-gen-condition-store', 'sponsor_gen_condition_store')->name('sponsor_gen_condition_store'); 
         Route::post('/sponsor-gen-condition-update', 'sponsor_gen_condition_update')->name('sponsor_gen_condition_update'); 
         Route::post('/sponsor-gen-condition-remove', 'sponsor_gen_condition_remove')->name('sponsor_gen_condition_remove');
-
-
-
 
         Route::get('/working-gen-conditions', 'working_gen_conditions')->name('working_gen_conditions'); 
         Route::post('/working-gen-condition-store', 'working_gen_condition_store')->name('working_gen_condition_store'); 
@@ -610,19 +605,12 @@ Route::controller(PageController::class)->group(function () {
         Route::post('/rank-condition-create', 'rank_condition_create')->name('rank_condition_create'); 
         Route::post('/rank-condition-update', 'rank_condition_update')->name('rank_condition_update'); 
         Route::post('/rank-condition-remove', 'rank_condition_remove')->name('rank_condition_remove'); 
-
         Route::get('/web-config', 'web_config')->name('web_config'); 
         Route::post('/web-config-update', 'web_config_update')->name('web_config_update'); 
-     
-
-       
     });
     
 
 });
-
-
-
 Route::get('/run-queue', [QueueController::class, 'run'])->name('run-queue');
 Route::get('/run-tree-child-arranger', [QueueController::class, 'tree_child_setter'])->name('tree_child_arranger');
 
@@ -631,89 +619,8 @@ Route::get('/link-storage', function () {
     Artisan::call('storage:link');
     return "Storage linked successfully!";
 });
-
-
-
-
-Route::get('/test_sponsor', function () {
-
-    $gsd = global_user_data(); // Fetch global user data
-    $setting = setting(); // Fetch settings
-    $users = User::where('distribute_status', 1)->get(); // Fetch users with distribute status = 1
- 
-    foreach ($users as $user) {
-
-
-      
-    //     $users =  User::where('sponsor_id', $user->id)->get();
     
-    
-    //    // $users = User::where('sponsor_id', $userId)->get();
-    //     foreach ($users as $user) {
-    //         if($user->distribute_status == 1){
-                
-    //             $downlineUsers[] = ['user_id'=>$user->id,'user_name'=>$user->username,'sponsor_id'=>$user->sponsor_id];
-              
-    //            // getDownlineUsersBySps($user->id, $downlineUsers); // Recursive call
-    //         }
-    //     }
-      
-    //     echo "<pre>";
-    //     print_r( $downlineUsers);
-    //     echo "<pre/>";
-    //     echo "<hr/>";
-    //    return $downlineUsers;
-      //  getDownlineUsersBySps($user->id);
-    //  working_generation_income_with_refer($user->id, $user->ref_id, $user->submitted_point) // it is death ;
-    
-       // working_generation_income_with_refer($user, $conds)  ;
-       sponsor_generation_income_with_sponsor($user->id);
-        //matrix_income($user->id);
-
-//         $dbcs = DirectBonusCondition::all();
-//         $ckv = 0;
-//         foreach ($dbcs as $dbc) {
-//             if ($user->submitted_point >= $dbc->point) {
-//                 $ckv++;
-//             }
-//         }
-       
-
-//         if($ckv > 0){
-           
-//              //  Calculate bonus
-//             $prevbalance = $user->balance;
-//             $dbcm = $user->submitted_point / 100 * $dbcs[$ckv - 1]->commission;
-//             $dbcm -= $dbcm / 100 * $setting->income_charge;
-
-//             // Update user balance and income
-//             $user->balance += $dbcm;
-//             $user->total_income += $dbcm;
-//             $user->save();
-
-//            // Log transaction
-//            out_bonus($dbcm);
-//            trxCreate($dbcm, $prevbalance, $user->balance, $user->id, 'direct_bonus', 'Direct bonus from submitted Point', '+', 'N', 'DBT'); 
-//         }
-
-    
-//      }
-
-//     // Reset submission checks
-//     $users = User::where('submit_check', 1)->get();
-//     foreach ($users as $user) {
-//         $user->submit_check = 0;
-//         $user->distribute_status = 0;
-//         $user->save();
-    }
-//     SendBonusSmsJob::dispatch();
-//    // Log success (or you can notify)
-//     Log::info('Point Bonus Send Success');
-});
-
 Route::get('/test_matrix', function () {
-
-  
     $setting = setting();
     $level = $setting->matrix_gen_check; // Get the current matrix level
     $total_member = $setting->set_gen_member; // Set the total number of members in a generation
@@ -800,7 +707,7 @@ Route::get('/test_matrix', function () {
    processUsersInChunks($rearrangedArray);
     echo "Success Run";
     // Process users in chunks
-    // $this->processUsersInChunks($rearrangedArray);
+
     //    BonusBulkSenderJob::dispatch();
     // $this->info('Tree structure has been successfully updated.');
 
