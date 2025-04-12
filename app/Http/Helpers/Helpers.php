@@ -969,7 +969,6 @@ function working_generation_income_with_refer($root_user, $conds){
 
 
 function getSponsorIncomeInsert($root,$down_user_id,$conds,$gen){
-    // dd($conds[$key]);
     
     $user = User::where('id', $root)->first();
     $down_user = User::where('id', $down_user_id)->first();
@@ -980,7 +979,7 @@ function getSponsorIncomeInsert($root,$down_user_id,$conds,$gen){
             $setting = setting();
             if($user->submit_check == 1){ 
                 $prev_balance = $user->balance;
-                $sponsor_amount = $user->submitted_point / 100 * $conds[$gen-1]->amount;
+                $sponsor_amount = $down_user->submitted_point / 100 * $conds[$gen-1]->amount;
                 $sponsor_amount -= $sponsor_amount / 100 * $setting->income_charge;
                 $user->balance += $sponsor_amount;
                 $user->total_income += $sponsor_amount;
