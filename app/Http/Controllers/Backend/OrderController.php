@@ -10,6 +10,7 @@ use App\Models\PointSaleHistory;
 use App\Models\Product;
 use App\Models\Package;
 use App\Models\User;
+use App\Models\Dealer;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
@@ -19,8 +20,16 @@ class OrderController extends Controller
 {
     public function packageOrders(Request $request){
         $gsd = global_user_data();
+        $dealer = Dealer::where("user_id", $gsd->id)->exists();
+       // dd(Order::where('order_type','package')->where('dealer_id',$gsd->id)->get());
+        
         if (Auth::id() == 1){
          $orders = Order::where('order_type','package')->with(['order_detail.package','user','shipping_address'])->latest('id')->paginate(10);
+      
+        }else if( $dealer == true){
+          
+            $orders = Order::where('order_type','package')->where('dealer_id',$gsd->id)->with(['order_detail.package','user','shipping_address'])->latest('id')->paginate(10);
+            
         }else{
           $orders = Order::where('user_id',$gsd->id)->where('order_type','package')->with(['order_detail.package','user','shipping_address'])->latest('id')->paginate(10);
         }
@@ -31,8 +40,13 @@ class OrderController extends Controller
 
     public function productOrders(Request $request){
         $gsd = global_user_data();
+        $dealer = Dealer::where("user_id", $gsd->id)->exists();
+       
         if (Auth::id() == 1){
             $orders = Order::where('order_type','product')->with(['order_detail.product','user','shipping_address'])->latest('id')->paginate(10);
+        }else if( $dealer == true){
+            
+            $orders = Order::where('order_type','product')->where('dealer_id',$gsd->id)->with(['order_detail.product','user','shipping_address'])->latest('id')->paginate(10);
         }else{
             $orders = Order::where('user_id',$gsd->id)->where('order_type','product')->with(['order_detail.product','user','shipping_address'])->latest('id')->paginate(10);
         }
@@ -84,7 +98,8 @@ class OrderController extends Controller
 
     public function product_order_status_change(Request $request){
          $gsd = global_user_data();
-        if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
+         if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
+
             $setting = setting();
         $order = Order::where('id',$request->id)->with('order_detail')->first();
         if($order->status != "Delivered" && $request->order_status == "Returned" &&  $order->status != "Returned"){
@@ -179,8 +194,8 @@ class OrderController extends Controller
     public function product_order_payment_status_change(Request $request){
             $setting = setting();
              $gsd = global_user_data();
-             if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
-            $gsd = global_user_data();
+             if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
+             $gsd = global_user_data();
             $order = Order::where('id',$request->id)->with('order_detail')->first();
             $order->payment_status = $request->payment_status;
             $order->save();
@@ -196,7 +211,8 @@ class OrderController extends Controller
     }  
     public function product_order_shipping_cost_change(Request $request){
          $gsd = global_user_data();
-            if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
+         if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
+         {
         $order = Order::where('id',$request->id)->first();
         $order->shipping_cost = $request->amount;
         $order->save();
@@ -237,7 +253,8 @@ public function generate_package_invoice(Request $request){
 
 public function package_order_status_change(Request $request){
       $gsd = global_user_data();
-            if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
+      if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
+{
     $order = Order::where('id',$request->id)->first();
     $order->status = $request->order_status;
     $order->save();
@@ -253,7 +270,8 @@ public function package_order_status_change(Request $request){
 public function package_order_payment_status_change(Request $request){
      $setting = setting();
     $gsd = global_user_data();
-        if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
+    if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
+
     $order = Order::where('id',$request->id)->with('order_detail')->first();
     $order->payment_status = $request->payment_status;
     $order->save();
@@ -320,8 +338,8 @@ public function package_order_payment_status_change(Request $request){
 }  
 public function package_order_shipping_cost_change(Request $request){
       $gsd = global_user_data();
-            if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
-            $order = Order::where('id',$request->id)->first();
+      if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
+        $order = Order::where('id',$request->id)->first();
             $order->shipping_cost = $request->amount;
             $order->save();
         

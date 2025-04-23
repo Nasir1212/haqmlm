@@ -102,7 +102,7 @@
         </div>
         <div class="col-12 col-md-4">
             <div class="card h-100 w-100 p-2">
-                @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1)
+                @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
                 <div class="card">
                     <h4>Order & Shipping Info</h4>
                     <div class="mb-2">
@@ -213,7 +213,7 @@
        
     </div>
 </div>
- @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1)
+ @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
 <div class="modal fade" id="payment_status" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -277,7 +277,8 @@
         background: rgb(36, 36, 36);
     }
 </style>
- @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1)
+@if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
+
 <script>
  $(document).on('click', '#shipping_c_update', function () {
         

@@ -27,7 +27,8 @@
 
 										<th class="text-center">Payment Status</th>
 										<th class="text-center">Order Status</th>
-										@if (auth()->user()->id == 1)
+										@if (auth()->user()->id == 1 || is_dealer(auth()->user()->id) == true )
+
 										<th class="text-center">Action</th>
 										@endif
 									</tr>
@@ -62,7 +63,7 @@
 											
 										
 										</td>
-										@if (auth()->user()->id == 1)
+										@if (auth()->user()->id == 1 || is_dealer(auth()->user()->id) == true )
 										<td>
 											<a href="{{ route('package_order_details',['id'=>$order->id])}}" class="btn btn-primary">See</a>
 											<button class="btn btn-danger">Delete</button>

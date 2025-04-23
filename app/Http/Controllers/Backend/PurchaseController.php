@@ -232,6 +232,17 @@ class PurchaseController extends Controller
     public function packageConfirmOrder(Request $request)
      {
         $gsd = global_user_data();
+        $selected_dealer = DealerSelection::where('user_id', $gsd->id)->with('dealer')->first();
+    
+        if(!$selected_dealer){
+         $selected_dealer = new DealerSelection();
+         $selected_dealer->user_id = $gsd->id;
+         $selected_dealer->dealer_id = 1;
+         $selected_dealer->save();
+  
+      }
+
+        $gsd = global_user_data();
         $setting = setting();
         $package = Package::where('id', $request->package_id)->first();
         $shipping_cost = 0;
@@ -303,6 +314,7 @@ class PurchaseController extends Controller
                 
             $order = new Order();
             $order->user_id = $gsd->id;
+            $order->dealer_id =  $selected_dealer->dealer_id;
            
             $order->order_type = 'package';
             $order->shipping_cost = $shipping_cost;

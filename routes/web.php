@@ -620,96 +620,13 @@ Route::get('/link-storage', function () {
     return "Storage linked successfully!";
 });
     
-Route::get('/test_matrix', function () {
-    $setting = setting();
-    $level = $setting->matrix_gen_check; // Get the current matrix level
-    $total_member = $setting->set_gen_member; // Set the total number of members in a generation
-    
-    // Fetch all user_ids from UserExtra
-    $userIds = UserExtra::pluck('user_id')->toArray();
-    $originalArray = $userIds; // Original array of user IDs
-    $elementsToMove = []; // Elements to be moved to the end of the array
+Route::get('/test', function () {
 
-    // Truncate the UserExtra table
-    UserExtra::truncate();
-
-    $lv = "lv_" . $level;
-    foreach ($originalArray as $key => $user) {
-
-    $current_user = User::where('id',$user)->first();
-
-        // Fetch the user's level data from MatrixLevel
-        $check_level = MatrixLevel::where('user_id', $user)->first();
-
-        
-        $another_check = 0;
-        if ($check_level) {
-            $data = json_decode($check_level->$lv);
-            if (count($data) == $total_member) {
-                $elementsToMove[] = $user; // Mark users with full levels to be moved
-              
-            }else{
-                $another_check = 1;
-            }
-        }else{
-            $another_check = 1;
-        }
-        
-        if($another_check == 1){
-         
-            if ($current_user->submit_check == 0) {
-                $elementsToMove[] = $user; // Mark users with not submit point  to be moved
-             
-            }
-        }
-    
-
-       // Check if the user is the root user (ID=1)
-        if ($user == 1) {
-            $u = User::find(1); // Fetch user with ID=1
-            $extra = new UserExtra(); // Create new UserExtra entry
-            $extra->user_id = $user;
-            $extra->fill_check = 0;
-            $extra->root_level = 1;
-            $extra->level_cap = 1;
-            $extra->left = 0;
-            $extra->middle = 0;
-            $extra->right = 0;
-            $extra->rank = 0;
-            $extra->pos_id = 0;
-            $extra->position = 0;
-            $extra->parent_id = 0;
-            $extra->user_name = $u->username;
-            $extra->save();
-        }
-
-      //  Update matrix level for the user
-       matrixLUpdate($user);
+    $users = User::where('distribute_status', 0)->get(); // Fetch users with distribute status = 1
+    $conds =  WorkingGenCondition::all();
+    foreach ($users as $user) {
+        echo "user_id $user->id user name $user->username, Invest Status $user->invest_status Income Strike $user->income_strike <br/><br/>";
     }
-
-    // Separate the elements to move and the rest
-    $remainingElements = [];
-    $movingElements = [];
-
-   // Iterate through the original array to collect elements
-    foreach ($originalArray as $element) {
-        if (in_array($element, $elementsToMove)) {        
-            $movingElements[] = $element; // Collect elements to move
-        } else {
-            $remainingElements[] = $element; // Collect remaining elements      
-
-        }
-    }
-
-    
-    // Merge remaining elements and moving elements  
-    $rearrangedArray = array_merge($remainingElements, $movingElements);
-   processUsersInChunks($rearrangedArray);
-    echo "Success Run";
-    // Process users in chunks
-
-    //    BonusBulkSenderJob::dispatch();
-    // $this->info('Tree structure has been successfully updated.');
 
 });
 
