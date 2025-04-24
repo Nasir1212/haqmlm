@@ -107,7 +107,7 @@
     <div class="container">
         <div class="w-100 tex-tright mt-3" id="print-buttons">
               <button onclick="handlePrint()" class="btn btn-info">Print</button>
-                    <a href="{{ route('generate_product_invoice_download', ['id'=>$order->id])}}" class="btn btn-info">Download</a>
+                    {{-- <a href="{{ route('generate_product_invoice_download', ['id'=>$order->id])}}" class="btn btn-info">Download</a> --}}
             
         </div>
                           
@@ -117,6 +117,7 @@
                     <h1 style="" class="inv_company_name">{{ $setting->company_name }}</h1>
                     <h5 style="" class="inv_title"><strong>Off/Online Digital Affiliate Shop</strong></h5>
                     <h5 style="" class="inv_address">{{ $setting->company_address }}</h5> 
+                    <h5 style="" class="inv_address">Branch: <Strong> {{ $order->dealer->name }} </Strong> </h5> 
                     <h4 style="" class="inv_help_line"><strong>Help-line: {{ $setting->company_helpline }}</strong></h4>
                 </td>
                 <td style="text-align: right">  

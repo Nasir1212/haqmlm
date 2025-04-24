@@ -62,8 +62,9 @@ class OrderController extends Controller
     public function generate_product_invoice(Request $request){
         $gsd = global_user_data();
         $setting = setting();
-          $order = Order::where('id',$request->id)->with(['order_detail.product','user.sponsor','shipping_address','billing_address'])->first();
+          $order = Order::where('id',$request->id)->with(['order_detail.product','user.sponsor','shipping_address','billing_address','dealer'])->first();
           $user_address = json_decode($order->user->address);
+         
      
          return  view('Admin.orders.product.invoice',compact('order','gsd','setting','user_address'));
      

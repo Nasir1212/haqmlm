@@ -35,4 +35,9 @@ class Order extends Model
     public function billing_address(){
         return $this->hasOne(BillingAddress::class, 'id','billing');
     }
+
+    public function dealer()
+{
+    return $this->belongsTo(Dealer::class,'dealer_id','user_id');
+}
 }
