@@ -97,7 +97,35 @@
                         </dl>
                     </div>
                 </div>
-                Total Point {{ $totalp }}
+                <div class="d-flex justify-content-between">
+                    <div>Total Point {{ $totalp }}</div>
+                    <div>
+                        <button  class="btn btn-sm btn-primary"  data-toggle="modal" data-target=".bd-example-modal-lg">Add Product</button>
+                    </div>
+                </div>
+<hr style="color: white;background:white">
+                <div class="row">
+                    <form class="d-flex">
+                        <div class=" col-6">
+                           <img style="width:200px;height:100px" src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt="">
+                           <h5>Nasir Uddin abced utility</h5>
+                         
+                        </div>
+                        <div class=" col-2">
+                            <label for="" class="form-label">Price</label>
+                            <input type="text" class="form-control" id="qty_id" value="13343" readonly  >
+                        </div>
+                        <div class=" col-2">
+                            <label for="" class="form-label">Qty</label>
+                            <input type="text" class="form-control" id="qty_id" value="1" placeholder="Enter Qty"  pattern="\d*" inputmode="numeric">
+                        </div>
+                       <div class="col-2">
+
+                           <button type="submit" class="btn btn-danger">x</button>
+                       </div>
+                    </form>
+                </div>
+                
             </div>
         </div>
         <div class="col-12 col-md-4">
@@ -256,6 +284,44 @@
 </div>
 @endif
 
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="card">
+        <div class="card-body">
+            <h5>Select Product</h5>
+            <div>
+                <div class="row">
+                    @foreach ($products as $product)
+                   
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="card details_product_card_section" data-product="[{id:{{ $product->id }},name:{{ $product->name}},price:{{ $product->main_price }},dealer_id:{{ $order->dealer->user_id }},img:{{ $product->img_name }}}]" style="border: 1px solid white">
+                            <div class="card-body">
+                                <div>
+                                    {{-- <img src="{{ url('/') }}/{{ $product->img_name}}" alt=""> --}}
+                                    <img style="width: 150px;height:150px " src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt="">
+                                </div>
+                                <h5>{{$product->name}}</h5>
+                                <h6>Price : <Strong>{{$product->main_price}} </Strong></h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    @endforeach
+                </div>
+            </div>
+        </div>
+        <div class="card-footer ">
+            <div class="float-right">
+                <button class="btn btn-sm btn-primary" onclick="handle_select_product(this)">Next</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
 <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
@@ -275,6 +341,16 @@
     .ops_unpaid {
         color: rgb(226, 226, 226);
         background: rgb(36, 36, 36);
+    }
+
+    .details_product_card_section{
+        cursor: pointer;
+    }
+    /* .details_product_card_section:hover{
+        opacity: 0.6;
+    } */
+    .buy{
+        opacity: 0.4;
     }
 </style>
 @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
@@ -420,6 +496,30 @@
             }
         })
                 }
+
+        document.addEventListener("DOMContentLoaded", function() {
+        const productCards = document.querySelectorAll('.details_product_card_section');
+        productCards.forEach(card => {
+        card.addEventListener('click', function() {
+        this.classList.toggle('buy');
+        });
+        });
+        });
+
+        function handle_select_product(e){
+            
+            const buy = document.querySelectorAll('.buy');
+        buy.forEach(b => {
+         let data = b.getAttribute('data-product');
+         console.log(data);
+       
+        });
+
+            //  data-product="[{id:{{ $product->id }},name:{{ $product->name}},price:{{ $product->main_price }},dealer_id:}]"
+        }
+
+
+
 </script>
 @endif
 @endsection

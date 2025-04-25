@@ -55,8 +55,18 @@ class OrderController extends Controller
 
     public function productOrderDetails(Request $request){
         $gsd = global_user_data();
-        $order = Order::where('id',$request->id)->with(['order_detail.product','user','shipping_address','billing_address'])->first();
-        return view('Admin.orders.product.details',compact('order','gsd'));
+        $order = Order::where('id',$request->id)->with(['order_detail.product','user','shipping_address','billing_address','dealer'])->first();
+        // $order = Order::where('id',$request->id)->with(['order_detail.product','user.sponsor','shipping_address','billing_address','dealer'])->first();
+        //dd($order->dealer->user_id);
+        $products = Product::select('products.*', 'product_owners.qty as owner_qty')
+        ->join('product_owners', 'products.id', '=', 'product_owners.product_id')
+        ->where('product_owners.dealer_id', $order->dealer->user_id)
+        ->latest('products.id')
+        ->get();
+        // ->paginate(24);
+
+       
+        return view('Admin.orders.product.details',compact('order','gsd','products'));
     }
 
     public function generate_product_invoice(Request $request){
