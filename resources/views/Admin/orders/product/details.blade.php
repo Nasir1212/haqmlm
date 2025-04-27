@@ -105,24 +105,11 @@
                 </div>
 <hr style="color: white;background:white">
                 <div class="row">
-                    <form class="d-flex">
-                        <div class=" col-6">
-                           <img style="width:200px;height:100px" src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt="">
-                           <h5>Nasir Uddin abced utility</h5>
-                         
-                        </div>
-                        <div class=" col-2">
-                            <label for="" class="form-label">Price</label>
-                            <input type="text" class="form-control" id="qty_id" value="13343" readonly  >
-                        </div>
-                        <div class=" col-2">
-                            <label for="" class="form-label">Qty</label>
-                            <input type="text" class="form-control" id="qty_id" value="1" placeholder="Enter Qty"  pattern="\d*" inputmode="numeric">
-                        </div>
-                       <div class="col-2">
+                    <form >
+                        <div id="selected_product_rebuy">
 
-                           <button type="submit" class="btn btn-danger">x</button>
-                       </div>
+                        </div>
+                       
                     </form>
                 </div>
                 
@@ -296,7 +283,7 @@
                     @foreach ($products as $product)
                    
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="card details_product_card_section" data-product="[{id:{{ $product->id }},name:{{ $product->name}},price:{{ $product->main_price }},dealer_id:{{ $order->dealer->user_id }},img:{{ $product->img_name }}}]" style="border: 1px solid white">
+                        <div class="card details_product_card_section" data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" style="border: 1px solid white">
                             <div class="card-body">
                                 <div>
                                     {{-- <img src="{{ url('/') }}/{{ $product->img_name}}" alt=""> --}}
@@ -507,18 +494,57 @@
         });
 
         function handle_select_product(e){
+            let temp = ``;
             
             const buy = document.querySelectorAll('.buy');
+            let productArray = [];
         buy.forEach(b => {
          let data = b.getAttribute('data-product');
-         console.log(data);
-       
+         let parseData = JSON.parse(data.replace(/'/g, '"'));
+         console.log(parseData[0]);
+         
+         temp += `
+         <div class="d-flex" id="single_product_list_${parseData[0] }" >
+                <div class=" col-6">
+                    <img style="width:200px;height:100px" src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt="">
+                    <h5>${parseData[1]}</h5>
+                    
+                </div>
+                <div class=" col-2">
+                    <label for="" class="form-label">Price</label>
+                    <input type="text" class="form-control" name="price" value="${parseData[2]}" readonly  >
+                    <input type="hidden" class="form-control" name="id" id="" value="${parseData[0]}" readonly  >
+                    <input type="hidden" class="form-control" name="dealer_id" id="" value="${parseData[3]}" readonly  >
+                </div>
+                <div class=" col-2">
+                    <label for="" class="form-label">Qty</label>
+                    <input type="text" class="form-control" id="qty" value="1" placeholder="Enter Qty" >
+                </div>
+                <div class="col-2 mt-3">
+
+                    <button type="button" onclick="close_single_product_list(this,${parseData[0]})" class="btn btn-danger">x</button>
+                </div>
+        </div>
+        <hr class="single_product_list_${parseData[0] }" style="border-top: 1px solid white";/>
+         
+         `;
         });
-
-            //  data-product="[{id:{{ $product->id }},name:{{ $product->name}},price:{{ $product->main_price }},dealer_id:}]"
+        document.getElementById('selected_product_rebuy').innerHTML = temp+=`
+        <div class="float-right">
+          <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        `;
+        console.log(temp)
+        $('.bd-example-modal-lg').modal('hide');
         }
+        // data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" 
 
+        
+        function close_single_product_list(e,id){
+            document.getElementById(`single_product_list_${id}`).remove();
+            document.querySelector(`.single_product_list_${id}`).remove();
 
+        }
 
 </script>
 @endif
