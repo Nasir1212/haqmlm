@@ -20,6 +20,9 @@
                     </div>
                     <div class="col-12 col-md-6 text-right">
                         <a href="{{ route('generate_product_invoice', ['id'=>$order->id])}}" class="btn btn-info">Print Invoice</a>
+                        @if( $order->status =='Pending')
+                        <a href="{{ request()->fullUrl() }}?edit=ok" class="btn btn-info">Edit Invoice</a>
+                        @endif
                     </div>
                 </div>
                 <div class="text-right my-4">
@@ -27,7 +30,11 @@
                     <div class="mb-1">Payment Method : <strong>{{$order->payment_method}}</strong></div>
                     <div class="mb-1">Payment Status: <span class="ops_unpaid">{{$order->payment_status}}</span></div>
                 </div>
- <div class="product_info_table">
+                <div class="product_info_table">
+                    @if(!is_null(request()->query('edit')) && $order->status =='Pending')
+                <form action="{{ route('product_order_confirm_edit') }} " method="POST">
+                    @csrf
+                    @endif
                 <table class="table fz-12 table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table w-100">
                     <thead class="thead-light thead-50 text-capitalize">
                         <tr>
@@ -56,7 +63,17 @@
                                         <h6 class="title-color">{{$odd->product->name}}</h6>
                                         <div><strong>Price :</strong> {{$odd->price}}/- TK</div>
                                         <div><strong>Point :</strong> {{ $odd->product->point}}</div>
-                                        <div><strong>Qty :</strong> {{ $odd->qty}}</div>
+                                        @if(!is_null(request()->query('edit')) && $order->status =='Pending')
+                                        <input type="hidden" name="prev_qty[]" value="{{$odd->qty}}">
+                                        <input type="hidden" name="order_details_id[]" value="{{$odd->id}}">
+                                        <input type="hidden" name="order_id[]" value="{{$odd->order_id}}">
+                                        <input type="hidden" name="product_id[]" value="{{$odd->product_id}}">
+                                        <input type="hidden" name="dealer_id[]" value="{{$order->dealer->user_id}}">
+                                       
+                                        <div><strong>Qty :</strong> <input type="text" class="form-control" name="qty[]" value="{{ $odd->qty }}"></div>
+                                    @else
+                                        <div><strong>Qty :</strong> {{ $odd->qty }}</div>
+                                    @endif
                                        
                                     </div>
                                 </div>
@@ -77,7 +94,24 @@
                         </tr>
                         @endforeach
                     </tbody>
+                    @if(!is_null(request()->query('edit')))
+                       <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td> 
+                                <button class="btn btn-sm btn-success" type="submit">Update</button>
+                             </td>
+                        </tr>
+                       </tfoot>
+                    @endif
                 </table>
+                @if(!is_null(request()->query('edit')))
+            </form>
+         @endif
 </div>
                 <div class="row justify-content-md-end mb-3">
                     <div class="col-md-9 col-lg-8">
@@ -99,9 +133,11 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <div>Total Point {{ $totalp }}</div>
+                    @if( $order->status =='Pending')
                     <div>
                         <button  class="btn btn-sm btn-primary"  data-toggle="modal" data-target=".bd-example-modal-lg">Add Product</button>
                     </div>
+                    @endif
                 </div>
 <hr style="color: white;background:white">
                 <div class="row">
@@ -270,7 +306,7 @@
     </div>
 </div>
 @endif
-
+@if( $order->status =='Pending')
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -282,7 +318,8 @@
                 <div class="row">
                     
                     @foreach ($products as $product)
-                 
+                    @foreach ($order->order_detail as $key => $odd)
+                    @if($odd->product_id !=$product->id )
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card details_product_card_section" data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" style="border: 1px solid white">
                             <div class="card-body">
@@ -295,7 +332,8 @@
                             </div>
                         </div>
                     </div>
-
+                    @endif
+                    @endforeach
                     @endforeach
                 </div>
             </div>
@@ -309,6 +347,7 @@
     </div>
   </div>
 </div>
+@endif
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>
@@ -539,7 +578,6 @@
         console.log(temp)
         $('.bd-example-modal-lg').modal('hide');
         }
-        // data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" 
 
         
         function close_single_product_list(e,id){

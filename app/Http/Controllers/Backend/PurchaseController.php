@@ -231,7 +231,11 @@ class PurchaseController extends Controller
 
     public function productConfirmReOrder(Request $request)
     {
+        $data = $request->except('_token'); // get all data except _token
 
+        if (empty($data)) {
+            return back()->withErrors('No data submitted.');
+        }
         $prices = $request->input('price');        // Array of prices
         $ids = $request->input('id');               // Array of IDs
         $dealer_ids = $request->input('dealer_id'); // Array of dealer IDs
@@ -243,14 +247,6 @@ class PurchaseController extends Controller
             $dealerId = $dealer_ids[$index];
             $quantity = $qtys[$index];
             $orderId = $order_id[$index];
-    
-           
-            logger("Product ID: $productId, Price: $price, Dealer ID: $dealerId, Quantity: $quantity,order_id: $orderId");
-        
-    
-        // You can return a response after processing
-        // return redirect()->back()->with('success', 'Order submitted successfully!');
-
         // dd($request->all());
          $gsd = global_user_data();
         
@@ -302,6 +298,89 @@ class PurchaseController extends Controller
             
             notify()->success('Order Creating success!');
             return back();
+            
+        
+    }
+
+    public function productConfirmOrderEdit(Request $request)
+    {
+
+        $prevQty = $request->input('prev_qty');
+        $orderDetailsIds = $request->input('order_details_id');
+        $orderIds = $request->input('order_id');
+        $productIds = $request->input('product_id');
+        $qtys = $request->input('qty');
+        $dealer_ids = $request->input('dealer_id');
+    
+        // Process data (e.g., saving to database)
+        foreach ($orderDetailsIds as $index => $orderDetailsId) {
+            // Example: Updating order details
+            
+                $orev_quantity  = $prevQty[$index];
+                $quantity = $qtys[$index];
+                $orderIds[$index];
+                $productId =$productIds[$index];
+                $dealerId =$dealer_ids[$index];
+          
+        
+    
+  
+        
+         $gsd = global_user_data();
+        
+    
+        $product = Product::where('id', $productId)->first();
+          if (!$product) {
+                    notify()->error('Product not found');
+                    return back();
+                }
+    
+        $owner = ProductOwner::where('dealer_id', $dealerId)
+            ->where('product_id', $productId)
+            ->first();
+    
+      
+        
+        $owner->qty +=array_sum($prevQty);
+        $owner->save();
+    
+        $product->stock += array_sum($prevQty);
+        $product->save();
+
+       
+        if($quantity <=0){
+         OrderDetail::where('id', $orderDetailsId)->delete();
+        }else{
+
+            if (!$owner || $owner->qty < $quantity) {
+                notify()->error('Stock limit or dealer not available');
+                return back();
+            }
+            $final_price = $product->main_price * $quantity;
+            $total_point = $quantity * $product->point;
+        $order_detail = OrderDetail::where('id', $orderDetailsId)->first();
+        if ($order_detail) {
+            $order_detail->order_type = 'product';
+            $order_detail->qty = $quantity;
+            $order_detail->price = $product->main_price;
+            $order_detail->total_price = $final_price;
+            $order_detail->point = $product->point;
+            $order_detail->total_point = $total_point;
+            $order_detail->product_id = $product->id;
+            $order_detail->save();
+        }
+                     
+                    
+                $owner->qty -= $quantity;
+                $owner->save();
+            
+                $product->stock -= $quantity;
+                $product->save();
+        }
+    }
+            
+            notify()->success('Order Updateing success!');
+            return redirect()->to(url('product-order-details/' . $request->order_id[0]));
             
         
     }

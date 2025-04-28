@@ -21,21 +21,23 @@ display: block !important;
                     <img src="{{ asset('/assets/logo.png') }}" >
                     
                 </a>
-                <p style="cursor: pointer">{{global_delar()?->dealer?->country}}</p>
                
-               
+                <div class="dropdown">
+                    <button class=" dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <p style="cursor: pointer">{{global_delar()?->dealer?->country}}</p> <i class="bi bi-caret-down-fill"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                    
+                     
+                        @foreach (dealer_country() as $country) 
+                        <li><a class="dropdown-item" href="#">{{ $country }}</a></li>
+                    @endforeach
+                    
+                    </ul>
+                  </div>
             </div>
         </div>
-        {{-- <button class="  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown  <i class="bi bi-caret-down-fill"></i>
-        </button> --}}
-        {{-- <ul class="dropdown-menu show">
-         
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-            
-        </ul> --}}
+      
    
         <div class="right_part">
             <div class="w-100 dsk pc_screen  mobile_screen_search_bar">   

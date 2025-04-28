@@ -47,6 +47,10 @@ function dealer_check()
     }
 }
 
+function dealer_country(){
+  return array_values(array_unique(Dealer::pluck('country')->toArray()));
+}
+
 function global_delar(){
     if(Auth::check()){
         $gsd = global_user_data();

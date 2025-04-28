@@ -54,7 +54,16 @@
            <div class="col-md-6 col-12">
                 <label for="location_type" class="form-label">Country</label>
                 <div class="input-group">
-                    <input type="text" class="form-control border-start-0" id="country" name="country" value="{{ $dealer->country }}">
+                    @php
+                        $response = Http::get('https://countriesnow.space/api/v0.1/countries');
+                        $data = $response->json(); // whole array
+                        $countries = $data['data']; 
+                        @endphp
+                    <select name="country" id="" class="form-control border-start-0">
+                        @foreach ($countries as $country) 
+                        <option value="{{ $country['country'] }}" @if($country['country'] == $dealer->country ) selected @endif >{{$country['country']}}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="col-md-6 col-12">
