@@ -321,6 +321,7 @@ Route::controller(PageController::class)->group(function () {
         Route::get('/product-order/{slug}', 'productOrder')->name('product_order');
         Route::post('/product-order-confirm', 'productConfirmOrder')->name('product_order_confirm');
         Route::post('/package-order-confirm', 'packageConfirmOrder')->name('package_order_confirm');
+        Route::post('/product-order-reconfirm', 'productConfirmReOrder')->name('product_order_reconfirm');
       
     });  
 

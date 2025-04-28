@@ -105,11 +105,11 @@
                 </div>
 <hr style="color: white;background:white">
                 <div class="row">
-                    <form >
+                    <form action="{{route('product_order_reconfirm')}}" method="POST">
                         <div id="selected_product_rebuy">
 
                         </div>
-                       
+                       @csrf 
                     </form>
                 </div>
                 
@@ -280,16 +280,17 @@
             <h5>Select Product</h5>
             <div>
                 <div class="row">
+                    
                     @foreach ($products as $product)
-                   
-                    <div class="col-lg-6 col-md-6 col-sm-12">
+                 
+                    <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card details_product_card_section" data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" style="border: 1px solid white">
                             <div class="card-body">
                                 <div>
-                                    {{-- <img src="{{ url('/') }}/{{ $product->img_name}}" alt=""> --}}
-                                    <img style="width: 150px;height:150px " src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt="">
+                                    <img style="width: 200px;height:150px" src="{{ url('/') }}/{{ $product->img_name}}" alt="">
+                                    {{-- <img style="width: 150px;height:150px " src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt=""> --}}
                                 </div>
-                                <h5>{{$product->name}}</h5>
+                                <p style="font-size: 12px;font-weight:bold">{{$product->name}}</p>
                                 <h6>Price : <Strong>{{$product->main_price}} </Strong></h6>
                             </div>
                         </div>
@@ -506,19 +507,20 @@
          temp += `
          <div class="d-flex" id="single_product_list_${parseData[0] }" >
                 <div class=" col-6">
-                    <img style="width:200px;height:100px" src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt="">
+                    <img style="width:200px;height:100px" src="{{url('/')}}/${parseData[4]}" alt="">
                     <h5>${parseData[1]}</h5>
                     
                 </div>
                 <div class=" col-2">
                     <label for="" class="form-label">Price</label>
-                    <input type="text" class="form-control" name="price" value="${parseData[2]}" readonly  >
-                    <input type="hidden" class="form-control" name="id" id="" value="${parseData[0]}" readonly  >
-                    <input type="hidden" class="form-control" name="dealer_id" id="" value="${parseData[3]}" readonly  >
+                    <input type="text" class="form-control" name="price[]" value="${parseData[2]}" readonly  >
+                    <input type="hidden" class="form-control" name="id[]" id="" value="${parseData[0]}" readonly  >
+                    <input type="hidden" class="form-control" name="dealer_id[]"  value="${parseData[3]}" readonly  >
+                    <input type="hidden" class="form-control" name="order_id[]"  value="{{ request()->segment(2) }}" readonly  >
                 </div>
                 <div class=" col-2">
                     <label for="" class="form-label">Qty</label>
-                    <input type="text" class="form-control" id="qty" value="1" placeholder="Enter Qty" >
+                    <input type="text" class="form-control" name="qty[]" value="1" placeholder="Enter Qty" >
                 </div>
                 <div class="col-2 mt-3">
 
