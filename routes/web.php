@@ -46,6 +46,7 @@ use App\Http\Controllers\Backend\LocationManageController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\WithdrawController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 
 
 
@@ -619,17 +620,32 @@ Route::get('/run-tree-child-arranger', [QueueController::class, 'tree_child_sett
 
 Route::get('/link-storage', function () {
     Artisan::call('storage:link');
+    
     return "Storage linked successfully!";
+});
+    
+Route::get('/queuework', function () {
+    Artisan::call('queue:work', [
+        '--stop-when-empty' => true
+    ]);
+    
+    return "queue work successfully!";
 });
     
 Route::get('/test', function () {
 
-    $users = User::where('distribute_status', 0)->get(); // Fetch users with distribute status = 1
-    $conds =  WorkingGenCondition::all();
-    foreach ($users as $user) {
-        echo "user_id $user->id user name $user->username, Invest Status $user->invest_status Income Strike $user->income_strike <br/><br/>";
-    }
-
+    $response = Http::get('https://bulksmsbd.net/api/smsapi', [
+        'api_key'  => 'DkNOGGOao6AwQAZHXUq4',
+        'type'     => 'text',
+        'number'   => '01890492444',
+        'senderid' => '8809617611753',
+        'message'  => 'Hello World. I am from Chittagong',
+    ]);
+   if ($response->successful()) {
+    echo "SMS Sent";
+} else {
+    echo "Failed to send SMS: " . $response->body();
+}
 });
 
 

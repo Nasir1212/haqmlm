@@ -28,9 +28,8 @@ display: block !important;
                     </button>
                     <ul class="dropdown-menu">
                     
-                     
-                        @foreach (dealer_country() as $country) 
-                        <li><a class="dropdown-item" href="#">{{ $country }}</a></li>
+                    @foreach (dealer_country() as $country) 
+                        <li><a class="dropdown-item" onclick="get_the_dealer(`{{ $country }}`)">{{ $country }}</a></li>
                     @endforeach
                     
                     </ul>
@@ -239,7 +238,19 @@ display: block !important;
             <a href="{{ route('public_index') }}">
             <img src="{{ asset('/assets/logo.png') }}" alt="">
             </a>
-            <div class="m_country">{{ global_delar()->dealer->country }}</div>
+            {{-- <div class="m_country">{{ global_delar()->dealer->country }}</div> --}}
+            <div class="dropdown ">
+                <button class=" m_country dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{global_delar()?->dealer?->country}}
+                </button>
+                <ul class="dropdown-menu">
+                
+                @foreach (dealer_country() as $country) 
+                    <li><a class="dropdown-item" onclick="get_the_dealer(`{{ $country }}`)">{{ $country }}</a></li>
+                @endforeach
+                
+                </ul>
+              </div>
         </div>
     </div>
 
@@ -279,6 +290,36 @@ display: block !important;
 
 @endif
 
+<div class="modal fade modal-dialog modal-xl" id="dealer_show_modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        <div class="modal-body">
+            <form action="{{ route('dealer_select_for_buying') }}" method="post" id="dealerForm">
+                @csrf
+                <select name="dealer" id="dealerSelect" class="form-select dealerS">
+                    <option >Select Dealer</option>
+                  
+                    @foreach (dealers() as $dealer)
+                    @if (global_delar() != null  )
+                      <option class="country_name {{ $dealer->country }}" @selected(global_delar()->dealer_id == $dealer->user_id) value="{{ $dealer->user_id }}">{{ $dealer->name }} -- {{ $dealer->phone }} -- {{ $dealer->type }} : {{ $dealer->type_name }}</option>
+                    @else
+                    <option class="country_name {{ $dealer->country }}"  value="{{ $dealer->user_id }}">{{ $dealer->name }} - {{ $dealer->phone }} - {{ $dealer->type }}</option>
+                      @endif
+                    @endforeach
+                    
+                  
+                </select>
+            </form>
+          
+        </div>
+       
+      </div>
+    </div>
+  </div>
+
 <style>
     @media(max-width:767px){
        .dsk{
@@ -301,3 +342,30 @@ display: block !important;
     }
     
 </style>
+
+<script>
+    function get_the_dealer (name){
+        const modal = new bootstrap.Modal(document.getElementById('dealer_show_modal'));
+        modal.show();
+
+        document.querySelectorAll('.country_name').forEach(function(el) {
+    el.style.display = 'none';
+});  
+        document.querySelectorAll(`.${name}`).forEach(function(el) {
+    el.style.display = 'block';
+});    }
+
+const dropdown = document.querySelector('.m_country.dropdown-toggle');
+const header = document.querySelector('section.mobile_header');
+
+const observer = new MutationObserver(() => {
+    if (dropdown.classList.contains('show')) {
+        header.style.height = '15rem';
+    } else {
+        header.style.height = ''; // reset or use original height
+    }
+});
+
+observer.observe(dropdown, { attributes: true, attributeFilter: ['class'] });
+   
+</script>

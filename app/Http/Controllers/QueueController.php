@@ -112,13 +112,15 @@ user_finder();
 
 public function run()
 {
-    while (true) {
-        try {
-            $this->runQueueWorker();
-        } catch (\Exception $e) {
-            // Log the exception or handle it as needed
-        }
-    }
+    $this->runQueueWorker();
+    return "Queue Run Success";
+    // while (true) {
+    //     try {
+    //         $this->runQueueWorker();
+    //     } catch (\Exception $e) {
+    //         // Log the exception or handle it as needed
+    //     }
+    // }
 }
 
 protected function runQueueWorker()

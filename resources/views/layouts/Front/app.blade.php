@@ -344,6 +344,14 @@ $(document).on('click', 'ul#product_names .product_name', function () {
               
           });
 
+          
+
+    
+        $('#dealerSelect').on('change', function () {
+            $('#dealerForm').submit();
+        });
+
+
 })(jQuery)
 
          

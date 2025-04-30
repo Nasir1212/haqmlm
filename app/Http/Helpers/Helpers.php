@@ -47,6 +47,12 @@ function dealer_check()
     }
 }
 
+function dealers(){
+    return  $dealers = Dealer::where('status','Active')->latest('id')->get();
+}
+
+
+
 function dealer_country(){
   return array_values(array_unique(Dealer::pluck('country')->toArray()));
 }
@@ -58,7 +64,6 @@ function global_delar(){
     }else{
         return null;
     }
-
 }
 
 function current_select_dealer()
