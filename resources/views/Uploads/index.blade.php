@@ -36,7 +36,8 @@
 
 							<div class="form-group">
 								<label for="media_file" class="w-100 font-weight-bold mb-1">Select Media</label>
-								<input type="file" class="form-control pb-2"  id="media_file" name="media_file">
+								<input type="file" class="form-control pb-2"  id="media_file" name="media_file[]" multiple>
+                              
 							</div>
 							
                             <button type="submit" class="btn btn-success">Upload</button>

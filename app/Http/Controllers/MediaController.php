@@ -6,7 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Upload;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Image;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+
+
+//use Image;
 class MediaController extends Controller
 {
     public function index(Request $request){
@@ -25,8 +30,6 @@ class MediaController extends Controller
             } 
         }
         
-        
-
         return view('Uploads.index', compact('media_list','gsd'));
    
     }
@@ -34,41 +37,47 @@ class MediaController extends Controller
 
 
     public function store(Request $request){
+        
         $gsd = global_user_data();
-        if($request->hasFile('media_file')){
-           $media = new Upload();
-            $dt = Carbon::now();
-            $micro = $dt->micro;
-            $image_obj = $request->file('media_file');
-         
-            $orpath = storage_path('app/public/uploads/'.$request->media_type.'/');
-           
-            $public_path = 'storage/uploads/'.$request->media_type.'/';
-            $image_name = $micro.$image_obj->getClientOriginalName();
-           
-            Image::make($image_obj)->save($public_path.'/'.$image_name);
-            $media->path = $public_path;
-            $media->name = $image_name;
-            $media->media_type = $request->media_type;
+
+    if ($request->hasFile('media_file')) {
+        foreach ($request->file('media_file') as $image_obj) {
+            $media = new Upload();
+
+            // Generate unique name
+            $filename = Str::random(40) . '.' . $image_obj->getClientOriginalExtension();
+            $media_type = $request->media_type;
+            $relative_path = 'uploads/' . $media_type . '/' . $filename;
+            // Save image
+            $image_instance = Image::make($image_obj)->encode(); // You can also resize here
+            Storage::disk('img_disk')->put($relative_path, $image_instance);
+            // Save to DB
+            $media->path = Storage::disk('img_disk')->url('uploads/' . $media_type . '/');
+            $media->name = $filename;
+            $media->media_type = $media_type;
             $media->uploader_id = $gsd->id;
             $media->save();
-            notify()->success('Media Upload Success!');
-            return back();
-        }else{
-            
-            notify()->error('Sorry Something Wrong!');
-            return back();
         }
 
+        notify()->success('All media uploaded successfully!');
+        return back();
     }
 
-    public function remove(Request $request){
-        $media = Upload::where('id', $request->id)->first();
-        $orpath = storage_path('app/public/uploads/'.$media->media_type.'/').$media->name;
-       
-        
-        Upload::destroy($media->id);
-         unlink($orpath);
+    notify()->error('No files selected!');
+    return back();
+    }
+
+    public function remove(Request $request)
+    {
+        $media = Upload::findOrFail($request->id);
+        $relative_path = 'uploads/' . $media->media_type . '/' . $media->name;
+        // Delete file if exists
+        if (Storage::disk('img_disk')->exists($relative_path)) {
+            Storage::disk('img_disk')->delete($relative_path);
+        }
+        // Delete DB record
+        $media->delete();
+        notify()->success('Media removed successfully!');
         return back();
     }
 }

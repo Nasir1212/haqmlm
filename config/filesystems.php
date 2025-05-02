@@ -29,6 +29,12 @@ return [
     */
 
     'disks' => [
+       'img_disk' => [
+        'driver' => 'local',
+        'root' => '/home/haqmulti/img.haqmultishop.com', // Change to your actual server path
+        'url' => env('IMG_URL', 'https://img.haqmultishop.com'),
+        'visibility' => 'public',
+    ],
 
         'local' => [
             'driver' => 'local',

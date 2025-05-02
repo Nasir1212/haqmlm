@@ -6,9 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Upload;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Image;
+// use Image;
 use App\Models\Slider;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
+
 
 class SliderController extends Controller
 {
@@ -27,77 +30,61 @@ class SliderController extends Controller
  
    
    public function store(Request $request){
-       $gsd = global_user_data();
-       if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
-       
+    $gsd = global_user_data();
+
+    if (Auth::id() == 1 || permission_checker($gsd->role_info, 'order_manage') == 1) {
+
         $slider = new Slider();
         $slider->name = $request->name;
- 
-        
-       if ($request->slug == '') {
-           $slider->slug = Str::slug($request->name); 
-       }else{
-           $slider->slug = $request->slug;
-       }
-        
+        $slider->slug = $request->slug ? $request->slug : Str::slug($request->name);
         $slider->target_link = $request->target_link;
-        
-        if($request->hasFile('media_file')){
-         
-           $dt = Carbon::now();
-           $micro = $dt->micro;
-           $image_obj = $request->file('media_file');
-        
-           $orpath = storage_path('app/public/uploads/slider');
-           folderCreate($orpath);
-           $ex_small_path = storage_path('app/public/uploads/slider/extra_small');
-           folderCreate($ex_small_path);
-           $small_path = storage_path('app/public/uploads/slider/small');
-           folderCreate($small_path);
-           $medium_path = storage_path('app/public/uploads/slider/medium');
-           folderCreate($medium_path);
-           $large_path = storage_path('app/public/uploads/slider/large');
-           folderCreate($large_path);
-           
-           $public_path = 'storage/uploads/slider';
-           folderCreate($public_path);
-     
-           
-           $image_name = $micro.$image_obj->getClientOriginalName();
-          
-           $img1 = Image::make($image_obj)->save($orpath.'/'.$image_name);
-           
-           $img2 = Image::make($image_obj)->resize(null, 200, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($small_path.'/'.$image_name);
-           
-           $img3 = Image::make($image_obj)->resize(null, 400, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($medium_path.'/'.$image_name);
-           
-           $img4 = Image::make($image_obj)->resize(null, 600, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($large_path.'/'.$image_name);
-           
-              $img5 = Image::make($image_obj)->resize(null, 50, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($ex_small_path.'/'.$image_name);
-          
-        $slider->created_by = $gsd->id;
-        $slider->image_name = $image_name;
-        $slider->image_path = $public_path."/";
-       }
-        
- 
         $slider->slider_type = 'home';
         $slider->status = $request->status;
+        $slider->created_by = $gsd->id;
+
+        if ($request->hasFile('media_file')) {
+            $image = $request->file('media_file');
+            $image_name = Str::random(40) . '.' . $image->getClientOriginalExtension();
+
+            $base_path = 'uploads/slider/';
+            $full_disk_path = Storage::disk('img_disk')->path($base_path);
+
+            // Save original
+            Storage::disk('img_disk')->makeDirectory($base_path);
+            Image::make($image)->save($full_disk_path . $image_name);
+
+            // Save resized versions
+            $sizes = [
+                'extra_small' => 50,
+                'small' => 200,
+                'medium' => 400,
+                'large' => 600,
+            ];
+
+            foreach ($sizes as $folder => $height) {
+                $folder_path = $base_path . $folder . '/';
+                Storage::disk('img_disk')->makeDirectory($folder_path);
+
+                $resized_image = Image::make($image)->resize(null, $height, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+                $resized_image->save(Storage::disk('img_disk')->path($folder_path . $image_name));
+            }
+
+            $slider->image_name = $image_name;
+            $slider->image_path = 'https://img.haqmultishop.com/uploads/slider/';
+        }
+
         $slider->save();
-        notify()->success('Slider Created Success !');
+        notify()->success('Slider Created Successfully!');
         return back();
-       }else{
-             notify()->error('Permission Not Allow !');
-           return back();
-       }
+
+    } else {
+        notify()->error('Permission Not Allowed!');
+        return back();
+    }
+
    }
    
    public function edit(Request $request){
@@ -109,99 +96,104 @@ class SliderController extends Controller
    }
    
    public function update(Request $request){
-       $gsd = global_user_data();
-       if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
-        $slider =  Slider::where('id',$request->id)->first();
-        $slider->name = $request->name;
- 
-       if ($request->slug == '') {
-           $slider->slug = Str::slug($request->name); 
-       }else{
-           $slider->slug = $request->slug;
-       }
-        
-        $slider->target_link = $request->target_link;
-        
-          if($request->hasFile('media_file')){
-         
-         if($slider){
-         fileDelete($slider->image_path.$slider->image_name);
-         fileDelete($slider->image_path.'small/'.$slider->image_name);
-         fileDelete($slider->image_path.'large/'.$slider->image_name);
-         fileDelete($slider->image_path.'medium/'.$slider->image_name);
-         fileDelete($slider->image_path.'extra_small/'.$slider->image_name);   
-       }
-       
-           $dt = Carbon::now();
-           $micro = $dt->micro;
-           $image_obj = $request->file('media_file');
-        
-           $orpath = storage_path('app/public/uploads/slider/');
-           
-           $ex_small_path = storage_path('app/public/uploads/slider/extra_small/');
-           $small_path = storage_path('app/public/uploads/slider/small/');
-           $medium_path = storage_path('app/public/uploads/slider/medium/');
-           $large_path = storage_path('app/public/uploads/slider/large/');
-           
-           $public_path = 'storage/uploads/slider/';
-     
-           
-           $image_name = $micro.$image_obj->getClientOriginalName();
-          
-           $img1 = Image::make($image_obj)->save($orpath.'/'.$image_name);
-           
-           $img2 = Image::make($image_obj)->resize(null, 200, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($small_path.'/'.$image_name);
-           
-           $img3 = Image::make($image_obj)->resize(null, 400, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($medium_path.'/'.$image_name);
-           
-           $img4 = Image::make($image_obj)->resize(null, 600, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($large_path.'/'.$image_name);
-           
-              $img5 = Image::make($image_obj)->resize(null, 50, function ($constraint) {
-                $constraint->aspectRatio();
-           })->save($ex_small_path.'/'.$image_name);
-          
- 
-        $slider->image_name = $image_name;
-        $slider->image_path = $public_path;
-       }
-       $slider->status = $request->status;
-       $slider->updated_by = $gsd->id;
-        $slider->save();
-             notify()->success('Slider Updated Success !');
+    $gsd = global_user_data();
+
+    if (Auth::id() != 1 && permission_checker($gsd->role_info, 'order_manage') != 1) {
+        notify()->error('Permission Not Allowed!');
         return back();
-    
-       }else{
-             notify()->error('Permission Not Allow !');
-           return back();
-       }
+    }
+
+    $slider = Slider::findOrFail($request->id);
+
+    $slider->name = $request->name;
+    $slider->slug = $request->slug ? $request->slug : Str::slug($request->name);
+    $slider->target_link = $request->target_link;
+    $slider->status = $request->status;
+    $slider->updated_by = $gsd->id;
+
+    // If new image is uploaded
+    if ($request->hasFile('media_file')) {
+        $image = $request->file('media_file');
+        $image_name = Str::random(40) . '.' . $image->getClientOriginalExtension();
+        $media_path = 'uploads/slider/';
+
+        // Delete old images
+        if ($slider->image_name) {
+            $old_paths = [
+                $media_path . $slider->image_name,
+                $media_path . 'extra_small/' . $slider->image_name,
+                $media_path . 'small/' . $slider->image_name,
+                $media_path . 'medium/' . $slider->image_name,
+                $media_path . 'large/' . $slider->image_name,
+            ];
+            foreach ($old_paths as $old) {
+                if (Storage::disk('img_disk')->exists($old)) {
+                    Storage::disk('img_disk')->delete($old);
+                }
+            }
+        }
+
+        // Save new images in different sizes
+        $sizes = [
+            '' => null,
+            'extra_small' => 50,
+            'small' => 200,
+            'medium' => 400,
+            'large' => 600,
+        ];
+
+        foreach ($sizes as $folder => $height) {
+            $path = $media_path . ($folder ? $folder . '/' : '');
+            Storage::disk('img_disk')->makeDirectory($path);
+
+            $img = Image::make($image);
+            if ($height) {
+                $img->resize(null, $height, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+            }
+
+            $img->save(Storage::disk('img_disk')->path($path . $image_name));
+        }
+
+        $slider->image_name = $image_name;
+        $slider->image_path = 'https://img.haqmultishop.com/uploads/slider/';
+    }
+
+    $slider->save();
+
+    notify()->success('Slider updated successfully!');
+    return back();
    }
    
    public function remove(Request $request){
    
-   $gsd = global_user_data();
-       if (Auth::id() == 1 || permission_checker($gsd->role_info,'order_manage') == 1){
-       $slider =  Slider::where('id',$request->id)->first();
-       if($slider){
-         fileDelete($slider->image_path.$slider->image_name);
-         fileDelete($slider->image_path.'small/'.$slider->image_name);
-         fileDelete($slider->image_path.'large/'.$slider->image_name);
-         fileDelete($slider->image_path.'medium/'.$slider->image_name);
-         fileDelete($slider->image_path.'extra_small/'.$slider->image_name);   
-       }
-        
-         
-       Slider::destroy($request->id);
-        notify()->success('Slider Remove Success !');
-        return back();
-       }else{
-             notify()->error('Permission Not Allow !');
-           return back();
-       }
-   }
+    $slider = Slider::findOrFail($request->id);
+
+    // Base folder and image name
+    $base_folder = 'uploads/slider/';
+    $image_name = $slider->image_name;
+
+    // Paths for all sizes including original
+    $paths = [
+        $base_folder . $image_name,                        // Original
+        $base_folder . 'extra_small/' . $image_name,
+        $base_folder . 'small/' . $image_name,
+        $base_folder . 'medium/' . $image_name,
+        $base_folder . 'large/' . $image_name,
+    ];
+
+    // Delete all image files
+    foreach ($paths as $path) {
+        if (Storage::disk('img_disk')->exists($path)) {
+            Storage::disk('img_disk')->delete($path);
+        }
+    }
+
+    // Delete from DB
+    $slider->delete();
+
+    notify()->success('Slider deleted successfully!');
+    return back();
+}
 }
