@@ -52,8 +52,8 @@
                                     <tr>
                                         <td>{{ $key + 1  }}</td>
                                         <td>{{ $data->name }}</td>
-                                        <td>{{ $data->category->name }}</td>
-                                        <td>{{ $data->brand->name }}</td>
+                                        <td>{{ $data->category?->name }}</td>
+                                        <td>{{ $data->brand?->name }}</td>
                                         <td>{{ $data->main_price }}</td>
                                         <td>{{ $data->regular_price }}</td>
                                         <td>{{ $data->point }}</td>

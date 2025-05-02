@@ -17,7 +17,7 @@
                 <div class="carousel-inner bg-dark border">
                         @foreach ($sliders as $key =>  $slider)
                   <div class="carousel-item <?php if($key == 0){ echo 'active';} ?>">
-                    <img src="{{ asset($slider->image_path.$slider->image_name) }}" class="d-block w-100" alt="...">
+                    <img src="{{ $slider->image_path.$slider->image_name }}" class="d-block w-100" alt="...">
                     <div class="carousel-caption d-none d-md-block">
                       <h5>{{ $slider->name }}</h5>
                       
@@ -25,7 +25,7 @@
                   </div>
                   @endforeach
                
-                 
+                
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -41,7 +41,8 @@
 <div class="section_latest">
     <div class="photobanner" style="width:<?php echo count($highlight_products)*130; ?>px">
         @foreach ($highlight_products as $data)
-        <img src="{{ config('app.url', 'Laravel').$data->product->img_name}}" style="width:100px" class="img-fluid">
+        
+        <img src="{{$data->product->img_name}}" style="width:100px" class="img-fluid">
         @endforeach
        
    
@@ -59,7 +60,7 @@
             <div class="col-4 col-md-2">
                 <a href="{{ route('frontend.Brand_product',['slug'=>$item->slug])}}" class="text-center">
                     <div class="img-circle m-auto">
-                        <img src="{{ asset($item->img_name)}}" class="img-fluid" alt="">
+                        <img src="{{$item->img_name}}" class="img-fluid" alt="">
                     </div>
                     
                     <div class="">{{ $item->name }}</div>
@@ -78,7 +79,7 @@
             <div class="col-4 col-md-2">
                 <a href="{{ route('frontend.Category_product',['slug'=>$item->slug])}}"  class="text-center">
                     <div class="img-circle m-auto">
-                        <img src="{{ asset($item->img_name)}}" class="img-fluid" alt="">
+                        <img src="{{ $item->img_name}}" class="img-fluid" alt="">
                     </div>
                     <div class="">{{ $item->name }}</div>
                 </a>
@@ -122,7 +123,7 @@
                 <div class="product_wrapper">
                     <div class="product_details">
                         <div class="img">
-                            <img src="{{ config('app.url', 'Laravel').$product->img_name}}" class="img-fluid" alt="">
+                            <img src="{{ $product->img_name}}" class="img-fluid" alt="">
                         </div>
                         <div class="product_title">
                             {{ $product->name }}

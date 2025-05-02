@@ -13,6 +13,7 @@ use App\Models\RankCondition;
 use Carbon\Carbon;
 use App\Models\CompanyReserveFund;
 use Image;
+use Illuminate\Support\Str;
 
 class PaymentAccountController extends Controller
 {
@@ -293,15 +294,17 @@ class PaymentAccountController extends Controller
         $payAccount->account = $request->account_number;
         $payAccount->charge = $request->charge;
         $payAccount->description = $request->account_details;
-
-        if($request->hasFile('account_qr')){
-            $dt = Carbon::now();
-            $micro = $dt->micro;
-            $image_obj = $request->file('account_qr');
-            $orpath = storage_path('app/public/uploads/payment-account/');
-            $image_name = $micro.$image_obj->getClientOriginalName();
-            $public_path = 'storage/uploads/payment-account/';
-            Image::make($image_obj)->save($orpath.'/'.$image_name);
+        if ($request->hasFile('account_qr')) {
+            $image = $request->file('account_qr');
+            $request->validate([
+                'account_qr' => 'image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+        
+            $dt = Carbon::now()->format('Ymd_His_u');
+            $image_name = $dt . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $folder_path = 'payment-account/';
+            $image_resized = Image::make($image)->encode();
+            Storage::disk('img_disk')->put($folder_path . $image_name, $image_resized->__toString());
             $payAccount->account_qr_code = $image_name;
         }
 
@@ -340,14 +343,20 @@ class PaymentAccountController extends Controller
         $payAccount->charge = $request->charge;
         $payAccount->description = $request->account_details;
 
-        if($request->hasFile('account_qr')){
-            $dt = Carbon::now();
-            $micro = $dt->micro;
-            $image_obj = $request->file('account_qr');
-            $orpath = storage_path('app/public/uploads/payment-account/');
-            $image_name = $micro.$image_obj->getClientOriginalName();
-            $public_path = 'storage/uploads/payment-account/';
-            Image::make($image_obj)->save($orpath.'/'.$image_name);
+       
+        if ($request->hasFile('account_qr')) {
+            $image = $request->file('account_qr');
+            $dt = Carbon::now()->format('Ymd_His_u');
+            $image_name = $dt . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $folder_path = 'payment-account/';
+            if ($payAccount->account_qr_code) {
+                $old_path = $folder_path . $payAccount->account_qr_code;
+                if (Storage::disk('img_disk')->exists($old_path)) {
+                    Storage::disk('img_disk')->delete($old_path);
+                }
+            }
+            $image_resized = Image::make($image)->encode();
+            Storage::disk('img_disk')->put($folder_path . $image_name, $image_resized->__toString());
             $payAccount->account_qr_code = $image_name;
         }
 
@@ -366,6 +375,19 @@ class PaymentAccountController extends Controller
     public function payaccount_remove_account(Request $request){
         $gsd = global_user_data();
          if (Auth::id() == 1 || permission_checker($gsd->role_info,'account_manage') == 1){
+            
+
+            $payAccount = PayAccounts::findOrFail($request->id);
+            $folder_path = 'payment-account/';
+        
+            if ($payAccount->account_qr_code) {
+                $file_path = $folder_path . $payAccount->account_qr_code;
+        
+                if (Storage::disk('img_disk')->exists($file_path)) {
+                    Storage::disk('img_disk')->delete($file_path);
+                }
+        
+            }
         PayAccounts::destroy($request->id);
         notify()->success('Remove Success');
         return back();
