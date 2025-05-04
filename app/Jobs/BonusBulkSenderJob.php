@@ -31,10 +31,6 @@ class BonusBulkSenderJob implements ShouldQueue
         $conds =  WorkingGenCondition::all();
         foreach ($users as $user) {
               
-            working_generation_income_with_refer($user, $conds)  ;
-            sponsor_generation_income_with_sponsor($user->id);
-            matrix_income($user->id);
-
             $dbcs = DirectBonusCondition::all();
             $ckv = 0;
             foreach ($dbcs as $dbc) {
@@ -60,6 +56,9 @@ class BonusBulkSenderJob implements ShouldQueue
                out_bonus($dbcm);
                trxCreate($dbcm, $prevbalance, $user->balance, $user->id, 'direct_bonus', 'Direct bonus from LSP '.$user->submitted_point, '+', 'N', 'DBT'); 
             }
+            working_generation_income_with_refer($user, $conds)  ;
+            sponsor_generation_income_with_sponsor($user->id);
+            matrix_income($user->id);
 
         
          }
@@ -71,7 +70,7 @@ class BonusBulkSenderJob implements ShouldQueue
             $user->distribute_status = 0;
             $user->save();
         }
-       SendBonusSmsJob::dispatch();
+      //SendBonusSmsJob::dispatch();
        // Log success (or you can notify)
         Log::info('Point Bonus Send Success');
 

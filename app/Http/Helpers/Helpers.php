@@ -819,6 +819,7 @@ $prevpoint = $root_user->balance;
 $root_user->balance += $amount;
 $root_user->total_income += $amount;
 $root_user->save();
+Log::info("Matrix amount is $amount ". User::where('id',$root_id)->first());
 out_bonus_history($root_user->id,$amount,'non_working_matrix','Bonus Get From level '.$conds[$gen-1]->level.' user - '.$down_user->username);
 trxCreate($amount,$prevpoint,$root_user->balance,$root_id,'non_working_matrix','Bonus Get From level '.$conds[$gen-1]->level.' user - '.$down_user->username.' LSP '.$down_user->submitted_point,'+','N','NWMBT');
 
@@ -944,30 +945,28 @@ function getValidDownlineByGeneration($userId, $generation = 1, &$generations = 
 
 
 function working_generation_income_with_refer($root_user, $conds){
-    
     $generations=[];
-
-   
     $dd = getValidDownlineByGeneration($root_user->id,1,$generations,count($conds));
     $setting = setting();
     foreach($dd as $key=>$d){
       
         foreach($d as $t ){
-           
-            if($root_user->submit_check == 1){ 
-                $prev_balance = $root_user->balance;
+            
+          $rt_user  =  User::where('id',$root_user->id)->first();
+            if($rt_user->submit_check == 1){ 
+                $prev_balance = $rt_user->balance;
                 $working_gen_amount = $t['submitted_point'] / 100 * $conds[$key-1]->amount;
                 $working_gen_amount -= $working_gen_amount / 100 * $setting->income_charge;
             
-                $root_user->balance += $working_gen_amount;
-                $root_user->total_income += $working_gen_amount;
+                $rt_user->balance += $working_gen_amount;
+                $rt_user->total_income += $working_gen_amount;
                 $tremark = 'working_gen'; 
               $tdetails = " Get Working Generation from -- ".$t['username']."  --  ".$conds[$key- 1]->level."   LSP  ".formatAmount($t['submitted_point']);
-          
-             $root_user->save();
-            out_bonus_history($root_user->id,$working_gen_amount,'working_gen',$tdetails);
+             $rt_user->save();
+             Log::info("Working Generation Amount is  $working_gen_amount ". User::where('id',$root_user->id)->first());
+            out_bonus_history($rt_user->id,$working_gen_amount,'working_gen',$tdetails);
             out_bonus($working_gen_amount);
-            trxCreate($working_gen_amount,$prev_balance,$root_user->balance,$root_user->id,$tremark,$tdetails,'+','N',"WGBT");
+            trxCreate($working_gen_amount,$prev_balance,$rt_user->balance,$rt_user->id,$tremark,$tdetails,'+','N',"WGBT");
             
             }
         }
@@ -994,9 +993,13 @@ function getSponsorIncomeInsert($root,$down_user_id,$conds,$gen){
                 $sponsor_amount -= $sponsor_amount / 100 * $setting->income_charge;
                 $user->balance += $sponsor_amount;
                 $user->total_income += $sponsor_amount;
+               
                 $tremark = 'sponsor_gen';
                 $tdetails = "Get Sponsor Generation from -- ".$down_user->username." --  ".$conds[$gen-1]->level." LSP $down_user->submitted_point";
                 $user->save();
+               // $tuser = User::where('id', $root)->first();
+                //Log::info("From Sponsor ". $tuser->name." is ". $tuser->balance." points : sps points $sponsor_amount" );
+                Log::info("sponsor_gen . Amount is  $sponsor_amount". User::where('id', $root)->first() );
                 out_bonus_history($user->id,$sponsor_amount,'sponsor_gen',$tdetails);
                 trxCreate($sponsor_amount,$prev_balance,$user->balance,$user->id,$tremark,$tdetails,'+','N',"SPBT");
             }

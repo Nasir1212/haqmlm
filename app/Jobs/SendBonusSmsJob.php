@@ -64,7 +64,12 @@ class SendBonusSmsJob implements ShouldQueue
 
             // If there is a net amount, prepare the SMS
             if ($net_amount > 0) {
-                $msg = "HMS Affiliate Bonus for (" . $month_year . ")- " . $net_amount . "TK, Charge deducted " . $charge . "TK, New Balance " . $user->balance . "TK (" . $user->username . ") \n Haqmultishop.com \n Digital Affiliate System";
+            $date = DateTime::createFromFormat('m-Y', $month_year);
+            // Add 1 month
+            $date->modify('+1 month');
+            // Format to "F, Y" (e.g., May, 2025)
+            $formatted = $date->format('F, Y');
+                $msg = "HMS Affiliate Bonus   " . $net_amount . " BDT , for (" . $formatted . "). Charge deducted " . $charge . "BDT .  New Balance " . formatAmount($user->balance) . "BDT (" . $user->username . ") \n Haqmultishop.com \n Digital Affiliate System";
                 $chcu[] = ['to' => $user->phone, 'message' => $msg];
             }
         }

@@ -634,18 +634,60 @@ Route::get('/queuework', function () {
     
 Route::get('/test', function () {
 
-    $response = Http::get('https://bulksmsbd.net/api/smsapi', [
-        'api_key'  => 'DkNOGGOao6AwQAZHXUq4',
-        'type'     => 'text',
-        'number'   => '01890492444',
-        'senderid' => '8809617611753',
-        'message'  => 'Hello World. I am from Chittagong',
-    ]);
-   if ($response->successful()) {
-    echo "SMS Sent";
-} else {
-    echo "Failed to send SMS: " . $response->body();
-}
+    $gsd = global_user_data(); // Fetch global user data
+    $setting = setting(); // Fetch settings
+
+    $users = User::where('distribute_status', 1)->get(); // Fetch users with distribute status = 1
+    $conds =  WorkingGenCondition::all();
+    foreach ($users as $user) {
+          
+       
+
+        $dbcs = DirectBonusCondition::all();
+        $ckv = 0;
+        foreach ($dbcs as $dbc) {
+            if ($user->submitted_point >= $dbc->point) {
+                $ckv++;
+            }
+        }
+       
+
+        if($ckv > 0){
+           
+             //  Calculate bonus
+            $prevbalance = $user->balance;
+            $dbcm = $user->submitted_point / 100 * $dbcs[$ckv - 1]->commission;
+            $dbcm -= $dbcm / 100 * $setting->income_charge;
+
+            // Update user balance and income
+            $user->balance += $dbcm;
+            $user->total_income += $dbcm;
+            $user->save();
+            Log::info("Direct Bonus  bonus is $dbcm ".User::where('id',$user->id)->first());
+           // Log transaction
+           out_bonus($dbcm);
+           trxCreate($dbcm, $prevbalance, $user->balance, $user->id, 'direct_bonus', 'Direct bonus from LSP '.$user->submitted_point, '+', 'N', 'DBT'); 
+        }
+        sponsor_generation_income_with_sponsor($user->id);
+        working_generation_income_with_refer($user, $conds)  ;
+        matrix_income($user->id);
+    
+     }
+
+    // Reset submission checks
+    $users = User::where('submit_check', 1)->get();
+    // foreach ($users as $user) {
+    //     $user->submit_check = 0;
+    //     $user->distribute_status = 0;
+    //     $user->save();
+    // }
+  //SendBonusSmsJob::dispatch();
+   // Log success (or you can notify)
+    Log::info('Point Bonus Send Success');
+
+   
+
+   
 });
 
 

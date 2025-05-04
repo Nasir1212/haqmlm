@@ -90,8 +90,8 @@
                         <div class="col-12 col-md-4">
                             <div class="">Price : {{ $data->product->main_price }} Tk/-</div>
                             <div class="">Point : {{ $data->product->point }}</div>
-                            <div class="">Brand : {{ $data->product->brand->name }}</div>
-                            <div class="">Category : {{ $data->product->category->name }}</div>
+                            <div class="">Brand : {{ $data->product?->brand?->name }}</div>
+                            <div class="">Category : {{ $data->product?->category?->name }}</div>
                         </div>
                         <div class="col-12 col-md-4 text-right">
                             

@@ -16,6 +16,7 @@ use App\Models\ShippingAddress;
 use App\Models\BillingAddress;
 use Illuminate\Support\Str;
 use App\Models\DealerSelection;
+use App\Models\Withdraw;
 
 class PurchaseController extends Controller
 {
@@ -145,6 +146,20 @@ class PurchaseController extends Controller
                     $gsd->point += $total_point;
                     $gsd->save();
 
+                    $withdraw = new Withdraw();
+                    $withdraw->user_id = $gsd->id;
+                    $withdraw->method_code = "Wallet Payment";
+                    $withdraw->amount = $final_price + $shipping_cost;
+                    $withdraw->charge =  0;
+                    $withdraw->detail = '';
+                    $withdraw->payment_r_ac =  'Wallet payment';
+                    $withdraw->refer_trx = strtoupper(Str::random(11)); // Or generate based on your logic
+                    $withdraw->status = 'Approve'; // or 0 if using integer
+                    $withdraw->trx = strtoupper(Str::random(10));
+                    $withdraw->admin_feedback = '';
+                    $withdraw->created_at = Carbon::now();
+                    $withdraw->updated_at = Carbon::now();
+                    $withdraw->save();
                     // $chkm = $setting->check_point;
 
                     // $PointSaleHistory = new PointSaleHistory();

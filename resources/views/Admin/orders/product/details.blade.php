@@ -20,7 +20,7 @@
                     </div>
                     <div class="col-12 col-md-6 text-right">
                         <a href="{{ route('generate_product_invoice', ['id'=>$order->id])}}" class="btn btn-info">Print Invoice</a>
-                        @if( $order->status =='Pending')
+                        @if(  $order->payment_status =='Unpaid')
                         <a href="{{ request()->fullUrl() }}?edit=ok" class="btn btn-info">Edit Invoice</a>
                         @endif
                     </div>
@@ -31,7 +31,7 @@
                     <div class="mb-1">Payment Status: <span class="ops_unpaid">{{$order->payment_status}}</span></div>
                 </div>
                 <div class="product_info_table">
-                    @if(!is_null(request()->query('edit')) && $order->status =='Pending')
+                    @if(!is_null(request()->query('edit')) &&  $order->payment_status =='Unpaid')
                 <form action="{{ route('product_order_confirm_edit') }} " method="POST">
                     @csrf
                     @endif
@@ -63,7 +63,7 @@
                                         <h6 class="title-color">{{$odd->product->name}}</h6>
                                         <div><strong>Price :</strong> {{$odd->price}}/- TK</div>
                                         <div><strong>Point :</strong> {{ $odd->product->point}}</div>
-                                        @if(!is_null(request()->query('edit')) && $order->status =='Pending')
+                                        @if(!is_null(request()->query('edit')) &&  $order->payment_status =='Unpaid')
                                         <input type="hidden" name="prev_qty[]" value="{{$odd->qty}}">
                                         <input type="hidden" name="order_details_id[]" value="{{$odd->id}}">
                                         <input type="hidden" name="order_id[]" value="{{$odd->order_id}}">
@@ -133,7 +133,7 @@
                 </div>
                 <div class="d-flex justify-content-between">
                     <div>Total Point {{ $totalp }}</div>
-                    @if( $order->status =='Pending')
+                    @if( $order->payment_status =='Unpaid')
                     <div>
                         <button  class="btn btn-sm btn-primary"  data-toggle="modal" data-target=".bd-example-modal-lg">Add Product</button>
                     </div>
@@ -264,7 +264,8 @@
        
     </div>
 </div>
- @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
+@if(  $order->payment_status =='Unpaid')
+
 <div class="modal fade" id="payment_status" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-modal="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -306,7 +307,7 @@
     </div>
 </div>
 @endif
-@if( $order->status =='Pending')
+@if(  $order->payment_status =='Unpaid')
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -324,7 +325,7 @@
                         <div class="card details_product_card_section" data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" style="border: 1px solid white">
                             <div class="card-body">
                                 <div>
-                                    <img style="width: 200px;height:150px" src="{{ url('/') }}/{{ $product->img_name}}" alt="">
+                                    <img style="width: 200px;height:150px" src="{{ $product->img_name}}" alt="">
                                     {{-- <img style="width: 150px;height:150px " src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt=""> --}}
                                 </div>
                                 <p style="font-size: 12px;font-weight:bold">{{$product->name}}</p>
@@ -524,7 +525,12 @@
         })
                 }
 
-        document.addEventListener("DOMContentLoaded", function() {
+      
+</script>
+@endif
+
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
         const productCards = document.querySelectorAll('.details_product_card_section');
         productCards.forEach(card => {
         card.addEventListener('click', function() {
@@ -546,7 +552,7 @@
          temp += `
          <div class="d-flex" id="single_product_list_${parseData[0] }" >
                 <div class=" col-6">
-                    <img style="width:200px;height:100px" src="{{url('/')}}/${parseData[4]}" alt="">
+                    <img style="width:200px;height:100px" src="${parseData[4]}" alt="">
                     <h5>${parseData[1]}</h5>
                     
                 </div>
@@ -587,5 +593,4 @@
         }
 
 </script>
-@endif
 @endsection

@@ -48,13 +48,13 @@
 							<hr>
 							<a href="{{ route('Transaction_list',['remark'=>'monthly_income']) }}" class="btn btn-dark mb-2">Bonus Statement </a>
 							<a href="{{ route('Transaction_list',['remark'=>'refer_bonus']) }}" class="btn btn-dark mb-2">Refer Bonus</a>
-							<a href="{{ route('Transaction_list',['remark'=>'sponsor_bonus']) }}" class="btn btn-dark mb-2">Sponsor Bonus</a>
 							<a href="{{ route('Transaction_list',['remark'=>'direct_bonus']) }}" class="btn btn-dark mb-2">Cashback Bonus</a>
+							<a href="{{ route('Transaction_list',['remark'=>'sponsor_bonus']) }}" class="btn btn-dark mb-2">Sponsor Bonus</a>
 							<a href="{{ route('Transaction_list',['remark'=>'working_bonus']) }}" class="btn btn-dark mb-2">Working Bonus</a>
-							<a href="{{ route('Transaction_list',['remark'=>'non_working_gen_bonus']) }}" class="btn btn-dark mb-2">Non Working Generation Bonus</a>
 							<a href="{{ route('Transaction_list',['remark'=>'non_working_matrix_bonus']) }}" class="btn btn-dark mb-2">Non Working Matrix Bonus</a>
-							<a href="{{ route('Transaction_list',['remark'=>'life_tile_insentive']) }}" class="btn btn-dark mb-2">Life time Incentive</a>
+							<a href="{{ route('Transaction_list',['remark'=>'non_working_gen_bonus']) }}" class="btn btn-dark mb-2">Non Working Generation Bonus</a>
 							<a href="{{ route('Transaction_list',['remark'=>'qualify_yearly_bonus']) }}" class="btn btn-dark mb-2">Qualify Yearly Bonus</a>
+							<a href="{{ route('Transaction_list',['remark'=>'life_tile_insentive']) }}" class="btn btn-dark mb-2">Life time Incentive</a>
 							<a href="{{ route('Transaction_list',['remark'=>'death_benefit']) }}" class="btn btn-dark mb-2">Death Benefit</a>
 							<a href="{{ route('Transaction_list',['remark'=>'point_history']) }}" class="btn btn-dark mb-2">Point History</a>
 							<a href="{{ route('Transaction_list',['remark'=>'auto_point_submit_history']) }}" class="btn btn-dark mb-2">Auto Point Submit History</a>
@@ -94,7 +94,7 @@
 			<th>Date</th>
 			<th>User</th>
 			<th>Transaction</th>
-			<th>Points</th>
+			<th>Submitted Points</th>
 			<th>Prev Points</th>
 			<th>Remark</th>
 			<th>Details</th>
@@ -148,8 +148,8 @@
 			<th>Date</th>
 			<th>User</th>
 			<th>Transaction</th>
-			<th>Amount</th>
-			<th>Prev Balance</th>
+			<th>Submitted Point</th>
+			<th>Prev Points</th>
 			<th>Remark</th>
 			<th>Details</th>
 		</tr>
