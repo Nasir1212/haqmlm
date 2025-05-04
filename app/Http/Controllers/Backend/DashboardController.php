@@ -20,6 +20,7 @@ use App\Models\Withdraw;
 use App\Models\WithdrawSetting;
 use App\Jobs\CallTreeMakeCommandJob;
 use App\Models\userSelfSubmitPoint;
+use Illuminate\Support\Facades\Artisan;
 
 
 
@@ -115,6 +116,9 @@ public function getDownlineSponsorUsers($userId, &$downlineUsers = [])
        
        
         CallTreeMakeCommandJob::dispatch();
+        Artisan::call('queue:work', [
+            '--stop-when-empty' => true
+        ]);
         
           notify()->success('Task Proccessing !');
         return back();
