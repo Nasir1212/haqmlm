@@ -26,7 +26,9 @@
 									    <th class="text-center">Order_ ID</th>
 									    <th class="text-center">Order_ Date</th>
 									    <th class="text-center">Customer Info</th>
-
+										@if(Auth::id() == 1)
+									    <th class="text-center">Dealer Info</th>
+										@endif
 										<th class="text-center">Payment Status</th>
 										<th class="text-center">Order Status</th>
 									
@@ -52,7 +54,12 @@
 											<br>
 											<a href="#" class="text-white">Email --{{$order->user->email}}</a>
 										</td>
-									
+										@if(Auth::id() == 1)
+										<td>
+											<p href="#" class="text-white">Name: {{$order->dealer->name}}</p>
+											<p href="#" class="text-white">Address: {{$order->dealer->full_address}}</p>
+										</td>
+									@endif
 							
 										<td>
 

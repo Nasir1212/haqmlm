@@ -40,13 +40,10 @@ class OrderController extends Controller
 
     public function productOrders(Request $request){
         $gsd = global_user_data();
-        $dealer = Dealer::where("user_id", $gsd->id)->exists();
+       
        
         if (Auth::id() == 1){
-            $orders = Order::where('order_type','product')->with(['order_detail.product','user','shipping_address'])->latest('id')->paginate(10);
-        }else if( $dealer == true){
-            
-            $orders = Order::where('order_type','product')->where('dealer_id',$gsd->id)->with(['order_detail.product','user','shipping_address'])->latest('id')->paginate(10);
+            $orders = Order::where('order_type','product')->with(['order_detail.product','user','shipping_address'])->with('dealer')->latest('id')->paginate(10);
         }else{
             $orders = Order::where('user_id',$gsd->id)->where('order_type','product')->with(['order_detail.product','user','shipping_address'])->latest('id')->paginate(10);
         }
@@ -201,22 +198,60 @@ class OrderController extends Controller
         }
     }
     public function product_order_payment_status_change(Request $request){
-            $setting = setting();
-             $gsd = global_user_data();
-             if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
-             $gsd = global_user_data();
-            $order = Order::where('id',$request->id)->with('order_detail')->first();
-            $order->payment_status = $request->payment_status;
-            $order->save();
+        //     $setting = setting();
+        //      $gsd = global_user_data();
+        //      if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
+        //      $gsd = global_user_data();
+        //     $order = Order::where('id',$request->id)->with('order_detail')->first();
+        //     $order->payment_status = $request->payment_status;
+        //     $order->save();
 
       
 
-        return response()->json(['success'=>'Status Chage Successfully!']);
-             }else{
+        // return response()->json(['success'=>'Status Chage Successfully!']);
+        //      }else{
             
-           notify()->error('Permission Not Allow !');
+        //    notify()->error('Permission Not Allow !');
+        //    return back();
+        // }
+
+        $setting = setting();
+        $gsd = global_user_data();
+        if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
+        $gsd = global_user_data();
+       $order = Order::where('id',$request->id)->with('order_detail')->first();
+       $order->payment_status = $request->payment_status;
+     
+       foreach($order?->order_detail as $order_details){
+           // echo $order_details?->qty."<br/>";
+           $product =  Product::where('id',$order_details?->product_id)->first();           
+           if (!$product) {
+           notify()->error('Product not found');
            return back();
-        }
+           }
+           $owner = ProductOwner::where('dealer_id', $gsd->id)
+           ->where('product_id', $order_details?->product_id)
+           ->first();
+
+           if (!$owner || $owner->qty < $order_details?->qty) {
+           notify()->error('Stock limit or dealer not available');
+           return back();
+           }
+
+           $owner->qty -= $order_details?->qty;
+           $owner->save();
+
+           $product->stock -= $order_details?->qty;
+           $product->save();
+
+       }
+       $order->save();
+   return response()->json(['success'=>'Status Chage Successfully!']);
+        }else{
+       
+      notify()->error('Permission Not Allow !');
+      return back();
+   }
     }  
     public function product_order_shipping_cost_change(Request $request){
          $gsd = global_user_data();

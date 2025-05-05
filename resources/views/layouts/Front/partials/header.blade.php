@@ -304,9 +304,9 @@ display: block !important;
                   
                     @foreach (dealers() as $dealer)
                     @if (global_delar() != null  )
-                      <option class="country_name {{ $dealer->country }}" @selected(global_delar()->dealer_id == $dealer->user_id) value="{{ $dealer->user_id }}">{{ $dealer->name }} -- {{ $dealer->phone }} -- {{ $dealer->type }} : {{ $dealer->type_name }}</option>
+                      <option class="country_name {{ $dealer->country }}" @selected(global_delar()->dealer_id == $dealer->user_id) value="{{ $dealer->user_id }}">{{ $dealer->name }} -- {{ $dealer->full_address }} {{ $dealer->phone }} -- {{ $dealer->type }} : {{ $dealer->type_name }}</option>
                     @else
-                    <option class="country_name {{ $dealer->country }}"  value="{{ $dealer->user_id }}">{{ $dealer->name }} - {{ $dealer->phone }} - {{ $dealer->type }}</option>
+                    <option class="country_name {{ $dealer->country }}"  value="{{ $dealer->user_id }}">{{ $dealer->name }} - {{ $dealer->full_address }}- {{ $dealer->phone }} - {{ $dealer->type }}</option>
                       @endif
                     @endforeach
                     

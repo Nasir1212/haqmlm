@@ -13,6 +13,7 @@ use App\Models\ProductCategory;
 use App\Models\ProductOwner;
 use App\Models\ProductStock;
 use App\Models\ProductTrasnsferRecord;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
@@ -112,6 +113,22 @@ class ProductStockController extends Controller
         $transfer_histories = $query->latest('id')->get();
         return view('Admin.product.stock.transfer.index.design-1',compact('transfer_histories','gsd'));
     } 
+
+    public function dealer_order_history(){
+        $gsd = global_user_data();
+        $dealer = Dealer::where("user_id", $gsd->id)->exists();
+       
+        if (Auth::id() == 1){
+            $orders = Order::where('order_type','product')->with(['order_detail.product','user','shipping_address'])->with('dealer')->latest('id')->paginate(10);
+       
+        }else if( $dealer == true){
+            
+            $orders = Order::where('order_type','product')->where('dealer_id',$gsd->id)->with(['order_detail.product','user','shipping_address'])->latest('id')->paginate(10);
+        }
+        return view('Admin.orders.product.index',compact('orders','gsd'));
+    
+
+    }
     
     public function stock_transfer_options(){
         $gsd = global_user_data();

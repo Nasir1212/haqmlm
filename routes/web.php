@@ -209,6 +209,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/product-stock-store','stock_store')->name('product_stock_store');
 
         Route::get('/product-stock-transfers','stock_transfer_list')->name('product_stock_transfer_list');
+        Route::get('/dealer-order-history','dealer_order_history')->name('product_dealer_order_history');
         Route::get('/product-stock-transfer-option','stock_transfer_options')->name('product_stock_transfer_options');
         Route::post('/product-stock-transfer-store','stock_transfer_store')->name('product_stock_transfer_store');
         Route::post('/product-stock-transfer-status','stock_transfer_status')->name('product_stock_transfer_status');

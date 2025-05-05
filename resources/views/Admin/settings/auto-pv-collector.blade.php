@@ -69,7 +69,11 @@
 											- {{ $user->id }}
 										@endif</td>
 										<td>{{ $user->email }} <br> {{ $user->phone }}</td>
+										@if(request('point_type')=='Lock')
+                                        <td>{{ $user->lock_point }}</td>
+										@else
                                         <td>{{ $user->point }}</td>
+										@endif
                                         <td>{{ $user->point_submit_date }}</td>
 										<td>{{ $user->created_at }}</td>
 									</tr>

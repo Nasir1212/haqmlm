@@ -204,6 +204,10 @@ class PurchaseController extends Controller
             $order->shipping_cost = $shipping_cost;
             if ($request->paymentMethod == "Wallet") {
                 $order->payment_status = "Paid";
+                $owner->qty -= $request->product_qty;
+                $owner->save();
+                $product->stock -= $request->product_qty;
+                $product->save();
                 $order->payment_method = "Wallet";
             } elseif ($request->paymentMethod == "Cash") {
                 $order->payment_status = "Unpaid";
@@ -230,11 +234,7 @@ class PurchaseController extends Controller
             
             
                     
-                $owner->qty -= $request->product_qty;
-                $owner->save();
-            
-                $product->stock -= $request->product_qty;
-                $product->save();
+           
     
             
             
@@ -276,10 +276,10 @@ class PurchaseController extends Controller
             ->where('product_id', $productId)
             ->first();
     
-        if (!$owner || $owner->qty < $quantity) {
-            notify()->error('Stock limit or dealer not available');
-            return back();
-        }
+        // if (!$owner || $owner->qty < $quantity) {
+        //     notify()->error('Stock limit or dealer not available');
+        //     return back();
+        // }
         
     
         $final_price = $product->main_price * $quantity;
@@ -303,11 +303,11 @@ class PurchaseController extends Controller
             
             
                     
-                $owner->qty -= $quantity;
-                $owner->save();
+                // $owner->qty -= $quantity;
+                // $owner->save();
             
-                $product->stock -= $quantity;
-                $product->save();
+                // $product->stock -= $quantity;
+                // $product->save();
         }
             
             
@@ -356,21 +356,21 @@ class PurchaseController extends Controller
     
       
         
-        $owner->qty +=array_sum($prevQty);
-        $owner->save();
+        // $owner->qty +=array_sum($prevQty);
+        // $owner->save();
     
-        $product->stock += array_sum($prevQty);
-        $product->save();
+        // $product->stock += array_sum($prevQty);
+        // $product->save();
 
        
         if($quantity <=0){
          OrderDetail::where('id', $orderDetailsId)->delete();
         }else{
 
-            if (!$owner || $owner->qty < $quantity) {
-                notify()->error('Stock limit or dealer not available');
-                return back();
-            }
+            // if (!$owner || $owner->qty < $quantity) {
+            //     notify()->error('Stock limit or dealer not available');
+            //     return back();
+            // }
             $final_price = $product->main_price * $quantity;
             $total_point = $quantity * $product->point;
         $order_detail = OrderDetail::where('id', $orderDetailsId)->first();

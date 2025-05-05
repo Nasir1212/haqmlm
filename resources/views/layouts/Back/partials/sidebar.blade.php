@@ -233,7 +233,7 @@
                                 </a>
                             </li> 
                             <li>
-                                <a href="{{ route('product_stock_transfer_list')}}">
+                                <a href="{{ route('product_dealer_order_history')}}">
                                     {{-- <i class="icon-circular-graph"></i> --}}
                                     <span class="menu-text">Dealer Order History</span>
                                 </a>
