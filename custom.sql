@@ -17,3 +17,7 @@ ADD COLUMN admin_recollect_date DATETIME NULL;
 ALTER TABLE dealers
 ADD COLUMN country VARCHAR(250) NULL;
 
+
+ALTER TABLE balance_transfer_records 
+ADD COLUMN after_blance VARCHAR(250) NULL, 
+ADD COLUMN prev_blance VARCHAR(250) NULL;

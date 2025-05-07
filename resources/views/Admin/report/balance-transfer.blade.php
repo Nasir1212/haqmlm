@@ -66,6 +66,8 @@
 										<th class="text-center">Balance Type</th>
 										
 										<th class="text-center">Amount</th>
+										<th class="text-center">Prev Amount</th>
+										<th class="text-center">After Amount</th>
 								
 									</tr>
 								</thead>
@@ -84,6 +86,16 @@
 											<td>
 												<span class="text-success">	
 												{{ getAmount($value->amount) }}
+											 </span>
+											</td>
+											<td>
+												<span class="text-success">	
+												{{ getAmount($value?->prev_blance ) }}
+											 </span>
+											</td>
+											<td>
+												<span class="text-success">	
+												{{ getAmount($value?->after_blance ) }}
 											 </span>
 											</td>
 										

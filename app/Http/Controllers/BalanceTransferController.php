@@ -70,6 +70,8 @@ class BalanceTransferController extends Controller
                 $BalanceTransferRecord->receiver_id = $target_user->id;
                 $BalanceTransferRecord->balance_type = "Main Balance";
                 $BalanceTransferRecord->amount = $request->amount;
+                $BalanceTransferRecord->after_blance =   $target_user->balance+$request->amount;
+                $BalanceTransferRecord->prev_blance =   $target_user->balance;
                 $BalanceTransferRecord->save();
                     
                     
@@ -91,6 +93,8 @@ class BalanceTransferController extends Controller
                       $BalanceTransferRecord->receiver_id = $target_user->id;
                       $BalanceTransferRecord->balance_type = "Point Balance";
                       $BalanceTransferRecord->amount = $request->amount;
+                      $BalanceTransferRecord->after_blance =   $target_user->point+$request->amount;
+                      $BalanceTransferRecord->prev_blance =   $target_user->balance;
                       $BalanceTransferRecord->save();
                     
                     

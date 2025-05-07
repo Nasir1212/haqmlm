@@ -272,7 +272,7 @@ display: block !important;
         </div>
         <div class="notify_burgur_icon_container d-flex justify-content-between ">
             <div class="notify_icon">
-               <a href=""> <i style="color:green" class="fa-solid fa-shopping-cart"></i> </a>
+               <a href="{{ route('get_cart') }}"> <i style="color:green" class="fa-solid fa-shopping-cart"></i> </a>
             </div>
             <div>
                 <a href=""> <i style="color:green" class="fa-solid fa-bell"></i> </a>

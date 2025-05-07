@@ -26,17 +26,17 @@
                 @foreach ($stocks as $key => $stock)
                     <tr>
                         <td>{{ $key+1 }}</td>
-                        <td>{{ $stock->product->name }}</td>
+                        <td>{{ $stock?->product?->name }}</td>
            {{-- /             <td>{{ $stock->owner->name }}</td> --}}
-                        <td>{{ $stock->supplier }}</td>
-                        <td>{{ $stock->stock_type }}</td>
-                        <td>{{ $stock->qty }}</td>
-                        <td>{{ getAmount($stock->purchase_price) }}/-</td>
-                        <td>{{ getAmount($stock->sell_price) }}/-</td>
-                        <td>{{ getAmount($stock->purchase_price * $stock->qty) }}/-</td>
-                        <td>{{ getAmount($stock->sell_price * $stock->qty) }}/-</td>
-                        <td>{{ $stock->creator->name }}</td>
-                        <td>{{ $stock->created_at }}</td>
+                        <td>{{ $stock?->supplier }}</td>
+                        <td>{{ $stock?->stock_type }}</td>
+                        <td>{{ $stock?->qty }}</td>
+                        <td>{{ getAmount($stock?->purchase_price) }}/-</td>
+                        <td>{{ getAmount($stock?->sell_price) }}/-</td>
+                        <td>{{ getAmount($stock?->purchase_price * $stock->qty) }}/-</td>
+                        <td>{{ getAmount($stock?->sell_price * $stock->qty) }}/-</td>
+                        <td>{{ $stock?->creator->name }}</td>
+                        <td>{{ $stock?->created_at }}</td>
                     </tr> 
                 @endforeach
             </tbody>

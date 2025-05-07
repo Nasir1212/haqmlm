@@ -148,8 +148,14 @@
 			<th>Date</th>
 			<th>User</th>
 			<th>Transaction</th>
+			@if(request('remark') == 'auto_point_submit_history' || request('remark') == 'self_point_submit_history')
 			<th>Submitted Point</th>
 			<th>Prev Points</th>
+			@else
+			<th>Blance</th>
+			<th>Prev Blance</th>
+			@endif
+			
 			<th>Remark</th>
 			<th>Details</th>
 		</tr>
