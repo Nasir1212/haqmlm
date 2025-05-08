@@ -68,10 +68,12 @@ class BalanceTransferController extends Controller
                 $BalanceTransferRecord = new BalanceTransferRecord();
                 $BalanceTransferRecord->sender_id = $gsd->id;
                 $BalanceTransferRecord->receiver_id = $target_user->id;
-                $BalanceTransferRecord->balance_type = "Main Balance";
+                $BalanceTransferRecord->balance_type = "Balance";
+               
+                $BalanceTransferRecord->prev_blance =   $target_user->balance;
                 $BalanceTransferRecord->amount = $request->amount;
                 $BalanceTransferRecord->after_blance =   $target_user->balance+$request->amount;
-                $BalanceTransferRecord->prev_blance =   $target_user->balance;
+              
                 $BalanceTransferRecord->save();
                     
                     
@@ -91,10 +93,12 @@ class BalanceTransferController extends Controller
                       $BalanceTransferRecord = new BalanceTransferRecord();
                       $BalanceTransferRecord->sender_id = $gsd->id;
                       $BalanceTransferRecord->receiver_id = $target_user->id;
-                      $BalanceTransferRecord->balance_type = "Point Balance";
+                      $BalanceTransferRecord->balance_type = "Points";
+                    
+                      $BalanceTransferRecord->prev_blance =   $target_user->point;
                       $BalanceTransferRecord->amount = $request->amount;
                       $BalanceTransferRecord->after_blance =   $target_user->point+$request->amount;
-                      $BalanceTransferRecord->prev_blance =   $target_user->balance;
+                   
                       $BalanceTransferRecord->save();
                     
                     
@@ -124,8 +128,11 @@ class BalanceTransferController extends Controller
                       $BalanceTransferRecord = new BalanceTransferRecord();
                       $BalanceTransferRecord->sender_id = $gsd->id;
                       $BalanceTransferRecord->receiver_id = $target_user->id;
-                      $BalanceTransferRecord->balance_type = "Main balance";
+                      $BalanceTransferRecord->balance_type = "balance";
                       $BalanceTransferRecord->amount = $request->amount;
+                      $BalanceTransferRecord->prev_blance =   $target_user->balance;
+                      $BalanceTransferRecord->after_blance =   $target_user->balance+$request->amount;
+                      
                       $BalanceTransferRecord->save();
                     
                     
@@ -136,8 +143,10 @@ class BalanceTransferController extends Controller
                      $BalanceTransferRecord = new BalanceTransferRecord();
                       $BalanceTransferRecord->sender_id = $gsd->id;
                       $BalanceTransferRecord->receiver_id = $target_user->id;
-                      $BalanceTransferRecord->balance_type = "Point Balance";
+                      $BalanceTransferRecord->balance_type = "Points";
                       $BalanceTransferRecord->amount = $request->amount;
+                      $BalanceTransferRecord->prev_blance =   $target_user->point;
+                      $BalanceTransferRecord->after_blance =   $target_user->point+$request->amount;
                       $BalanceTransferRecord->save();
                       
                       

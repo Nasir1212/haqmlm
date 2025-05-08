@@ -36,10 +36,10 @@
 									<label for="transfer_type" class="w-100 font-weight-bold mb-1">Transfer Type<span class="text-danger">*</span></label>
 									<select name="transfer_type" id="transfer_type" class="form-control">
 									    <option value="point_balance">
-											Point Balance
+											Point 
 										</option>
 										<option value="main_balance">
-											Main Balance
+											 Balance
 										</option>
 									
 									</select>
