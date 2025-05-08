@@ -65,8 +65,8 @@
 									
 										<th class="text-center">Balance Type</th>
 										
+										<th class="text-center">Before Amount</th>
 										<th class="text-center">Amount</th>
-										<th class="text-center">Prev Amount</th>
 										<th class="text-center">After Amount</th>
 								
 									</tr>
@@ -83,14 +83,15 @@
 											<td>{{ $value->receiver->name."(".$value->receiver->username.")" }}</td>
 											
 											<td>{{ $value->balance_type }}</td>
+											
 											<td>
 												<span class="text-success">	
-												{{ getAmount($value->amount) }}
+												{{ getAmount($value?->prev_blance ) }}
 											 </span>
 											</td>
 											<td>
 												<span class="text-success">	
-												{{ getAmount($value?->prev_blance ) }}
+												{{ getAmount($value->amount) }}
 											 </span>
 											</td>
 											<td>

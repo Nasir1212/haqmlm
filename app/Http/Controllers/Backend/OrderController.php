@@ -135,47 +135,7 @@ class OrderController extends Controller
                 if($order->payment_status == "Paid"){
                       $order->status = $request->order_status;
                         $order->updated_by = $gsd->name;
-                        $order->save();
-                        
-                        
-                       $user = User::where('id',$order->user_id)->first();
-                        if($order->order_type == 'product'){
-                            $total_point = 0;
-                            foreach ($order->order_detail as $key => $value) {
-                               $pd = Product::where('id',$value->product_id)->first();
-                               if ($pd) {
-                                $user->point += $value->total_point;
-                                $user->save();
-                                $total_point += $value->total_point;
-                               }
-                            } 
-            
-            
-                                // $chkm = $setting->check_point;
-                                // if($user->point >= $chkm && $user->distribute_status == 0){
-                                //     $prev_point = $user->point;
-                                //     $today = Carbon::today();
-                                //     $user->point -= $chkm;
-                                //     $user->submitted_point = $chkm;
-                                      
-                                //     $user->total_submitted_point += $chkm;
-                                //     $user->point_submit_date = $today;
-                                //     $user->distribute_status = 1;
-                                //     $user->submit_check = 1;
-                                //     $user->save();
-                            
-                                //     trxCreate($chkm,$prev_point,$user->point,$user->id,'auto_pv_submit','admin action','+','N',"M");
-                                // }
-            
-            
-                            $PointSaleHistory = new PointSaleHistory();
-                            $PointSaleHistory->user_id = $user->id;
-                            $PointSaleHistory->point = $total_point;
-                            $PointSaleHistory->status = 1;
-                            $PointSaleHistory->save();
-                            
-                        }
-                     
+                        $order->save();                 
                     }else{
                         return response()->json(['success'=>'Oparation fail for payment unpaid!']);
                     }
@@ -198,22 +158,6 @@ class OrderController extends Controller
         }
     }
     public function product_order_payment_status_change(Request $request){
-        //     $setting = setting();
-        //      $gsd = global_user_data();
-        //      if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
-        //      $gsd = global_user_data();
-        //     $order = Order::where('id',$request->id)->with('order_detail')->first();
-        //     $order->payment_status = $request->payment_status;
-        //     $order->save();
-
-      
-
-        // return response()->json(['success'=>'Status Chage Successfully!']);
-        //      }else{
-            
-        //    notify()->error('Permission Not Allow !');
-        //    return back();
-        // }
 
         $setting = setting();
         $gsd = global_user_data();
@@ -223,8 +167,8 @@ class OrderController extends Controller
        $order->payment_status = $request->payment_status;
      
        foreach($order?->order_detail as $order_details){
-           // echo $order_details?->qty."<br/>";
-           $product =  Product::where('id',$order_details?->product_id)->first();           
+
+        $product =  Product::where('id',$order_details?->product_id)->first();           
            if (!$product) {
            notify()->error('Product not found');
            return back();
@@ -246,6 +190,44 @@ class OrderController extends Controller
 
        }
        $order->save();
+
+       $user = User::where('id',$order->user_id)->first();
+       if($order->order_type == 'product'){
+           $total_point = 0;
+           foreach ($order->order_detail as $key => $value) {
+              $pd = Product::where('id',$value->product_id)->first();
+              if ($pd) {
+               $user->point += $value->total_point;
+               $user->save();
+               $total_point += $value->total_point;
+              }
+           } 
+
+
+               // $chkm = $setting->check_point;
+               // if($user->point >= $chkm && $user->distribute_status == 0){
+               //     $prev_point = $user->point;
+               //     $today = Carbon::today();
+               //     $user->point -= $chkm;
+               //     $user->submitted_point = $chkm;
+                     
+               //     $user->total_submitted_point += $chkm;
+               //     $user->point_submit_date = $today;
+               //     $user->distribute_status = 1;
+               //     $user->submit_check = 1;
+               //     $user->save();
+           
+               //     trxCreate($chkm,$prev_point,$user->point,$user->id,'auto_pv_submit','admin action','+','N',"M");
+               // }
+
+
+           $PointSaleHistory = new PointSaleHistory();
+           $PointSaleHistory->user_id = $user->id;
+           $PointSaleHistory->point = $total_point;
+           $PointSaleHistory->status = 1;
+           $PointSaleHistory->save();
+           
+       }
    return response()->json(['success'=>'Status Chage Successfully!']);
         }else{
        
