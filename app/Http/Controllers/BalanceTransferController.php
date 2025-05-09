@@ -59,7 +59,8 @@ class BalanceTransferController extends Controller
             
             
             
-            if($request->transfer_type == 'main_balance'){
+            if($request->transfer_type == 'main_balance'){   
+                $target_user_blance = $target_user->balance ;
                 if($sender_ac->balance >= $request->amount){
                     $sender_ac->balance -= $request->amount;
                     $target_user->balance += $request->amount;
@@ -70,9 +71,9 @@ class BalanceTransferController extends Controller
                 $BalanceTransferRecord->receiver_id = $target_user->id;
                 $BalanceTransferRecord->balance_type = "Balance";
                
-                $BalanceTransferRecord->prev_blance =   $target_user->balance;
+                $BalanceTransferRecord->prev_blance = $target_user_blance ;
                 $BalanceTransferRecord->amount = $request->amount;
-                $BalanceTransferRecord->after_blance =   $target_user->balance+$request->amount;
+                $BalanceTransferRecord->after_blance = $target_user_blance + $request->amount;
               
                 $BalanceTransferRecord->save();
                     
@@ -85,7 +86,7 @@ class BalanceTransferController extends Controller
                 
                 
             }elseif($request->transfer_type == 'point_balance'){
-
+                $target_user_prev_point =$target_user->point;
                 if($sender_ac->point >= $request->amount){
                     $sender_ac->point -= $request->amount;
                     $target_user->point += $request->amount;
@@ -94,11 +95,9 @@ class BalanceTransferController extends Controller
                       $BalanceTransferRecord->sender_id = $gsd->id;
                       $BalanceTransferRecord->receiver_id = $target_user->id;
                       $BalanceTransferRecord->balance_type = "Points";
-                    
-                      $BalanceTransferRecord->prev_blance =   $target_user->point;
+                      $BalanceTransferRecord->prev_blance =  $target_user_prev_point;
                       $BalanceTransferRecord->amount = $request->amount;
-                      $BalanceTransferRecord->after_blance =   $target_user->point+$request->amount;
-                   
+                      $BalanceTransferRecord->after_blance = $target_user_prev_point+$request->amount;
                       $BalanceTransferRecord->save();
                     
                     
@@ -123,6 +122,7 @@ class BalanceTransferController extends Controller
             if($request->trx_pin == admin_trx_pin()){
                 $target_user = User::where('username', $request->username)->first();
                 if($request->balance_type == 'main_balance'){
+                    $target_user_blance = $target_user->balance ;
                     $target_user->balance += $request->amount;
                     
                       $BalanceTransferRecord = new BalanceTransferRecord();
@@ -130,14 +130,14 @@ class BalanceTransferController extends Controller
                       $BalanceTransferRecord->receiver_id = $target_user->id;
                       $BalanceTransferRecord->balance_type = "balance";
                       $BalanceTransferRecord->amount = $request->amount;
-                      $BalanceTransferRecord->prev_blance =   $target_user->balance;
-                      $BalanceTransferRecord->after_blance =   $target_user->balance+$request->amount;
-                      
+                      $BalanceTransferRecord->prev_blance =  $target_user_blance ;
+                      $BalanceTransferRecord->after_blance =  $target_user_blance +$request->amount;
                       $BalanceTransferRecord->save();
                     
                     
                     notify()->success('Balance Added in Main Wallet!');
                 }elseif($request->balance_type == 'point_balance'){
+                    $target_user_prev_point = $target_user->point;
                     $target_user->point += $request->amount;
                     
                      $BalanceTransferRecord = new BalanceTransferRecord();
@@ -145,8 +145,8 @@ class BalanceTransferController extends Controller
                       $BalanceTransferRecord->receiver_id = $target_user->id;
                       $BalanceTransferRecord->balance_type = "Points";
                       $BalanceTransferRecord->amount = $request->amount;
-                      $BalanceTransferRecord->prev_blance =   $target_user->point;
-                      $BalanceTransferRecord->after_blance =   $target_user->point+$request->amount;
+                      $BalanceTransferRecord->prev_blance =  $target_user_prev_point;
+                      $BalanceTransferRecord->after_blance = $target_user_prev_point + $request->amount;
                       $BalanceTransferRecord->save();
                       
                       
