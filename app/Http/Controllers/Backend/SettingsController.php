@@ -17,6 +17,7 @@ use App\Models\NonWorkingMatrixCondition;
 use App\Models\RankCondition;
 use App\Models\userSelfSubmitPoint;
 use App\Models\Transaction;
+use App\Models\CountTotalSubmittedPoint;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Contracts\Encryption\Encrypter as EncrypterContract;
@@ -74,6 +75,7 @@ class SettingsController extends Controller
        }else{
        
         $user_submitted_points  = userSelfSubmitPoint::all();
+        $runing_count_point= 0;
         foreach($user_submitted_points as $user_submitted_point){
             $gsd = User::where('id',$user_submitted_point->user_id)->first();
             if($gsd->submit_check == 1){
@@ -81,6 +83,7 @@ class SettingsController extends Controller
             }else{
                $gsd->submitted_point = $user_submitted_point->point;
             }
+            $runing_count_point +=  $user_submitted_point->point;
             $gsd->total_submitted_point  += $user_submitted_point->point;
             $gsd->distribute_status = 1;
             $gsd->submit_check = 1; 
@@ -95,6 +98,12 @@ class SettingsController extends Controller
             }
         
         }
+            $record = CountTotalSubmittedPoint::first();
+            if ($record) {
+            $record->update([
+            'point' => $record->point + $runing_count_point
+            ]);
+            }
        userSelfSubmitPoint::truncate();
         notify()->success('Self Sub Point Collection Complete');
         return back();

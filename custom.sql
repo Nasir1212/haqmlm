@@ -5,6 +5,14 @@ CREATE TABLE user_self_submit_point (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE count_total_submitted_points (
+    id INT AUTO_INCREMENT PRIMARY KEY, 
+    point TEXT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 ALTER TABLE transactions 
 ADD COLUMN admin_recollect_date DATETIME NULL;
 

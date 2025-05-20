@@ -25,6 +25,10 @@
 
 }
 </style>
+@php
+    use App\Models\CountTotalSubmittedPoint;
+    $count_total_point = CountTotalSubmittedPoint::first()?->point ?? 0;
+@endphp
 	<div class="main-container">
 
 		<!-- Page header start -->
@@ -160,8 +164,9 @@
 					<div class="info-icon primary border">
 						<i class="icon-shopping_cart"></i>
 					</div>
+					
 					<div class="sale-num">
-						<h3>{{ getAmount($total_submitted_point,2) }}</h3>
+						<h3>{{ getAmount($count_total_point,2) }}</h3>
 						<p>Total Submitted Point</p>
 					</div>
 				</div>
