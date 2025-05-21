@@ -64,8 +64,8 @@ class SettingsController extends Controller
 
     public function auto_pv_collection_action(Request $request){
          $gsd = global_user_data();
-        if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
-            
+          $runing_count_point= 0;
+        if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){     
             $point = $request->point;
        // $now = Carbon::today();
        if($request->point_type == 'Normal'){
@@ -75,7 +75,7 @@ class SettingsController extends Controller
        }else{
        
         $user_submitted_points  = userSelfSubmitPoint::all();
-        $runing_count_point= 0;
+       
         foreach($user_submitted_points as $user_submitted_point){
             $gsd = User::where('id',$user_submitted_point->user_id)->first();
             if($gsd->submit_check == 1){
@@ -98,18 +98,17 @@ class SettingsController extends Controller
             }
         
         }
-            $record = CountTotalSubmittedPoint::first();
-            if ($record) {
-            $record->update([
-            'point' => $record->point + $runing_count_point
-            ]);
-            }
+           
+        CountTotalSubmittedPoint::create([
+        'point' => $runing_count_point
+        ]);
+
        userSelfSubmitPoint::truncate();
         notify()->success('Self Sub Point Collection Complete');
         return back();
 
        }
-   
+     
             if($point == ''){
                 notify()->error('Collection point not set !');
                 return back();
@@ -125,14 +124,25 @@ class SettingsController extends Controller
      $today = Carbon::today();
         $amount = $point;
         foreach ($users as $key => $user) {
+           
             if($request->point_type == 'Normal'){
+                 $runing_count_point+=$user->point;
             $prev_point = $user->point;
             $user->point -= $point;
             $dd = 'admin action normal point';
-             }else{
+             $ph = new PointSubmitHistory();
+            $ph->point = $request->point;
+            $ph->user_id = $user->id;
+            $ph->save();
+             }else if($request->point_type == 'Lock'){
+                 $runing_count_point+=$user->lock_point;
               $prev_point = $user->lock_point;
               $user->lock_point -= $point;
               $dd = 'admin action lock point';
+               $ph = new PointSubmitHistory();
+            $ph->point = $request->point;
+            $ph->user_id = $user->id;
+            $ph->save();
              }
             
             $user->submitted_point = $point;
@@ -141,14 +151,12 @@ class SettingsController extends Controller
             $user->distribute_status = 1;
             $user->submit_check = 1;
             $user->save();
-
-            $ph = new PointSubmitHistory();
-            $ph->point = $request->point;
-            $ph->user_id = $user->id;
-            $ph->save();
             
             trxCreate($amount,$prev_point,$user->point,$user->id,'auto_pv_submit',$dd,'-','N',"M");
         }
+         CountTotalSubmittedPoint::create([
+        'point' => $runing_count_point
+        ]);
         notify()->success('Collection Complete');
         return back();
       }else {

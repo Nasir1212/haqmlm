@@ -371,7 +371,7 @@ public function account_balance_trans_manage(){
             }
           
         }else{
-            notify()->error('Nedd More Point');
+            notify()->error('Need More Point');
             return back();
         }
 

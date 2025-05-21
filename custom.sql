@@ -8,7 +8,7 @@ CREATE TABLE user_self_submit_point (
 CREATE TABLE count_total_submitted_points (
     id INT AUTO_INCREMENT PRIMARY KEY, 
     point TEXT NULL,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -27,7 +27,7 @@
 </style>
 @php
     use App\Models\CountTotalSubmittedPoint;
-    $count_total_point = CountTotalSubmittedPoint::first()?->point ?? 0;
+   
 @endphp
 	<div class="main-container">
 
@@ -164,9 +164,23 @@
 					<div class="info-icon primary border">
 						<i class="icon-shopping_cart"></i>
 					</div>
-					
+				
 					<div class="sale-num">
-						<h3>{{ getAmount($count_total_point,2) }}</h3>
+						<h3>
+							 @if (Auth::id() == 1 && request('date') != null)
+							 @php
+							[$year, $month] = explode('-', request('date'));
+
+							$records = CountTotalSubmittedPoint::whereYear('created_at', $year)
+							->whereMonth('created_at', $month)
+							->sum('point');
+							 @endphp
+								{{ $records }}
+							 @else
+							{{ getAmount($total_submitted_point,2) }}
+							@endif
+
+						</h3>
 						<p>Total Submitted Point</p>
 					</div>
 				</div>
