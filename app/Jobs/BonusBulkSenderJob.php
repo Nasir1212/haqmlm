@@ -70,7 +70,7 @@ class BonusBulkSenderJob implements ShouldQueue
             $user->distribute_status = 0;
             $user->save();
         }
-      //SendBonusSmsJob::dispatch();
+      SendBonusSmsJob::dispatch();
        // Log success (or you can notify)
         Log::info('Point Bonus Send Success');
 
