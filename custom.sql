@@ -33,3 +33,9 @@ ADD COLUMN prev_blance VARCHAR(250) NULL;
 
 ALTER TABLE `point_sale_histories`
 MODIFY `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE balance_transfer_records 
+ADD COLUMN sender_after_blance VARCHAR(250) NULL, 
+ADD COLUMN sender_before_blance VARCHAR(250) NULL;
+
+

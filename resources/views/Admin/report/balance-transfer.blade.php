@@ -72,6 +72,11 @@
 									</tr>
 								</thead>
 								<tbody>
+									{{-- @dd($btsrs)  --}}
+									{{-- @dd( global_user_data()) --}}
+									@php
+									$auth_id = global_user_data()->id;
+									@endphp
 									@foreach ($btsrs as $value)
 										<tr class="text-center">
 										    <td>
@@ -86,7 +91,11 @@
 											
 											<td>
 												<span class="text-success">	
+													@if($value->receiver->id == $auth_id) 
 												{{ getAmount($value?->prev_blance ) }}
+												@else
+												{{ getAmount($value?->sender_before_blance ) }}
+												@endif
 											 </span>
 											</td>
 											<td>
@@ -96,7 +105,12 @@
 											</td>
 											<td>
 												<span class="text-success">	
-												{{ getAmount($value?->after_blance ) }}
+												@if($value->receiver->id == $auth_id) 
+												+{{ getAmount($value?->after_blance ) }}
+												@else
+												-{{ getAmount($value?->sender_after_blance ) }}
+												@endif
+												
 											 </span>
 											</td>
 										

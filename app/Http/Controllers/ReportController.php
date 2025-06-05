@@ -482,9 +482,7 @@ $btsrs = $query->get();
         
         }else{
           
-              
-              $query = BalanceTransferRecord::latest('id')->with(['sender', 'receiver']);
-
+ $query = BalanceTransferRecord::latest('id')->with(['sender', 'receiver']);
 // Check if a date is provided
 if (isset($request->date)) {
     // Filter by date and sender/receiver ID
