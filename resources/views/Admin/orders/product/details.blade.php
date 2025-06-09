@@ -151,9 +151,11 @@
                 
             </div>
         </div>
+       
         <div class="col-12 col-md-4">
             <div class="card h-100 w-100 p-2">
-                @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)
+                @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true  )
+                @if(get_dealer_id($order->user_id) != null && get_dealer_id(auth()->user()->id)->id != get_dealer_id($order->user_id)->id || (auth()->user()->id == 1 )
                 <div class="card">
                     <h4>Order & Shipping Info</h4>
                     <div class="mb-2">
@@ -170,15 +172,13 @@
                         </select>
                     </div>
                     <div class="mb-2">
+                          @if( $order->payment_status == 'Unpaid' || auth()->user()->id == 1)
                         <label class="font-weight-bold title-color fz-14">Payment Status</label>
-                        <select name="payment_status" class="payment_status form-control" data-id="{{ $order->id}}">
-                            <option  href="javascript:" value="Paid">
-                                Paid
-                            </option>
-                            <option value="Unpaid" selected="">
-                                Unpaid
-                            </option>
+                        <select name="payment_status" class="payment_status form-control" data-id="{{ $order->id }}">
+                        <option value="Paid" {{ $order->payment_status == 'Paid' ? 'selected' : '' }}>Paid</option>
+                        <option value="Unpaid" {{ $order->payment_status == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
                         </select>
+                        @endif
                     </div>
                     
                     <div class="mb-2">
@@ -187,6 +187,7 @@
                         <button type="button" class="form-control mt-1" id="shipping_c_update">Shipping Cost Update</button>
                     </div>
                 </div>
+                @endif
                 @endif
 
                 <div class="card">
@@ -313,13 +314,22 @@
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="card">
+        <div class="card-header">
+                <input class="form-control me-2" type="search" placeholder="Search Product by name" aria-label="Search"  onkeyup="search_product(this.value)">
+        </div>
         <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
             <h5>Select Product</h5>
+             <div class="float-right">
+                <button class="btn btn-sm btn-primary" onclick="handle_select_product(this)">Next</button>
+            </div>
+            </div>
             <div>
                 <div class="row">
-                    
+                    {{-- @dd($products ) --}}
                     @foreach ($products as $product)
-                    @foreach ($order->order_detail as $key => $odd)
+
+                    {{-- @foreach ($order->order_detail as $key => $odd) --}}
                     @if($odd->product_id !=$product->id )
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card details_product_card_section" data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" style="border: 1px solid white">
@@ -334,15 +344,13 @@
                         </div>
                     </div>
                     @endif
-                    @endforeach
+                    {{-- @endforeach --}}
                     @endforeach
                 </div>
             </div>
         </div>
         <div class="card-footer ">
-            <div class="float-right">
-                <button class="btn btn-sm btn-primary" onclick="handle_select_product(this)">Next</button>
-            </div>
+           
         </div>
       </div>
     </div>
@@ -591,6 +599,19 @@
             document.querySelector(`.single_product_list_${id}`).remove();
 
         }
+function search_product(value) {
+    const searchValue = value.toLowerCase();
+    const cards = document.querySelectorAll('.details_product_card_section');
 
+    cards.forEach(card => {
+        const productName = card.querySelector('p').textContent.toLowerCase();
+
+        if (productName.includes(searchValue)) {
+            card.parentElement.style.display = ''; // show
+        } else {
+            card.parentElement.style.display = 'none'; // hide
+        }
+    });
+}
 </script>
 @endsection
