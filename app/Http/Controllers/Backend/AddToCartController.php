@@ -150,6 +150,8 @@ public function carts_info(Request $request){
 
     public function CartCheckOutConfirm(Request $request)
     {
+        // dd($request->all());
+        
         $gsd = global_user_data();
         
         
@@ -249,7 +251,7 @@ public function carts_info(Request $request){
         }
 
         $aptp += $shipping_cost;
-
+        dd($aptp);
             if($request->paymentMethod == "Cash"){
 
             }else {

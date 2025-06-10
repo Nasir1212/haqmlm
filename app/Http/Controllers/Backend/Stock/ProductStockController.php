@@ -49,6 +49,17 @@ class ProductStockController extends Controller
         
        
     }
+
+    public function update_product_stock(Request $request) {
+    $stock = ProductOwner::find($request->id);
+    if ($stock) {
+        $stock->qty = $request->qty;
+        $stock->save();
+        return response()->json(['success' => true, 'message' => 'Stock updated successfully!']);
+    }
+    return response()->json(['success' => false, 'message' => 'Stock update failed.']);
+}
+
     
     public function owner_stock_list(){
         $gsd = global_user_data();

@@ -60,7 +60,7 @@
                         <td>{{ $stock?->owner?->name }}</td>
                         <td>{{ $stock?->product?->name }}</td>
                         <td>{{ $stock?->product?->category?->name }}</td>
-                        <td>{{ $stock?->qty }}</td>
+                        <td @if ($gsd->id == 1) id="stockId_{{ $stock?->id  }}" onblur="save_change(this,{{ $stock?->id  }})" ondblclick="this.setAttribute('contenteditable', 'true'); this.focus();" @endif>{{ $stock?->qty }}</td>
                      
                     </tr> 
                 @endforeach
@@ -113,6 +113,30 @@ var dealer_id = $('#dealer').val();
                                 // Handle errors here
                         }
                     });
+        }
+
+        function save_change (e,id) {
+            // alert('Double click to edit the stock quantity');
+            // return false;
+            // This function is called when the stock quantity is changed
+            var qty = $('#stockId_' + id).text();
+            $.ajax({
+                url: "{{ route('update_product_stock') }}",
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                data: { id: id, qty: qty },
+                success: function(response) {
+                    // Optionally handle success response
+                    console.log('Stock updated successfully');
+                },
+                error: function(error) {
+                    // Handle errors here
+                    console.error('Error updating stock:', error);
+                }
+            });
+            e.setAttribute('contenteditable', 'false')
         }
     </script>
 @endpush
