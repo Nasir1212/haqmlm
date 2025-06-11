@@ -87,7 +87,7 @@
             <h6 class="help_line">Help Line : {{ $setting->company_helpline}}</h6>
         </div>
         <div>
-            <img style="width: 45px;height: 45px; margin-left: 20px;" src="{{url('/storage/uploads/users/sq-logo.png')}}" alt="">
+            <img style="width: 45px;height: 45px; margin-left: 20px;" src="https://img.haqmultishop.com/uploads/users/sq-logo.png" alt="">
         </div>
         </div>
             <table class="table 1st_table">

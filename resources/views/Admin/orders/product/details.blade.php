@@ -1,4 +1,5 @@
-@extends('layouts.Back.app') @section('content')
+@extends('layouts.Back.app')
+@section('content')
 <div class="main-container">
     <!-- Page header start -->
     <div class="page-header">
@@ -155,7 +156,7 @@
         <div class="col-12 col-md-4">
             <div class="card h-100 w-100 p-2">
                 @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true  )
-                @if(get_dealer_id($order->user_id) != null && get_dealer_id(auth()->user()->id)->id != get_dealer_id($order->user_id)->id || (auth()->user()->id == 1 )
+                @if(get_dealer_id($order->user_id) != null && get_dealer_id(auth()->user()->id)->id != get_dealer_id($order->user_id)->id || (auth()->user()->id == 1 ))
                 <div class="card">
                     <h4>Order & Shipping Info</h4>
                     <div class="mb-2">
@@ -326,10 +327,8 @@
             </div>
             <div>
                 <div class="row">
-                    {{-- @dd($products ) --}}
+                 
                     @foreach ($products as $product)
-
-                    {{-- @foreach ($order->order_detail as $key => $odd) --}}
                     @if($odd->product_id !=$product->id )
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="card details_product_card_section" data-product="['{{ $product->id }}','{{ $product->name}}','{{ $product->main_price }}','{{ $order->dealer->user_id }}','{{ $product->img_name }}']" style="border: 1px solid white">
@@ -344,7 +343,7 @@
                         </div>
                     </div>
                     @endif
-                    {{-- @endforeach --}}
+               
                     @endforeach
                 </div>
             </div>
@@ -613,5 +612,8 @@ function search_product(value) {
         }
     });
 }
+
 </script>
+
+
 @endsection

@@ -52,13 +52,6 @@ class SendBonusSmsJob implements ShouldQueue
         $users = User::where('submitted_point', '>=', $ckp)->get();
 
       foreach ($users as $user) {
-            // Fetch the transactions for the current year and month
-            // $DirectBonusTransaction = DirectBonusTransaction::where('user_id', $user->id)->whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->sum('amount');
-            // $ReferBonusTransaction = ReferBonusTransaction::where('user_id', $user->id)->whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->sum('amount');
-            // $NwmtbTransaction = NwmtbTransaction::where('user_id', $user->id)->whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->sum('amount');
-            // $NwmtgTransaction = NwmtgTransaction::where('user_id', $user->id)->whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->sum('amount');
-            // $WgbTransaction = WgbTransaction::where('user_id', $user->id)->whereYear('created_at', $now->year)->whereMonth('created_at', $now->month)->sum('amount');
-
             $pointhistory = PointSubmitHistory::where('user_id',$user->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->first();
             $DirectBonusTransaction = DirectBonusTransaction::where('user_id',$user->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
             $ReferBonusTransaction = ReferBonusTransaction::where('user_id',$user->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');

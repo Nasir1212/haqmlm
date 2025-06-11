@@ -154,8 +154,7 @@ public function carts_info(Request $request){
         
         $gsd = global_user_data();
         
-        
-          $selected_dealer = DealerSelection::where('user_id', $gsd->id)->with('dealer')->first();
+              $selected_dealer = DealerSelection::where('user_id', $gsd->id)->with('dealer')->first();
     
               if(!$selected_dealer){
                $selected_dealer = new DealerSelection();
@@ -209,13 +208,15 @@ public function carts_info(Request $request){
 
 
         if($request->rMethod == 'Courier'){
-   
+              
             if ($request->sp_state == 'Dhaka') {
                 $shipping_cost = $setting->shipping_cost_in_dhaka;
             } else {
                 $shipping_cost = $setting->shipping_cost_out_dhaka;
             }
-
+        
+            //Shipping Cost
+              $aptp += $shipping_cost;
                 // shipping
                 $prev_sp_address = ShippingAddress::where('user_id', $gsd->id)->first();
                 if (empty($prev_sp_address)) {
@@ -244,14 +245,14 @@ public function carts_info(Request $request){
                
         }
         
-        foreach ($cart_products as $key => $dt) {
-            $aptp += $dt->qty * $dt->product->main_price;
-            $gpoint += $dt->qty * $dt->product->point;
+        // foreach ($cart_products as $key => $dt) {
+        //     $aptp += $dt->qty * $dt->product->main_price;
+        //     $gpoint += $dt->qty * $dt->product->point;
 
-        }
+        // }
 
-        $aptp += $shipping_cost;
-        dd($aptp);
+      
+        // dd($aptp);
             if($request->paymentMethod == "Cash"){
 
             }else {
