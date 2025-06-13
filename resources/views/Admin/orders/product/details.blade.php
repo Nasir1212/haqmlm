@@ -156,7 +156,7 @@
         <div class="col-12 col-md-4">
             <div class="card h-100 w-100 p-2">
                 @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true  )
-                @if(get_dealer_id($order->user_id) != null && get_dealer_id(auth()->user()->id)->id != get_dealer_id($order->user_id)->id || (auth()->user()->id == 1 ))
+                @if(get_dealer_id($order->user_id) == null && get_dealer_id(auth()->user()->id)?->id != get_dealer_id($order->user_id)?->id || (auth()->user()->id == 1 ))
                 <div class="card">
                     <h4>Order & Shipping Info</h4>
                     <div class="mb-2">
