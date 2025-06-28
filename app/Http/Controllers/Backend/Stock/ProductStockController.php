@@ -43,9 +43,10 @@ class ProductStockController extends Controller
         if (isset($request->product_name) && $request->product_name != '') {
             $query->where('products.name', 'like', '%' . $request->product_name . '%');
         }
-    
+       $query->orderBy('qty');
         $stocks = $query->get();
-        return view('Admin.product.stock.owner.render', compact('stocks'))->render();
+        
+        return view('Admin.product.stock.owner.render', compact('stocks','gsd'))->render();
         
        
     }
@@ -74,7 +75,7 @@ class ProductStockController extends Controller
            
             $query->where('dealer_id',$gsd->id);
         }
-        
+         $query->orderBy('qty');
         $stocks = $query->get();
         
         return view('Admin.product.stock.owner.design-1',compact('stocks','dealers','gsd'));

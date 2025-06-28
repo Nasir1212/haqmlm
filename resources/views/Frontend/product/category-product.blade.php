@@ -28,6 +28,9 @@
                 
                     P- {{ $product->point }}
                 </div>
+                 <div class="stock_status_bar">
+                        Stock {{ $product->stock   }}
+                </div>
                 <div class="product_order_option btn-group">
                     @auth
                     <a href="{{ route('product_order', ['slug'=>$product->slug])}}" target="_blank" class="details_link btn btn-success">Order Now</a>
@@ -66,7 +69,23 @@
     justify-content: center;
     border-bottom: 2px solid black;
 }
-
+.stock_status_bar {
+    position: absolute;
+    right: -50px;
+    top: -3px;
+    transform: rotate(49deg);
+    color: black;
+    background: #e5dada2b;
+    width: 131px;
+    height: 58px;
+    display: flex
+;
+    align-items: flex-end;
+    justify-content: center;
+    border-bottom: 2px solid black;
+    z-index: 0;
+    font-size: 13px;
+}
     .product_order_option{
         display: flex;
         align-items: center;

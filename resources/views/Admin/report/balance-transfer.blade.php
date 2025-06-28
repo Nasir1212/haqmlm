@@ -68,6 +68,9 @@
 										<th class="text-center">Before Amount</th>
 										<th class="text-center">Amount</th>
 										<th class="text-center">After Amount</th>
+										@if (auth()->user()->id == 1)
+										<th class="text-center">Reciver After Amount</th>
+										@endif
 								
 									</tr>
 								</thead>
@@ -99,21 +102,28 @@
 											 </span>
 											</td>
 											<td>
-												<span class="text-success">	
+												<span class="@if($value->receiver->id == $auth_id) text-success @else text-danger @endif">
+												@if($value->receiver->id == $auth_id) + @else - @endif
 												{{ getAmount($value->amount) }}
 											 </span>
 											</td>
+											
 											<td>
 												<span class="text-success">	
 												@if($value->receiver->id == $auth_id) 
-												+{{ getAmount($value?->after_blance ) }}
+												+ {{ getAmount($value?->after_blance ) }}
 												@else
-												-{{ getAmount($value?->sender_after_blance ) }}
+												- {{ getAmount($value?->sender_after_blance ) }}
 												@endif
 												
 											 </span>
 											</td>
-										
+
+											@if (auth()->user()?->id == 1)
+											<td>
+											{{ getAmount($value?->after_blance ) }}
+											</td>
+											@endif
 										</tr>
 									@endforeach
 									

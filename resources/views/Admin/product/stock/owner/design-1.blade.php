@@ -15,7 +15,7 @@
                             <select name="dealer" id="dealer" class="single-select form-control form-select">
                                 <option value="None">Select Dealer</option>
                                 @foreach ($dealers as $dealer)
-                                  <option value="{{ $dealer->id }}">{{ $dealer->name }} -- {{ $dealer->phone }}</option>
+                                  <option value="{{ $dealer->user_id }}">{{ $dealer->name }} -- {{ $dealer->phone }}</option>
                                 @endforeach
                             </select>
                         </div>

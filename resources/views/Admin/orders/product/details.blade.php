@@ -160,6 +160,7 @@
                 <div class="card">
                     <h4>Order & Shipping Info</h4>
                     <div class="mb-2">
+                        @if( $order->status != 'Delivered' ) 
                         <label class="font-weight-bold title-color fz-14">Order Status</label>
                         <select name="order_status" onchange="order_status(this.value)" class="status form-control" data-id="{{ $order->id}}">
                             <option value="Pending"> Pending</option>
@@ -171,9 +172,10 @@
                             <option value="Failed">Failed to deliver </option>
                             <option value="Canceled">Canceled </option>
                         </select>
+                        @endif
                     </div>
                     <div class="mb-2">
-                          @if( $order->payment_status == 'Unpaid' || auth()->user()->id == 1)
+                          @if( $order->payment_status == 'Unpaid' )
                         <label class="font-weight-bold title-color fz-14">Payment Status</label>
                         <select name="payment_status" class="payment_status form-control" data-id="{{ $order->id }}">
                         <option value="Paid" {{ $order->payment_status == 'Paid' ? 'selected' : '' }}>Paid</option>

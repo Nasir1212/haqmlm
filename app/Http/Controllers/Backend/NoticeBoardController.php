@@ -8,6 +8,7 @@ use App\Models\NoticeBoard;
 use App\Models\User;
 use App\Jobs\SendBulkSmsJob;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
 
 class NoticeBoardController extends Controller
 {
@@ -61,6 +62,9 @@ public function sms_sending_action(Request $request)
         } else {
             // Dispatch job for background SMS sending
             SendBulkSmsJob::dispatch($request->sms_body, $manualNumbers);
+              Artisan::call('queue:work', [
+        '--stop-when-empty' => true
+    ]);
             notify()->success('SMS is being sent in the background!');
         }
     }
