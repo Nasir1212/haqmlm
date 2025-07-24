@@ -20,6 +20,8 @@ use App\Mail\RegisterMail;
 use App\Models\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Notifications\UserMessageNotification;
+
 
 class RegisteredUserController extends Controller
 {
@@ -101,7 +103,7 @@ public function sponsor_user__check(Request $request){
            
                 $dref = User::where('ref_id', $ref_user->id)->get();
                 if($dref){
-                    if($dref->count() >= 3){
+                    if($dref->count() >= 2){
                      $notice = "<h4 style='color:red;padding:10px'>".$ref_user->name." <strong> Direct ".$dref->count()." Refers already completed! Please try another referral from your working-team.
 </h4>";
                     }else{
@@ -167,7 +169,9 @@ public function   user_join_review(Request $request) {
 
     public function store(Request $request)
     {
-
+    //   $u =   User::where('username', $request->sponsor_username)->first();
+     
+       
         $request->validate([
           'terms' => ['required'],
             'username' => ['required', 'lowercase', 'string', 'min:4', 'unique:'.User::class],
@@ -194,7 +198,7 @@ public function   user_join_review(Request $request) {
         }else{
         $dref = User::where('ref_id', $userCheck->id)->get();
         if($dref){
-            if($dref->count() >= 3){
+            if($dref->count() >= 2){
                 $notify[] = ['error', 'Direct ".$dref->count()." Refers already completed! Please try another referral from your working-team.
 '];
                 return back();       
@@ -316,7 +320,43 @@ public function   user_join_review(Request $request) {
         Auth::login($user);
 
         session(['check_auth_id'=> Auth::id()]);
-       
+                $template = getNotificationTemplate('new_joining_working_team', [
+                
+                '[new_working_team_member]' => $request->username,
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url("user-unilevel-tree/$request->username"),
+                ];
+
+                   $template_sps = getNotificationTemplate('new_joining_sps_team', [
+                
+                '[new_sps_team_member]' => $request->username,
+                ]);
+                $data_sps = [
+                'body' => $template_sps['body'],
+                'type' => $template_sps['type'],
+                'subject' => $template_sps['subject'],
+                'url' => url("my-sponsors?id=$request->username"),
+                ];
+                 $upline =  getUplinesRef( Auth::id());
+
+                 foreach ($upline as $key => $up) {
+                    $up_ref = User::find($up->id);
+                    if ($up_ref) {
+                        $up_ref->notify(new UserMessageNotification($data));
+                    }
+                }
+                    $uplineSps = getUplinesSps(Auth::id());
+                    foreach ($uplineSps as $key => $up) {
+                        $up_sps = User::find($up->id);
+                        if ($up_sps) {
+                            $up_sps->notify(new UserMessageNotification($data_sps));
+                        }
+                    }
+               
 
         return redirect()->route('dashboard_index');
     }

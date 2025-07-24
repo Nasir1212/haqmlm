@@ -23,11 +23,67 @@ use App\Models\WishList;
 use App\Models\Dealer;
 use App\Models\DealerSelection;
 use App\Models\WorkingGenCondition;
-
 use App\Models\SponsorGenCondition;
-
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\NotificationTemp;
+
+
+if (!function_exists('getUplinesRef')) {
+    function getUplinesRef($userId, &$uplines = []) {
+        $user = User::find($userId);
+        if ($user && $user->ref_id) {
+            $referrer = User::find($user->ref_id);
+            if ($referrer) {
+                $uplines[] = $referrer;
+                getUplinesRef($referrer->id, $uplines);
+            }
+        }
+        return $uplines;
+    }
+}
+
+if (!function_exists('getUplinesSps')) {
+    function getUplinesSps($userId, &$uplines = []) {
+        $user = User::find($userId);
+        if ($user && $user->sponsor_id) {
+            $referrer = User::find($user->sponsor_id);
+            if ($referrer) {
+                $uplines[] = $referrer;
+                getUplinesSps($referrer->id, $uplines);
+            }
+        }
+        return $uplines;
+    }
+}
+
+
+if (!function_exists('getNotificationTemplate')) {
+    function getNotificationTemplate(string $type, array $replacements = []): array
+    {
+        $template = NotificationTemp::where('type', $type)->first();
+       
+        return [
+            'body' => strtr($template->body ?? '', $replacements),
+            'subject' => $template->subject ?? '',
+            'type' => $type,
+        ];
+    }
+}
+
+function sendWebSocketMessage($toUserId, $message) {
+    $data = json_encode([
+        'to_user_id' => $toUserId,
+        'message' => $message,
+    ]);
+
+    $fp = fsockopen("websocket://0.0.0.0", 8080, $errno, $errstr, 30);
+    if ($fp) {
+        fwrite($fp, $data);
+        fclose($fp);
+    }
+}
+
 
 function calculateDiscountedValue($value, $percentage) {
     $discount = ($value * $percentage) / 100;

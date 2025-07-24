@@ -59,9 +59,9 @@
     </div>
 
     <!-- Notification Icon -->
-    <div style="position: relative; width: 26px; height: 20px; text-align: center;">
-        <i class="fa-solid fa-bell" style="font-size: 25px;"></i>
-        <span style="
+    <div style="cursor: pointer;position: relative; width: 26px; height: 20px; text-align: center;" onclick="toggleNotifications()">
+        <i class = "fa-solid fa-bell" style="font-size: 25px;"></i>
+        <span id= "notification-count" style="
             position: absolute;
             top: -5px;
             right: -5px;
@@ -76,7 +76,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-        ">3</span>
+        ">{{ $notifications = auth()->user()->unreadNotifications->count(); }}</span>
     </div>
 
     <!-- Wrap the Shopping Cart Icon Inside the <a> Tag -->

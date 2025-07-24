@@ -622,6 +622,13 @@
                         </ul>
                     </div>
                 </li>
+             
+                  <li>
+                    <a href="{{ route('notification-temps.index')}}">
+                        <i class="fas fa-bell"></i>
+                        <span class="menu-text">Notification Template</span>
+                    </a>
+                </li>
                 @endif
             </ul>
             <br>

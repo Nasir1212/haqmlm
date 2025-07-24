@@ -41,8 +41,8 @@
 			top: 17px;
 			left: 22rem;
 			width: 13rem;
-    justify-content: space-around;
-	z-index: 20000;
+    		justify-content: space-around;
+			z-index: 20000;
 			}
 
 /* .extra_logo {
@@ -59,7 +59,49 @@
 			left: 5rem;
 			}
 }
-		</style>
+
+
+    /* #notificationDropdown {
+        display: none;
+    } */
+    /* #notificationDropdown.show {
+        display: block;
+    } */
+
+	.show {
+        display: block !important;
+    }
+
+
+	/* Target the scroll container */
+.notificatin_ul {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Scrollbar Track */
+.notificatin_ul::-webkit-scrollbar {
+    width: 8px; /* Vertical scrollbar width */
+}
+
+/* Scrollbar Thumb */
+.notificatin_ul::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+/* Scrollbar Thumb on Hover */
+.notificatin_ul::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Scrollbar Track Background */
+.notificatin_ul::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+</style>
+	
 
 		
 	</head>
@@ -96,7 +138,7 @@
 				<!-- Container fluid start -->
 			    @include('layouts.Back.partials.footer')
 				<!-- Container fluid end -->
-				
+				@include('layouts.Back.partials.notification')
 				<!-- Chat start -->
                 @include('layouts.Back.partials.chat')
 				<!-- Chat end -->
@@ -165,5 +207,7 @@
 				}
         });
 		</script>
+>
+
 	</body>
 </html>

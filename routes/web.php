@@ -47,7 +47,9 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\WithdrawController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
-
+use Illuminate\Notifications\DatabaseNotification;
+use App\Notifications\UserMessageNotification;
+use App\Http\Controllers\NotificationTempController;
 
 
 /*
@@ -80,6 +82,8 @@ Route::controller(MediaController::class)->group(function () {
     Route::get('/media-remove/{id}', 'remove')->name('media_remove');
    
 });
+
+Route::resource('notification-temps', NotificationTempController::class);
 
 Route::controller(ProductCategoryController::class)->group(function () {
     Route::get('/product-category-list', 'Index')->name('product_category_list');
@@ -616,6 +620,13 @@ Route::controller(PageController::class)->group(function () {
     
 
 });
+
+Route::get('/notifications/read-all', function () {
+    auth()->user()->unreadNotifications->markAsRead();
+    return redirect()->back();
+})->name('notifications.read.all');
+
+
 Route::get('/run-queue', [QueueController::class, 'run'])->name('run-queue');
 Route::get('/run-tree-child-arranger', [QueueController::class, 'tree_child_setter'])->name('tree_child_arranger');
 
@@ -634,63 +645,30 @@ Route::get('/queuework', function () {
     return "queue work successfully!";
 });
     
-Route::get('/test', function () {
 
-    $gsd = global_user_data(); // Fetch global user data
-    $setting = setting(); // Fetch settings
+Route::get('/notification', function () {
+//   DatabaseNotification::create([
+//     'type' => 'App\Notifications\UserMessageNotification',
+//     'notifiable_type' => 'App\Models\User',
+//     'notifiable_id' => 1,
+//     'data' => ['message' => 'This is a test notification'],
+// ]);
+$user = auth()->user();
+  $user->notify(new UserMessageNotification('This is a test notification'));
+  return "Notification sent successfully!";
+    //return view('Admin.NoticeBoard.notification');
 
-    $users = User::where('distribute_status', 1)->get(); // Fetch users with distribute status = 1
-    $conds =  WorkingGenCondition::all();
-    foreach ($users as $user) {
-          
-       
 
-        $dbcs = DirectBonusCondition::all();
-        $ckv = 0;
-        foreach ($dbcs as $dbc) {
-            if ($user->submitted_point >= $dbc->point) {
-                $ckv++;
-            }
-        }
-       
-
-        if($ckv > 0){
-           
-             //  Calculate bonus
-            $prevbalance = $user->balance;
-            $dbcm = $user->submitted_point / 100 * $dbcs[$ckv - 1]->commission;
-            $dbcm -= $dbcm / 100 * $setting->income_charge;
-
-            // Update user balance and income
-            $user->balance += $dbcm;
-            $user->total_income += $dbcm;
-            $user->save();
-            Log::info("Direct Bonus  bonus is $dbcm ".User::where('id',$user->id)->first());
-           // Log transaction
-           out_bonus($dbcm);
-           trxCreate($dbcm, $prevbalance, $user->balance, $user->id, 'direct_bonus', 'Direct bonus from LSP '.$user->submitted_point, '+', 'N', 'DBT'); 
-        }
-        sponsor_generation_income_with_sponsor($user->id);
-        working_generation_income_with_refer($user, $conds)  ;
-        matrix_income($user->id);
-    
-     }
-
-    // Reset submission checks
-    $users = User::where('submit_check', 1)->get();
-    // foreach ($users as $user) {
-    //     $user->submit_check = 0;
-    //     $user->distribute_status = 0;
-    //     $user->save();
-    // }
-  //SendBonusSmsJob::dispatch();
-   // Log success (or you can notify)
-    Log::info('Point Bonus Send Success');
-
-   
-
-   
 });
+    
+Route::get('/notification-read', function () {
+ $user = auth()->user();
+
+// সব নটিফিকেশন
+//  dd($user->unreadNotifications->markAsRead());
+ dd($user->unreadNotifications);
+});
+    
 
 
 Route::get('/clear-all', function() {
@@ -703,6 +681,7 @@ $exitCode = Artisan::call('optimize');
     echo "clear";
     // return what you want
 });
+
 
 
 require __DIR__.'/auth.php';
