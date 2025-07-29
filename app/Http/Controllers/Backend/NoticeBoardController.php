@@ -9,6 +9,9 @@ use App\Models\User;
 use App\Jobs\SendBulkSmsJob;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
+use App\Models\NotificationTemp;
+use App\Notifications\UserMessageNotification;
 
 class NoticeBoardController extends Controller
 {
@@ -72,6 +75,39 @@ public function sms_sending_action(Request $request)
     return back();
 }
 
+public function send_notification_action(Request $request){
+   
+     $request->validate([
+            'notification_type' => 'required|in:all,manual',
+            'notification_body' => 'required|string',
+        ]);
+
+        $users = [];
+
+        if ($request->notification_type === 'all') {
+            $users = User::all();
+        } elseif ($request->notification_type === 'manual') {
+            $request->validate([
+                'user_ids' => 'required|array',
+                'user_ids.*' => 'exists:users,id',
+            ]);
+            $users = User::whereIn('id', $request->user_ids)->get();
+        }
+
+        foreach ($users as $user) {
+            Log::info("Notification sent to {$user->username}: " . $request->notification_body);
+             $data = [
+                'body' =>$request->notification_body ,
+                'type' => 'admin_notification',
+                'subject' => 'From Admin Notification',
+                'url' => '#',
+                ];
+               $user->notify(new UserMessageNotification($data));
+          
+        }
+
+        return back()->with('success', 'Notification sent to selected users.');
+}
     
     
     

@@ -319,6 +319,7 @@ Route::controller(PageController::class)->group(function () {
         Route::get('/sms-sender-option', 'sms_sender_option')->name('sms_sender_option');
         Route::get('/sms-sending-records', 'sms_sending_records')->name('sms_sending_records');
         Route::post('/sms-sending-action', 'sms_sending_action')->name('sms_sending_action');
+        Route::post('/send-notification-action', 'send_notification_action')->name('send_notification_action');
         
     
     });
