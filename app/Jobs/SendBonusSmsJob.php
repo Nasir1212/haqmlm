@@ -10,6 +10,7 @@ use App\Models\NwmtgTransaction;
 use App\Models\WgbTransaction;
 use App\Models\PointSubmitHistory;
 use App\Models\SpbTransaction;
+use App\Notifications\UserMessageNotification;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -78,9 +79,19 @@ class SendBonusSmsJob implements ShouldQueue
                 $msg = "HMS Affiliate Bonus ".$inc."BDT for " . $formatted . ". Charge deducted " . $charge . "BDT. New Balance " . formatAmount($user->balance) . "BDT (" . $user->username . ") \n Haqmultishop.com \n Digital Affiliate System";
                 $chcu[] = ['to' => $user->phone, 'message' => $msg];
             }
+            
+            
+                $data_bonus = [
+                'body' => $msg,
+                'type' => 'bonus_notification',
+                'subject' => 'Bonus Notification',
+                'url' => url("transactions?remark=refer_bonus"),
+                ];
+
+                 $user->notify(new UserMessageNotification($data_bonus));
       }
         \Log::info($chcu);
         // Send bulk SMS
-        bulk_msg_sms_send($chcu);
+      //  bulk_msg_sms_send($chcu);
     }
 }

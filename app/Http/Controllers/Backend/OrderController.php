@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use App\Notifications\UserMessageNotification;
 
 class OrderController extends Controller
 {
@@ -108,6 +109,7 @@ class OrderController extends Controller
 
             $setting = setting();
         $order = Order::where('id',$request->id)->with('order_detail')->first();
+        $user = User::find($order->user_id);
         if($order->status != "Delivered" && $request->order_status == "Returned" &&  $order->status != "Returned"){
              $odd = OrderDetail::where('order_id', $order->id)->get();
               if($odd){
@@ -133,6 +135,20 @@ class OrderController extends Controller
         if($order->status != "Delivered" &&  $order->status != "Returned"){
             if($request->order_status == "Delivered"){
                 if($order->payment_status == "Paid"){
+               
+   $template_delivery = getNotificationTemplate('order_delivery', [
+                '[client_name]' => $user->username,
+                '[company_name]'=> $setting->company_name,
+                ]);
+                $data = [
+                'body' => $template_delivery['body'],
+                'type' => $template_delivery['type'],
+                'subject' => $template_delivery['subject'],
+                'url' => url("product-order-details/$order->id"),
+                ];
+                
+               
+                $user->notify(new UserMessageNotification($data));
                       $order->status = $request->order_status;
                         $order->updated_by = $gsd->name;
                         $order->save();                 
@@ -143,7 +159,8 @@ class OrderController extends Controller
 
                 $order->status = $request->order_status;
                 $order->updated_by = $gsd->name;
-                $order->save();
+                $order->save();               
+                
             }
         }
 
@@ -164,8 +181,21 @@ class OrderController extends Controller
         if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
         $gsd = global_user_data();
        $order = Order::where('id',$request->id)->with('order_detail')->first();
+        $user = User::find($order->user_id);
        $order->payment_status = $request->payment_status;
-     
+
+       $template_delivery = getNotificationTemplate('order_paid', [
+                '[client_name]' => $user->username,
+                '[company_name]'=> $setting->company_name,
+                ]);
+                $data = [
+                'body' => $template_delivery['body'],
+                'type' => $template_delivery['type'],
+                'subject' => $template_delivery['subject'],
+                'url' => url("product-order-details/$order->id"),
+                ];
+               
+                $user->notify(new UserMessageNotification($data));
        foreach($order?->order_detail as $order_details){
 
         $product =  Product::where('id',$order_details?->product_id)->first();           
