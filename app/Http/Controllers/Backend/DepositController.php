@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Deposit;
 use App\Models\PayAccounts;
 use App\Models\User;
+use App\Notifications\UserMessageNotification;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -118,25 +119,40 @@ class DepositController extends Controller
         $trx_trx = $deposit->refer_trx;
         $user_id = $deposit->user_id;
         $deposit_current_status = $deposit->status;
-        $user = User::where('id', $gsd->id)->first();
+        // $user = User::where('id', $gsd->id)->first();
         $user = User::where('id',$user_id)->first();
         //  Approve Condition
         if( $ac_order == 'approve'){
             if( $deposit_current_status == 'Approve'){
+                  
                   notify()->error('Already Approved, So Do not Try again!');
                  return back();
             }else{
             $deposit->status = 'Approve';
             $deposit->save();
 
-            
+             
+
             if($deposit->balance_type == 'main_balance'){
                 $user->balance += $deposit->amount;
+                $d_type= "Tk ";
             }else{
                 $user->point += $deposit->amount;
+                $d_type= "Point ";  
             }
             $user->deposit -= $deposit->amount;
             $user->save();
+            $template_delivery = getNotificationTemplate('deposit_approved', [
+                '[amount]' => number_format($deposit->amount,2). ' ' .  $d_type, 
+              
+                ]);
+                $data = [
+                'body' => $template_delivery['body'],
+                'type' => $template_delivery['type'],
+                'subject' => $template_delivery['subject'],
+                'url' => url("deposit-approved"),
+                ];              
+                $user->notify(new UserMessageNotification($data));
 
             notify()->success('Balance Request approve successfully!');
             return back();
@@ -159,11 +175,28 @@ class DepositController extends Controller
             if($prev_status == 'Approve'){
                 if($deposit->balance_type == 'main_balance'){
                     $user->balance -= $deposit->amount;
+                   
                 }else{
                     $user->point -= $deposit->amount;
+                   
                 }
             }
             $user->save();
+            $d_type = $deposit->balance_type == 'main_balance' ? ' Tk ' : ' Point ';
+             $template_delivery = getNotificationTemplate('deposit_rejected', [
+                '[amount]' =>number_format($deposit->amount,2) . ' ' .$d_type,
+              
+                ]);
+                $data = [
+                'body' => $template_delivery['body'],
+                'type' => $template_delivery['type'],
+                'subject' => $template_delivery['subject'],
+                'url' => url("deposit-approved"),
+                ];
+                
+               
+                $user->notify(new UserMessageNotification($data));
+
 
             notify()->success('Balance Request Rejected successfully!');
             return back();

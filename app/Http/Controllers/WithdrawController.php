@@ -9,9 +9,10 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use Image;
-
-
+use App\Notifications\UserMessageNotification;
+use Illuminate\Support\Str;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class WithdrawController extends Controller
 {
@@ -51,6 +52,7 @@ class WithdrawController extends Controller
         $ac_order = $request->action_order;
         $withdraw =  Withdraw::where('id',$request->id)->first();
         $user_id = $withdraw->user_id;
+        $user = User::find($user_id);
         $withdraw_current_status = $withdraw->status;
 
      
@@ -65,6 +67,20 @@ class WithdrawController extends Controller
             }else{
                 $withdraw->status = 'Approve';
                 $withdraw->save();
+
+               
+             $template_delivery = getNotificationTemplate('withdraw_request_accepted', [
+                '[amount]' =>number_format($withdraw->amount,2),
+              
+                ]);
+                $data = [
+                'body' => $template_delivery['body'],
+                'type' => $template_delivery['type'],
+                'subject' => $template_delivery['subject'],
+                'url' => url("withdraw-approved"),
+                ];               
+                $user->notify(new UserMessageNotification($data));
+               
                 notify()->success('Withdraw Approve successfull!');
                 return back();
                 }
@@ -82,11 +98,22 @@ class WithdrawController extends Controller
             }
             elseif($withdraw_current_status == 'Pending'){
                     $withdraw->status = 'Cancel';
-                    $withdraw->save();
-            
+                    $withdraw->save();        
                     $user = User::where('id',$user_id)->first();
                     $user->balance += $withdraw->amount + $withdraw->charge;
                     $user->save();
+
+                      $template_delivery = getNotificationTemplate('withdraw_request_rejected', [
+                '[amount]' =>number_format($withdraw->amount,2),
+              
+                ]);
+                $data = [
+                'body' => $template_delivery['body'],
+                'type' => $template_delivery['type'],
+                'subject' => $template_delivery['subject'],
+                'url' => url("withdraw-cancel"),
+                ];               
+                $user->notify(new UserMessageNotification($data));
                   
                     notify()->success('Withdraw Reject successfull!');
                     return back();
@@ -138,16 +165,36 @@ class WithdrawController extends Controller
             $withdraw = new Withdraw();
             $withdraw->payment_r_ac =  $request->account_number;
     
-            if($request->hasFile('account_qr_code')){
-                $dt = Carbon::now();
-                $micro = $dt->micro;
-                $image_obj = $request->file('account_qr_code');
-                $orpath = storage_path('app/public/uploads/withdraw-account-qr/');
-                $image_name = $micro.$image_obj->getClientOriginalName();
-                $public_path = 'storage/uploads/withdraw-account-qr/';
-                Image::make($image_obj)->save($orpath.'/'.$image_name);
-                $withdraw->payment_r_ac_qr =  $request->account_qr_code;
+            // if($request->hasFile('account_qr_code')){
+            //     $dt = Carbon::now();
+            //     $micro = $dt->micro;
+            //     $image_obj = $request->file('account_qr_code');
+            //     $orpath = storage_path('app/public/uploads/withdraw-account-qr/');
+            //     $image_name = $micro.$image_obj->getClientOriginalName();
+            //     $public_path = 'storage/uploads/withdraw-account-qr/';
+            //     Image::make($image_obj)->save($orpath.'/'.$image_name);
+            //     $withdraw->payment_r_ac_qr =  $request->account_qr_code;
+            // }
+
+            if ($request->hasFile('account_qr_code')) {
+            $image_obj = $request->file('account_qr_code');
+
+            // Generate unique filename
+            $filename = Str::random(40) . '.' . $image_obj->getClientOriginalExtension();
+
+            // Define relative and full storage path
+            $media_type = 'withdraw-account-qr';
+            $relative_path = 'uploads/' . $media_type . '/' . $filename;
+
+            // Save image using Intervention
+            $image_instance = Image::make($image_obj)->encode(); // you can resize if needed
+            Storage::disk('img_disk')->put($relative_path, $image_instance);
+
+            // Save to DB
+            $withdraw->payment_r_ac_qr = Storage::disk('img_disk')->url('uploads/' . $media_type . '/' . $filename);
             }
+
+
             $charge = $wm / 1000 * $payAccount->charge;
             $withdraw->charge =  $charge;
             $withdraw->amount =  $wm - $charge;

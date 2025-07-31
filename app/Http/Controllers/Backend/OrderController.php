@@ -136,7 +136,7 @@ class OrderController extends Controller
             if($request->order_status == "Delivered"){
                 if($order->payment_status == "Paid"){
                
-   $template_delivery = getNotificationTemplate('order_delivery', [
+                $template_delivery = getNotificationTemplate('order_delivery', [
                 '[client_name]' => $user->username,
                 '[company_name]'=> $setting->company_name,
                 ]);
