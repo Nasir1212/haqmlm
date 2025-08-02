@@ -174,6 +174,7 @@
 							$records = CountTotalSubmittedPoint::whereYear('created_at', $year)
 							->whereMonth('created_at', $month)
 							->sum('point');
+						
 							 @endphp
 								{{ $records }}
 							 @else

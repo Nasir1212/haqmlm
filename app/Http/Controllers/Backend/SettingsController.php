@@ -51,7 +51,7 @@ class SettingsController extends Controller
        }
         
             
-            
+           
             $page_title = "Auto collector find out users";
             $users->appends(['point' => $request->point,'point_type' => $request->point_type]);
             return view('Admin.settings.auto-pv-collector',compact('cpoint','page_title','users','gsd'));
@@ -63,6 +63,7 @@ class SettingsController extends Controller
 
 
     public function auto_pv_collection_action(Request $request){
+         $runing_count_point = 0;
          $gsd = global_user_data();
           $runing_count_point= 0;
         if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){     
@@ -73,7 +74,7 @@ class SettingsController extends Controller
        }elseif($request->point_type == 'Lock'){
         $users = User::where('lock_point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
        }else{
-       
+      
         $user_submitted_points  = userSelfSubmitPoint::all();
        
         foreach($user_submitted_points as $user_submitted_point){
@@ -99,9 +100,9 @@ class SettingsController extends Controller
         
         }
            
-        CountTotalSubmittedPoint::create([
-        'point' => $runing_count_point
-        ]);
+        // CountTotalSubmittedPoint::create([
+        // 'point' => $runing_count_point
+        // ]);
 
        userSelfSubmitPoint::truncate();
         notify()->success('Self Sub Point Collection Complete');
@@ -123,26 +124,26 @@ class SettingsController extends Controller
     }
      $today = Carbon::today();
         $amount = $point;
+
         foreach ($users as $key => $user) {
-           
             if($request->point_type == 'Normal'){
-                 $runing_count_point+=$user->point;
+            $runing_count_point+=$request->point;
             $prev_point = $user->point;
             $user->point -= $point;
             $dd = 'admin action normal point';
-             $ph = new PointSubmitHistory();
+            $ph = new PointSubmitHistory();
             $ph->point = $request->point;
             $ph->user_id = $user->id;
-            $ph->save();
+           // $ph->save();
              }else if($request->point_type == 'Lock'){
-                 $runing_count_point+=$user->lock_point;
+              $runing_count_point+=$request->point;
               $prev_point = $user->lock_point;
               $user->lock_point -= $point;
               $dd = 'admin action lock point';
                $ph = new PointSubmitHistory();
             $ph->point = $request->point;
             $ph->user_id = $user->id;
-            $ph->save();
+          //  $ph->save();
              }
             
             $user->submitted_point = $point;
@@ -150,13 +151,14 @@ class SettingsController extends Controller
             $user->point_submit_date = $today;
             $user->distribute_status = 1;
             $user->submit_check = 1;
-            $user->save();
+          //  $user->save();
             
             trxCreate($amount,$prev_point,$user->point,$user->id,'auto_pv_submit',$dd,'-','N',"M");
         }
          CountTotalSubmittedPoint::create([
         'point' => $runing_count_point
         ]);
+        dd($runing_count_point);
         notify()->success('Collection Complete');
         return back();
       }else {
@@ -213,47 +215,8 @@ class SettingsController extends Controller
     
     }
     
-    
-     public function auto_pv_collection_bullk_back_action(Request $request){
-         $gsd = global_user_data();
-        if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
-      
-            $trxs = Transaction::whereDate('created_at',$request->date)->where('remark','auto_pv_submit')->get();
-            foreach($trxs as $trx){
-                   $auto_p  = PointSubmitHistory::whereDate('created_at',$request->date)->where('user_id',$trx->user_id)->where('point',$trx->amount)->first();
-                   $user = User::where('id',$trx->user_id)->first();
-                   if($user->submit_check == 1 && $user->distribute_status == 1){
-                       
-                           $user->point -= $trx->amount;
-                           $user->submitted_point -= $trx->amount;
-                           $user->total_submitted_point -= $trx->amount;
-                           
-                            if($user->submitted_point <= 0){
-                                 $user->point_submit_date = NULL;
-                                 $user->distribute_status = 0;
-                            $user->submit_check = 0;
-                            }
-                            $user->save();
-                            
-                            $auto_p->delete();
-                            $trx->delete();
-                       
-                   }
-            }
-         
-         
-            notify()->success('Command Success');
-           
-            return back();
-         
-       }else{
-                 notify()->error('Permission Not Allow !');
-                           return back();
-                        }
-    
-    
-    }
-    
+
+        
     
     
    

@@ -227,6 +227,7 @@ public function account_balance_trans_manage(){
         {
             $power = 'general';
             if (Auth::id() == 1){
+             
                 
                 if(isset($request->date)){
                      $now =  Carbon::parse($request->date);
@@ -237,6 +238,7 @@ public function account_balance_trans_manage(){
                      $matrix_inac_users = $accusers - $matrix_ac_users;
                      $total_sale_point = PointSaleHistory::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->where('status',1)->sum('point');
                      $total_submitted_point = PointSubmitHistory::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->latest('id')->sum('point');
+
                      $bonus_delivered = Withdraw::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->where('status','Approve')->sum('amount');
                      $out_point = OutPointHistory::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
                 }else{
@@ -364,6 +366,7 @@ public function account_balance_trans_manage(){
                 $ph->updated_at = $dt;
                 $ph->save();
                 $dd = 'self point submit';
+
                  trxCreate($request->point,$prev_point,$gsd->point,$gsd->id,'self_pv_submit',$dd,'-','N',"M");
                 notify()->success('Point Submit Success');
                 return back();
