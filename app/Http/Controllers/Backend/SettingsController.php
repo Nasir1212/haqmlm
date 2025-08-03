@@ -134,7 +134,7 @@ class SettingsController extends Controller
             $ph = new PointSubmitHistory();
             $ph->point = $request->point;
             $ph->user_id = $user->id;
-           // $ph->save();
+           $ph->save();
              }else if($request->point_type == 'Lock'){
               $runing_count_point+=$request->point;
               $prev_point = $user->lock_point;
@@ -143,7 +143,7 @@ class SettingsController extends Controller
                $ph = new PointSubmitHistory();
             $ph->point = $request->point;
             $ph->user_id = $user->id;
-          //  $ph->save();
+           $ph->save();
              }
             
             $user->submitted_point = $point;
@@ -151,14 +151,14 @@ class SettingsController extends Controller
             $user->point_submit_date = $today;
             $user->distribute_status = 1;
             $user->submit_check = 1;
-          //  $user->save();
+           $user->save();
             
             trxCreate($amount,$prev_point,$user->point,$user->id,'auto_pv_submit',$dd,'-','N',"M");
         }
          CountTotalSubmittedPoint::create([
         'point' => $runing_count_point
         ]);
-        dd($runing_count_point);
+       
         notify()->success('Collection Complete');
         return back();
       }else {
@@ -177,9 +177,9 @@ class SettingsController extends Controller
             $trx = Transaction::whereDate('created_at',$request->date)->where('id',$request->id)->where('user_id',$request->user_id)->where('remark','auto_pv_submit')->first();
          
             $auto_p  = PointSubmitHistory::whereDate('created_at',$request->date)->where('user_id',$request->user_id)->where('point',$trx->amount)->first();
-        //   dd($auto_p);
+        
             $user = User::where('id',$request->user_id)->first();
-        //  dd($user->submit_check);
+       
            if($user->submit_check == 1 && $user->distribute_status == 1){
                 
                    $user->point += $trx->amount;
