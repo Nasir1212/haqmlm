@@ -43,6 +43,17 @@ if (!function_exists('getUplinesRef')) {
     }
 }
 
+if (!function_exists('getDownlinesSpsByUserId')) {
+    function getDownlinesSpsByUserId($userId, &$downlines = []) {
+        $children = \App\Models\User::where('sponsor_id', $userId)->get();
+        foreach ($children as $child) {
+            $downlines[] = $child;
+            getDownlinesSpsByUserId($child->id, $downlines); // recursive call
+        }
+        return $downlines;
+    }
+}
+
 if (!function_exists('getUplinesSps')) {
     function getUplinesSps($userId, &$uplines = []) {
         $user = User::find($userId);

@@ -91,15 +91,40 @@ if($user){
 }
 
 public function fetch_total_team_point_by_sponsors(Request $request,$id ){
-   $users =  User::where('username',$id)->with('sponsor')->get();
-   $sum_ttp = 0;
-   foreach($users as $user){
-   if (\Carbon\Carbon::parse($user["point_submit_date"])->gt(\Carbon\Carbon::now()->subDays(7))) {
-    $sum_ttp += $user["submitted_point"];
-}
+    $user = User::where('username', $id)->first();
 
-}
-return $sum_ttp;
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
+    }
+
+ 
+    $sum_ttp = 0;
+
+      if ($user->point_submit_date && \Carbon\Carbon::parse($user->point_submit_date)->gt(\Carbon\Carbon::now()->subDays(7))) {
+        $sum_ttp += $user->submitted_point ?? 0;
+    }
+       $downlines = getDownlinesSpsByUserId($user->id);
+    foreach ($downlines as $member) {
+       
+        if ($member->point_submit_date && \Carbon\Carbon::parse($member->point_submit_date)->gt(\Carbon\Carbon::now()->subDays(7))) {
+            $sum_ttp += $member->submitted_point ?? 0;
+            //  print_r($member->username. "   ".$member->submitted_point."<br/>");
+        }
+    }
+
+    return $sum_ttp;
+
+//    $users =  User::where('username',$id)->with('sponsor')->get();
+
+//    $sum_ttp = 0;
+//    foreach($users as $user){
+//    if (\Carbon\Carbon::parse($user["point_submit_date"])->gt(\Carbon\Carbon::now()->subDays(7))) {
+//     $sum_ttp += $user["submitted_point"];
+  
+// }
+
+// }
+// return $sum_ttp;
 }
 
 public function getDownlineSponsorUsers($userId, &$downlineUsers = [])
