@@ -175,7 +175,7 @@ class OrderController extends Controller
         }
     }
     public function product_order_payment_status_change(Request $request){
-
+       
         $setting = setting();
         $gsd = global_user_data();
         if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
@@ -200,6 +200,7 @@ class OrderController extends Controller
 
         $product =  Product::where('id',$order_details?->product_id)->first();           
            if (!$product) {
+            return response()->json(['error'=>'Product not found']);
            notify()->error('Product not found');
            return back();
            }
@@ -208,6 +209,7 @@ class OrderController extends Controller
            ->first();
 
            if (!$owner || $owner->qty < $order_details?->qty) {
+            return response()->json(['success'=>'Stock limit or dealer not available']);
            notify()->error('Stock limit or dealer not available');
            return back();
            }
@@ -261,8 +263,7 @@ class OrderController extends Controller
    return response()->json(['success'=>'Status Chage Successfully!']);
         }else{
        
-      notify()->error('Permission Not Allow !');
-      return back();
+         return response()->json(['error' => 'Permission Not Allow !']);
    }
     }  
     public function product_order_shipping_cost_change(Request $request){
