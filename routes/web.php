@@ -686,16 +686,44 @@ $exitCode = Artisan::call('optimize');
 Route::get('check-rank', function () {
  $users = App\Models\User::all(); // Replace with the user ID you want to check
   $my_rank = [];
+  $my_rank['STM'] = collect();
  foreach($users as $user){
  $counts =   RefCountLeftRight($user->id);
 
 if($counts['left'] >= 5 && $counts['right'] >= 5){
-    echo " $user->username  Eligible for rank! Left: {$counts['left']}, Right: {$counts['right']} <br/>";
-    $my_rank[] = $user->id;
+    //echo "$user->id  "." $user->username  Eligible for rank! Left: {$counts['left']}, Right: {$counts['right']} <br/>";
+   $my_rank["STM"]->push($user->id);
 }
+
  }
 
- print_r($my_rank);
+ $rankOrder = ['STM', 'GM', 'DGM', 'AGM', 'DTM'];
+
+ for($i = 1; count($rankOrder) > $i; $i++){
+//echo "<br/>Rank: $rankOrder[$i] <br/>";
+ 
+$preR = $rankOrder[$i-1];
+$currR = $rankOrder[$i];
+$my_rank[$currR] = collect();
+foreach($users as $user){
+$children =  $users->where('ref_id', $user->id)->values();
+if($children->count() >= 2){
+    $leftHas = $my_rank[$preR]->contains($children[0]->id);
+    $rightHas = $my_rank[$preR]->contains($children[1]->id);
+    if($leftHas && $rightHas){ 
+      $my_rank[$currR]->push($user->id);  
+
+    } 
+}
+}
+
+foreach ($my_rank as $rankName => $ids) {
+    echo "$rankName: " . implode(', ', $ids->toArray()) . "<br/>";
+}
+   
+ }
+
+//  print_r($my_rank);
     // return view('Admin.NoticeBoard.notification');
 })->name('check_rank');
 
