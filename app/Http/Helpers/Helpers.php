@@ -288,6 +288,27 @@ function showDateTime($date, $format = 'd M, Y h:i A')
     return Carbon::parse($date)->translatedFormat($format);
 }
 
+if(!function_exists('RefCountLeftRight')) {
+   function RefCountLeftRight($username){
+    $children  = User::where('ref_id',$username)->orderBy('id')->get();
+    $leftCount = 0;
+    $rightCount = 0;
+
+    if($children->count()>0){
+        $left = $children->first();
+        $leftCounts =  RefCountLeftRight($left->id);
+        $leftCount = 1+ $leftCounts['left'] + $leftCounts['right'];
+        
+        if($children->count() > 1){
+        $right = $children[1];
+        $rightCounts =  RefCountLeftRight($right->id);  
+        $rightCount = 1 + $rightCounts['left'] + $rightCounts['right']; 
+        }
+      
+    }
+      return ['left'=>$leftCount, 'right'=>$rightCount];
+}
+ }
 
 function shortDescription($string, $length = 120)
 {

@@ -683,6 +683,21 @@ $exitCode = Artisan::call('optimize');
     // return what you want
 });
 
+Route::get('check-rank', function () {
+ $users = App\Models\User::all(); // Replace with the user ID you want to check
+  $my_rank = [];
+ foreach($users as $user){
+ $counts =   RefCountLeftRight($user->id);
+
+if($counts['left'] >= 5 && $counts['right'] >= 5){
+    echo " $user->username  Eligible for rank! Left: {$counts['left']}, Right: {$counts['right']} <br/>";
+    $my_rank[] = $user->id;
+}
+ }
+
+ print_r($my_rank);
+    // return view('Admin.NoticeBoard.notification');
+})->name('check_rank');
 
 
 require __DIR__.'/auth.php';
