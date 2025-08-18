@@ -690,12 +690,14 @@ Route::get('check-rank', function () {
  foreach($users as $user){
  $counts =   RefCountLeftRight($user->id);
 
-if($counts['left'] >= 5 && $counts['right'] >= 5){
+if($counts['left'] >= 1 && $counts['right'] >= 1){
     //echo "$user->id  "." $user->username  Eligible for rank! Left: {$counts['left']}, Right: {$counts['right']} <br/>";
    $my_rank["STM"]->push($user->id);
 }
 
  }
+
+ 
 
  $rankOrder = ['STM', 'GM', 'DGM', 'AGM', 'DTM'];
 
@@ -712,16 +714,21 @@ if($children->count() >= 2){
     $rightHas = $my_rank[$preR]->contains($children[1]->id);
     if($leftHas && $rightHas){ 
       $my_rank[$currR]->push($user->id);  
-
     } 
 }
 }
+ }
 
-foreach ($my_rank as $rankName => $ids) {
-    echo "$rankName: " . implode(', ', $ids->toArray()) . "<br/>";
+// foreach ($my_rank as $rankName => $ids) {
+//     echo "$rankName: " . implode(', ', $ids->toArray()) . "<br/>";
+// }
+
+
+for($i = 0; count($my_rank) > $i; $i++){
+  print_r( $my_rank[$i]);
 }
    
- }
+
 
 //  print_r($my_rank);
     // return view('Admin.NoticeBoard.notification');
