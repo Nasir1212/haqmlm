@@ -693,7 +693,7 @@ $my_rank[$cond->first()->rank_name] = collect();
  foreach($users as $user){
 $counts =   RefCountLeftRight($user->id,$users);
 // echo $user->username. " L : ".$counts['left']." R: ".$counts['right'] ."  </br>";
-if($counts['left'] >= 1 && $counts['right'] >= 1){
+if($counts['left'] >= 10 && $counts['right'] >= 10){
 $my_rank[$cond->first()->rank_name]->push($user->id);
 }
 
