@@ -289,19 +289,19 @@ function showDateTime($date, $format = 'd M, Y h:i A')
 }
 
 if(!function_exists('RefCountLeftRight')) {
-   function RefCountLeftRight($username){
-    $children  = User::where('ref_id',$username)->orderBy('id')->get();
+   function RefCountLeftRight($username,$users){
+    $children  = $users->where('ref_id', $username)->sortBy('id')->values();
     $leftCount = 0;
     $rightCount = 0;
 
     if($children->count()>0){
         $left = $children->first();
-        $leftCounts =  RefCountLeftRight($left->id);
+        $leftCounts =  RefCountLeftRight($left->id,$users);
         $leftCount = 1+ $leftCounts['left'] + $leftCounts['right'];
         
         if($children->count() > 1){
         $right = $children[1];
-        $rightCounts =  RefCountLeftRight($right->id);  
+        $rightCounts =  RefCountLeftRight($right->id,$users);  
         $rightCount = 1 + $rightCounts['left'] + $rightCounts['right']; 
         }
       
