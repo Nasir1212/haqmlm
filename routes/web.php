@@ -683,6 +683,8 @@ $exitCode = Artisan::call('optimize');
     // return what you want
 });
 
+
+
 Route::get('check-rank', function () {
 $users = App\Models\User::select('id','ref_id','username')->get(); 
 $cond = App\Models\RankCondition::all(); 
@@ -693,7 +695,7 @@ $my_rank[$cond->first()->rank_name] = collect();
  foreach($users as $user){
 $counts =   RefCountLeftRight($user->id,$users);
 // echo $user->username. " L : ".$counts['left']." R: ".$counts['right'] ."  </br>";
-if($counts['left'] >= 10 && $counts['right'] >= 10){
+if($counts['left'] >= 0 && $counts['right'] >= 0){
 $my_rank[$cond->first()->rank_name]->push($user->id);
 }
 
@@ -716,20 +718,23 @@ if($children->count() >= 2){
 $leftHas = $my_rank[$preR]->contains($children[0]->id);
 $rightHas = $my_rank[$preR]->contains($children[1]->id);
 
-if($leftHas && $rightHas){ 
+if($leftHas && $rightHas){
 
-   // $my_rank[$currR]->push($user->id);
-   // $my_rank[$preR] =  $my_rank[$preR]->diff($my_rank[$currR]);
-   $shift[] = [
-    'left' => $children[0]->id."Ref :".$user->id,   
-    'right' => $children[1]->id."Ref :".$user->id
-   ] ;
-   if(count(array_column($shift, 'left')) >= 2 && count(array_column($shift, 'right')) >= 2){
-    $my_rank[$currR]->push($user->id);
-   // $my_rank[$preR] =  $my_rank[$preR]->diff($my_rank[$currR]);
-     echo "L : ".$children[0]->id." R : ".$children[1]->id." Ref : ".$user->id."<br/>";
-   }
-  
+    foreach($users->where('ref_id', $children[0]->id)->pluck('id')->values() as $childId){
+        if(in_array($childId, $my_rank[$cond->first()->rank_name]->toArray())){
+            echo "L : $childId - {$children[0]->id} Ref: {$user->id}  <br/> ";
+        }
+
+    }
+
+      foreach($users->where('ref_id', $children[1]->id)->pluck('id')->values() as $childId){
+        if(in_array($childId, $my_rank[$cond->first()->rank_name]->toArray())){
+            echo "R : $childId -  {$children[0]->id} Ref: {$user->id}   <br/>";
+        }
+
+    }
+
+
 } 
 }
 
@@ -737,23 +742,89 @@ if($leftHas && $rightHas){
 
  }
 
-//print_r($shift);
+
+
 
 foreach ($my_rank as $rankName => $ids) {
     echo "$rankName: " . implode(', ', $ids->toArray()) . "<br/>";
 }
 
 
-// for($i = 0; count($my_rank) > $i; $i++){
-//   print_r( $my_rank[$i]);
+    
+})->name('check_rank');
+
+
+// Route::get('check-rank', function () {
+// $users = App\Models\User::select('id','ref_id','username')->get(); 
+// $cond = App\Models\RankCondition::all(); 
+// //dd($cond);  
+
+// $my_rank = [];
+// $my_rank[$cond->first()->rank_name] = collect();
+//  foreach($users as $user){
+// $counts =   RefCountLeftRight($user->id,$users);
+// // echo $user->username. " L : ".$counts['left']." R: ".$counts['right'] ."  </br>";
+// if($counts['left'] >= 2 && $counts['right'] >= 2){
+// $my_rank[$cond->first()->rank_name]->push($user->id);
 // }
+
+//  }
+
+//  $rankOrder = $cond->where('rank_name')->values()->pluck('rank_name')->toArray();
+// $shift = [];
+
+//  for($i = 1; count($rankOrder) > $i; $i++){
+//  $up_user=[];
+// $preR = $rankOrder[$i-1];
+// $currR = $rankOrder[$i];
+// $my_rank[$currR] = collect();
+
+// foreach($users as $user){
+// $children =  $users->where('ref_id', $user->id)->values();
+
+
+// if($children->count() >= 2){
+// $leftHas = $my_rank[$preR]->contains($children[0]->id);
+// $rightHas = $my_rank[$preR]->contains($children[1]->id);
+
+// if($leftHas && $rightHas){ 
+
+//    // $my_rank[$currR]->push($user->id);
+//    // $my_rank[$preR] =  $my_rank[$preR]->diff($my_rank[$currR]);
+//    $shift[] = [
+//     'left' => $children[0]->id."Ref :".$user->id,   
+//     'right' => $children[1]->id."Ref :".$user->id
+//    ] ;
+// //    if(count(array_column($shift, 'left')) >= 2 && count(array_column($shift, 'right')) >= 2){
+// //     $my_rank[$currR]->push($user->id);
+// //    // $my_rank[$preR] =  $my_rank[$preR]->diff($my_rank[$currR]);
+// //      echo "L : ".$children[0]->id." R : ".$children[1]->id." Ref : ".$user->id."<br/>";
+// //    }
+  
+// } 
+// }
+
+// }
+
+//  }
+
+// //print_r($shift);
+
+// foreach ($my_rank as $rankName => $ids) {
+//     echo "$rankName: " . implode(', ', $ids->toArray()) . "<br/>";
+// }
+
+
+// // for($i = 0; count($my_rank) > $i; $i++){
+// //   print_r( $my_rank[$i]);
+// // }
    
 
 
-//  print_r($my_rank);
-    // return view('Admin.NoticeBoard.notification');
+// //  print_r($my_rank);
+//     // return view('Admin.NoticeBoard.notification');
     
-})->name('check_rank');
+// })->name('check_rank');
 
 
 require __DIR__.'/auth.php';
