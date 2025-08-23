@@ -288,27 +288,64 @@ function showDateTime($date, $format = 'd M, Y h:i A')
     return Carbon::parse($date)->translatedFormat($format);
 }
 
-if(!function_exists('RefCountLeftRight')) {
-   function RefCountLeftRight($username,$users){
-    $children  = $users->where('ref_id', $username)->sortBy('id')->values();
-    $leftCount = 0;
-    $rightCount = 0;
+// if(!function_exists('RefCountLeftRight')) {
+//    function RefCountLeftRight($username,$users){
+//     $children  = $users->where('ref_id', $username)->sortBy('id')->values();
+//     $leftCount = 0;
+//     $rightCount = 0;
 
-    if($children->count()>0){
-        $left = $children->first();
-        $leftCounts =  RefCountLeftRight($left->id,$users);
-        $leftCount = 1+ $leftCounts['left'] + $leftCounts['right'];
+//     if($children->count()>0){
+//         $left = $children->first();
+//         $leftCounts =  RefCountLeftRight($left->id,$users);
+//         $leftCount = 1+ $leftCounts['left'] + $leftCounts['right'];
         
-        if($children->count() > 1){
-        $right = $children[1];
-        $rightCounts =  RefCountLeftRight($right->id,$users);  
-        $rightCount = 1 + $rightCounts['left'] + $rightCounts['right']; 
-        }
+//         if($children->count() > 1){
+//         $right = $children[1];
+//         $rightCounts =  RefCountLeftRight($right->id,$users);  
+//         $rightCount = 1 + $rightCounts['left'] + $rightCounts['right']; 
+//         }
       
+//     }
+//       return ['left'=>$leftCount, 'right'=>$rightCount];
+// }
+//  }
+
+
+if (!function_exists('RefCountLeftRight')) {
+    function RefCountLeftRight($username, $users)
+    {
+        $children = $users->where('ref_id', $username)->sortBy('id')->values();
+        $leftCount = 0;
+        $rightCount = 0;
+
+        // যদি কমপক্ষে ১টা child থাকে (ধরি খ)
+        if ($children->count() > 0) {
+            $left = $children[0]; // খ
+            $leftCount = 1 + countAllDescendants($left->id, $users);
+        }
+
+        // যদি ২টা child থাকে (ধরি গ)
+        if ($children->count() > 1) {
+            $right = $children[1]; // গ
+            $rightCount = 1 + countAllDescendants($right->id, $users);
+        }
+
+        return ['left' => $leftCount, 'right' => $rightCount];
     }
-      return ['left'=>$leftCount, 'right'=>$rightCount];
-}
- }
+    }
+
+ 
+    function countAllDescendants($id, $users)
+    {
+        $children = $users->where('ref_id', $id);
+        $count = $children->count();
+
+        foreach ($children as $child) {
+            $count += countAllDescendants($child->id, $users);
+        }
+        return $count;
+    }
+
 
 function shortDescription($string, $length = 120)
 {
