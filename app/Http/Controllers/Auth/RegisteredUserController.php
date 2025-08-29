@@ -357,7 +357,9 @@ public function   user_join_review(Request $request) {
                         }
                     }
                
-
+                    Artisan::call('queue:work', [
+                    '--stop-when-empty' => true
+                    ]);
         return redirect()->route('dashboard_index');
     }
 
