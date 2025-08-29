@@ -686,6 +686,8 @@ $exitCode = Artisan::call('optimize');
 
 
 Route::get('check-rank', function () {
+      // 1. পুরোনো rank data clear করা
+        DB::table('user_ranks')->truncate();
 $users = App\Models\User::select('id','ref_id','username')->get(); 
 $cond = App\Models\RankCondition::all(); 
 $childrenMap = $users->groupBy('ref_id');
@@ -759,10 +761,22 @@ if($leftHas && $rightHas){
 
 
 
+  // 3. নতুন রেজাল্ট DB তে সেভ করুন
+        // foreach ($my_rank as $rankName => $ids) {
+        //     foreach ($ids as $uid) {
+        //         DB::table('user_ranks')->insert([
+        //             'user_id' => $uid,
+        //             'rank'    => $rankName,
+        //             'created_at' => now(),
+        //             'updated_at' => now()
+        //         ]);
+        //     }
+        // }
 
 foreach ($my_rank as $rankName => $ids) {
     echo "$rankName: " . implode(', ', $ids->toArray()) . "<br/>";
 }
+
 // echo "<pre>";
 // print_r($shift);
 // echo "</pre>";  

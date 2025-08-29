@@ -175,4 +175,14 @@ public function transactions()
     return $this->hasMany(Transaction::class, 'user_id');
 }
 
+protected static function booted()
+{
+    // যখন নতুন একজন ইউজার create হবে
+    static::created(function ($user) {
+        // তখন আমরা একটি Queue Job dispatch করব
+        \App\Jobs\CheckRankJob::dispatch();
+    });
 }
+
+}
+
