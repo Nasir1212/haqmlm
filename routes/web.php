@@ -671,6 +671,15 @@ Route::get('/notification-read', function () {
 });
     
 
+Route::get('/auto-active', function () {
+
+$users =  User::where('total_submitted_point','>=',1800)->where('matrix_activation_status',0)->get('id');
+foreach($users as $user){
+      $tx =  DB::table('direct_bonus_transactions')->where('user_id',$user->id)->get();
+      print_r($tx);
+         
+}
+});
 
 Route::get('/clear-all', function() {
     $exitCode = Artisan::call('cache:clear');
