@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Notifications\DatabaseNotification;
 use App\Notifications\UserMessageNotification;
 use App\Http\Controllers\NotificationTempController;
+use App\Models\NotificationTemp;
 
 
 /*
@@ -672,14 +673,111 @@ Route::get('/notification-read', function () {
     
 
 Route::get('/auto-active', function () {
+// যেসব ইউজার 3000 পয়েন্ট জমা দিয়েছে এবং যাদের matrix_activation_status ০ তাদের নিয়ে আসুন
+$users = DB::table('users')
+    ->where('total_submitted_point', '>=', 3000)
+    ->where('matrix_activation_status', 0)
+    ->select('id','username','total_submitted_point','created_at')
+    ->orderBy('username', 'asc')
+    ->get();
 
-$users =  User::where('total_submitted_point','>=',1800)->where('matrix_activation_status',0)->get('id');
-foreach($users as $user){
-      $tx =  DB::table('direct_bonus_transactions')->where('user_id',$user->id)->get();
-      print_r($tx);
-         
-}
+
+
+    foreach($users as $user){
+        echo "Activating User: {$user->username}, Total Submitted Points: {$user->total_submitted_point}<br>";
+        $user = App\Models\User::find($user->id);
+        $user->matrix_activation_status = 1; // field update
+        $user->save(); // save changes
+        autoMatrixGenerator($user->id);
+  // Sender Notification
+    $template = getNotificationTemplate('con_non_working', [
+    '[user_name]' => $user->username,
+    
+    ]);
+    $data = [
+    'body' => $template['body'],
+    'type' => $template['type'],
+    'subject' => $template['subject'],
+    'url' => url('user-matrix-tree/'.$user->id),
+    ];
+     $user->notify(new UserMessageNotification($data));
+
+    }
+    
+
+// যেসব ইউজার 1800 পয়েন্ট জমা দিয়েছে এবং যাদের matrix_activation_status ০ তাদের নিয়ে আসুন
+$users = DB::table('users')
+    ->where('total_submitted_point', '>=', 1800)
+    ->where('matrix_activation_status', 0)
+    ->select('id','username','total_submitted_point','created_at')
+    ->orderBy('username', 'asc')
+    ->get();
+
+// প্রতিটি ইউজারের সাথে তার point submission history যোগ করুন
+$users = $users->map(function($user) {
+    $user->point_submit_histories = DB::table('point_submit_histories')
+        ->where('user_id', $user->id)
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+    return $user;
 });
+
+ 
+foreach($users as $user){
+$qualified = true;
+$total = 0;
+$startMonth = \Carbon\Carbon::parse($user->created_at)->startOfMonth();
+$endMonth   = now()->startOfMonth();
+$has_submition = false;
+$total_point  = 0;
+echo "User: {$user->username}, Total Submitted Points: {$user->total_submitted_point}<br>";
+  
+    for ($month = $startMonth; $month <= $endMonth; $month->addMonth()) {
+          $monthStr = $month->format('Y-m');
+       
+         foreach($user->point_submit_histories as $psh){
+            // check here is he  qualified  in every month
+            $psh_month = \Carbon\Carbon::parse($psh->created_at)->format('Y-m');
+            if($psh_month == $monthStr) {
+                $has_submition = true;
+                 $total_point += $psh->point ;
+                     echo "-- Month: $monthStr PSH Month:  $psh_month, Points: {$psh->point}, Total So Far: $total_point <br>";
+                 if($total_point >= 1800){
+                   autoMatrixGenerator($user->id); 
+                    // Sender Notification
+                        $template = getNotificationTemplate('non_working_matrix', [
+                        '[user_name]' => $user->username,
+                        
+                        ]);
+                        $data = [
+                        'body' => $template['body'],
+                        'type' => $template['type'],
+                        'subject' => $template['subject'],
+                        'url' => url('user-matrix-tree/'.$user->username),
+                        ];
+                        $user = App\Models\User::find($user->id);
+                        echo $user->id . " - ". $user->username . " -- Activated <br>";
+                        $user->notify(new UserMessageNotification($data));
+                    break;
+                 }
+            }else{
+               echo "Not Abailable $user->username <br/>" ;
+              //  break;
+                 
+            }
+         }
+
+         if(!$has_submition){
+            break;
+         }
+      
+    }
+}
+
+});
+
+
 
 Route::get('/clear-all', function() {
     $exitCode = Artisan::call('cache:clear');
