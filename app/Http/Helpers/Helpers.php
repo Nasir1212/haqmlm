@@ -2,6 +2,7 @@
 
 use App\Models\Cart;
 use App\Models\CompanyAccount;
+use App\Models\UserActivation;
 use App\Models\DirectBonusTransaction;
 use App\Models\MatrixLevel;
 use App\Models\NonWorkingGenCondition;
@@ -27,7 +28,125 @@ use App\Models\SponsorGenCondition;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\NotificationTemp;
+use App\Notifications\UserMessageNotification;
+use App\Http\Controllers\NotificationTempController;
 
+// মাসিক কাউন্ট
+function checkMonthlyQualification($user){
+foreach($users as $user){
+$qualified = true;
+$total = 0;
+$startMonth = \Carbon\Carbon::parse($user->created_at)->startOfMonth();
+$endMonth   = now()->startOfMonth();
+$has_submition = false;
+$total_point  = 0;
+$regular_tsp =1800;
+  
+    for ($month = $startMonth; $month <= $endMonth; $month->addMonth()) {
+          $monthStr = $month->format('Y-m');
+       
+         foreach($user->point_submit_histories as $psh){
+            // check here is he  qualified  in every month
+            $psh_month = \Carbon\Carbon::parse($psh->created_at)->format('Y-m');
+            if($psh_month == $monthStr) {
+                $has_submition = true;
+                 $total_point += $psh->point ;
+                     echo "-- Month: $monthStr PSH Month:  $psh_month, Points: {$psh->point}, Total So Far: $total_point <br>";
+                 if($total_point >= 1800){
+                   autoMatrixGenerator($user->id);
+                        UserActivation::create([
+                        'user_id' => $user->id,
+                        'activation_method' => "Activated By $regular_tsp TSP + Regular Qualified.",
+                        ]); 
+                        
+                        // Sender Notification
+                        $template = getNotificationTemplate('non_working_matrix', [
+                        '[user_name]' => $user->username,
+                        
+                        ]);
+                        $data = [
+                        'body' => $template['body'],
+                        'type' => $template['type'],
+                        'subject' => $template['subject'],
+                        'url' => url('user-matrix-tree/'.$user->username),
+                        ];
+                        $user = App\Models\User::find($user->id);
+                        echo $user->id . " - ". $user->username . " -- Activated <br>";
+                        $user->notify(new UserMessageNotification($data));
+                    break;
+                 }
+            }else{
+               echo "Not Abailable $user->username <br/>" ;
+              //  break;
+                 
+            }
+         }
+
+         if(!$has_submition){
+            break;
+         }
+      
+    }
+}
+}
+
+// সাপ্তাহিক কাউন্ট
+function  checkWeeklyQualification($user){
+foreach($users as $user){
+$qualified = true;
+$total = 0;
+$startWeek = \Carbon\Carbon::parse($user->created_at)->startOfWeek();
+$endWeek   = now()->startOfWeek();
+$has_submition = false;
+$total_point  = 0;
+$regular_tsp =1800;
+echo "User: {$user->username}, Total Submitted Points: {$user->total_submitted_point}<br>";
+  
+   for ($week = $startWeek; $week <= $endWeek; $week->addWeek()) {
+    $weekStr = $week->format('o-W');
+       
+         foreach($user->point_submit_histories as $psh){
+        $psh_week = \Carbon\Carbon::parse($psh->created_at)->format('o-W');
+           if($psh_week == $weekStr) {
+                $has_submition = true;
+                 $total_point += $psh->point ;
+
+                 if($total_point >= 1800){
+                   autoMatrixGenerator($user->id); 
+                     UserActivation::create([
+                        'user_id' => $user->id,
+                        'activation_method' => "Activated By $regular_tsp TSP + Regular Qualified.",
+                        ]);
+                    // Sender Notification
+                        $template = getNotificationTemplate('non_working_matrix', [
+                        '[user_name]' => $user->username,
+                        
+                        ]);
+                        $data = [
+                        'body' => $template['body'],
+                        'type' => $template['type'],
+                        'subject' => $template['subject'],
+                        'url' => url('user-matrix-tree/'.$user->username),
+                        ];
+                        $user = App\Models\User::find($user->id);
+                        echo $user->id . " - ". $user->username . " -- Activated <br>";
+                        $user->notify(new UserMessageNotification($data));
+                    break;
+                 }
+            }else{
+               echo "Not Abailable $user->username <br/>" ;
+              //  break;
+                 
+            }
+         }
+
+         if(!$has_submition){
+            break;
+         }
+      
+    }
+}
+}
 
 if (!function_exists('getUplinesRef')) {
     function getUplinesRef($userId, &$uplines = []) {

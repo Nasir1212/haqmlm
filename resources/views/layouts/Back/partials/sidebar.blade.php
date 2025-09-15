@@ -206,6 +206,12 @@
                                     <span class="menu-text">Package</span>
                                 </a>
                             </li>
+                            <li>
+                                <a href="{{ route('auto_active_non_working_user')}}">
+                                    {{-- <i class="icon-circular-graph"></i> --}}
+                                    <span class="menu-text">Auto Activated</span>
+                                </a>
+                            </li>
 
                            
                         </ul>

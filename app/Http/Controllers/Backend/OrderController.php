@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\Package;
 use App\Models\User;
 use App\Models\Dealer;
+use App\Models\UserActivation;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,21 @@ class OrderController extends Controller
     
     }
 
+    function auto_active_non_working_user(Request $request){
+         $gsd = global_user_data();
+        
+         if($gsd->id != 1){
+             $user_activations = UserActivation::where('user_id',$gsd->id)->with('user')->get();
+         }else{
+            $user_activations = UserActivation::with('user')->get();
+
+         }
+        return view('Admin.auto-active.auto-active',compact('gsd','user_activations'));
+       
+    }
+
+
+    
     public function productOrders(Request $request){
         $gsd = global_user_data();
        

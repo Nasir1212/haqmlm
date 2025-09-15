@@ -142,6 +142,30 @@
 										
 									</div>
 								</div>
+
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+											<div class="form-group">
+										<label for="whatsapp_n">Regular TSP</label>
+										<input type="text" class="form-control" name="whatsapp_n" id="whatsapp_n" value="{{ $setting_data->whatsapp_n }}">
+									
+									</div>
+								</div>
+
+									<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+										<div class="form-group">
+										<label for="whatsapp_n">Irregular TSP</label>
+										<input type="text" class="form-control" name="whatsapp_n" id="whatsapp_n" value="{{ $setting_data->whatsapp_n }}">
+									
+									</div>
+								</div>
+
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+										<div class="form-group">
+										<label for="whatsapp_n">Irregular TSP</label>
+										<input type="text" class="form-control" name="whatsapp_n" id="whatsapp_n" value="{{ $setting_data->whatsapp_n }}">
+									
+									</div>
+								</div>
 								
 							</div>
 							
