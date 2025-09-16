@@ -655,6 +655,7 @@ public function direct_bonus_condition_remove(Request $request){
     } 
 
     public function web_config_update(Request $request){
+      
            $gsd = global_user_data();
            if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){
         $setting = Setting::where('id',1)->first();
@@ -685,6 +686,9 @@ public function direct_bonus_condition_remove(Request $request){
        
        $setting->admin_mail = $request->admin_mail;
        $setting->whatsapp_n = $request->whatsapp_n;
+         $setting->regular_tsp = $request->regular_tsp;
+         $setting->irregular_tsp = $request->irregular_tsp;
+         $setting->non_working_auto = $request->non_working_auto;
 
         $setting->save();
         notify()->success('Update Success');

@@ -32,7 +32,7 @@ use App\Notifications\UserMessageNotification;
 use App\Http\Controllers\NotificationTempController;
 
 // মাসিক কাউন্ট
-function checkMonthlyQualification($user){
+function checkMonthlyQualification($users){
 foreach($users as $user){
 $qualified = true;
 $total = 0;
@@ -91,7 +91,7 @@ $regular_tsp =1800;
 }
 
 // সাপ্তাহিক কাউন্ট
-function  checkWeeklyQualification($user){
+function  checkWeeklyQualification($users){
 foreach($users as $user){
 $qualified = true;
 $total = 0;

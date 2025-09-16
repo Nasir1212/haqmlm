@@ -145,24 +145,27 @@
 
 								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 											<div class="form-group">
-										<label for="whatsapp_n">Regular TSP</label>
-										<input type="text" class="form-control" name="whatsapp_n" id="whatsapp_n" value="{{ $setting_data->whatsapp_n }}">
+										<label for="regular_tsp">Regular TSP</label>
+										<input type="text" class="form-control" name="regular_tsp" id="" value="{{ $setting_data->regular_tsp }}">
 									
 									</div>
 								</div>
 
 									<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 										<div class="form-group">
-										<label for="whatsapp_n">Irregular TSP</label>
-										<input type="text" class="form-control" name="whatsapp_n" id="whatsapp_n" value="{{ $setting_data->whatsapp_n }}">
+										<label for="irregular_tsp">Irregular TSP</label>
+										<input type="text" class="form-control" name="irregular_tsp" id="irregular_tsp" value="{{ $setting_data->irregular_tsp }}">
 									
 									</div>
 								</div>
 
 								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 										<div class="form-group">
-										<label for="whatsapp_n">Irregular TSP</label>
-										<input type="text" class="form-control" name="whatsapp_n" id="whatsapp_n" value="{{ $setting_data->whatsapp_n }}">
+										<label for="non_working_auto">Non-working Automation By </label>
+										<select class="form-control" name="non_working_auto" id="non_working_auto">
+											<option @selected($setting_data->non_working_auto == 1 ) value="1">Month</option>
+											<option @selected($setting_data->non_working_auto == 2 ) value="2">Week</option>
+										</select>	
 									
 									</div>
 								</div>

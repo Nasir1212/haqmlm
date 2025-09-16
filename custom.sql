@@ -38,4 +38,9 @@ ALTER TABLE balance_transfer_records
 ADD COLUMN sender_after_blance VARCHAR(250) NULL, 
 ADD COLUMN sender_before_blance VARCHAR(250) NULL;
 
+ALTER TABLE settings 
+ADD COLUMN regular_tsp VARCHAR(250) NULL, 
+ADD COLUMN irregular_tsp VARCHAR(250) NULL,
+ADD COLUMN non_working_auto VARCHAR(250) NULL;
+
 

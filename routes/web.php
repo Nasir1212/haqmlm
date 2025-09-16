@@ -4,6 +4,7 @@ use App\Models\DirectBonusCondition;
 use App\Models\WorkingGenCondition;
 use App\Models\UserExtra;
 use App\Models\MatrixLevel;
+use App\Models\Setting;
 
 use App\Http\Controllers\Backend\AddToCartController;
 use App\Http\Controllers\Backend\ClubController;
@@ -723,8 +724,13 @@ $users = $users->map(function($user) {
 
     return $user;
 });
+ $setting = Setting::where('id',1)->first();
+ if($setting->non_working_auto ==1){
+checkMonthlyQualification($users);
+ }else{
+checkWeeklyQualification($users);
+ }
 
-checkMonthlyQualification($user);
 });
 
 
