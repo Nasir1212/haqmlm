@@ -1,6 +1,6 @@
 <div id="chat-box">
     <div id="chat-circle" class="btn btn-raised">
-        <a href="whatsapp://send?abid=<?php echo setting()->whatsapp_n ?>&text=Hello%2C%20World!"><img src="{{ asset('assets/backend/img/chat.svg') }}" alt="Chat" /></a>
+        <a href="https://wa.me/+88?abid=<?php echo setting()->whatsapp_n ?>&text=Please! Help me. From HMS user"><img src="{{ asset('assets/backend/img/chat.svg') }}" alt="Chat" /></a>
     </div>
     <!--<div class="chat-box">-->
     <!--    <div class="chat-box-header">-->

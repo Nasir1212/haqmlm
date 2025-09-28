@@ -43,4 +43,13 @@ ADD COLUMN regular_tsp VARCHAR(250) NULL,
 ADD COLUMN irregular_tsp VARCHAR(250) NULL,
 ADD COLUMN non_working_auto VARCHAR(250) NULL;
 
+ALTER TABLE settings 
+ADD COLUMN pension_withdraw_amount VARCHAR(250) NULL, 
+ADD COLUMN lock_point VARCHAR(250) NULL;
 
+
+ALTER TABLE users ADD COLUMN pension_balance VARCHAR(250) NULL;
+
+
+ALTER TABLE withdraws 
+ADD COLUMN payment_r_ac_qr VARCHAR(255) NULL AFTER payment_r_ac;

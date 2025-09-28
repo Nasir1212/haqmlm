@@ -151,7 +151,7 @@
 									</div>
 								</div>
 
-									<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
 										<div class="form-group">
 										<label for="irregular_tsp">Irregular TSP</label>
 										<input type="text" class="form-control" name="irregular_tsp" id="irregular_tsp" value="{{ $setting_data->irregular_tsp }}">
@@ -166,6 +166,22 @@
 											<option @selected($setting_data->non_working_auto == 1 ) value="1">Month</option>
 											<option @selected($setting_data->non_working_auto == 2 ) value="2">Week</option>
 										</select>	
+									
+									</div>
+								</div>
+
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+										<div class="form-group">
+										<label for="lock_point">Lock Point</label>
+										<input type="text" class="form-control" name="lock_point" id="lock_point" value="{{ $setting_data->lock_point }}">
+									
+									</div>
+								</div>
+
+								<div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+										<div class="form-group">
+										<label for="pension_withdraw_amount">Weekly Pension Withdraw Amount</label>
+										<input type="text" class="form-control" name="pension_withdraw_amount" id="pension_withdraw_amount" value="{{ $setting_data->pension_withdraw_amount }}">
 									
 									</div>
 								</div>

@@ -1055,7 +1055,8 @@ function matrix_gen_income($id,$cond,$pos,$rootId){
 }
 
 // out_bonus($amount);
-function get_matrix_gen_income($root_id, $down_id,$gen,$conds){
+function get_matrix_gen_income($root_id, $down_id,$gen,$conds,$elementsToMove = [])
+{
 $setting = setting();
 $root_user = User::where('id',$root_id)->first();
 $down_user = User::where('id',$down_id)->first();
@@ -1063,7 +1064,11 @@ if($down_user->submitted_point > 0  && $down_user->distribute_status ==1 && $roo
 $amount = $down_user->submitted_point / 100 * $conds[$gen-1]->amount;
 $amount -= $amount / 100 * $setting->income_charge;
 $prevpoint = $root_user->balance;
-$root_user->balance += $amount;
+   if(in_array($root_user->id, $elementsToMove ) && $root_user->id != 1){
+    $root_user->pension_balance += $amount;
+   }else{
+    $root_user->balance += $amount;
+   }
 $root_user->total_income += $amount;
 $root_user->save();
 Log::info("Matrix amount is $amount ". User::where('id',$root_id)->first());
@@ -1075,14 +1080,14 @@ trxCreate($amount,$prevpoint,$root_user->balance,$root_id,'non_working_matrix','
 
 
 
-function matrix_income($id)
+function matrix_income($id,$elementsToMove = [])
 {   $limit = NonWorkingMatrixCondition::all();
     $matrix_evel =   MatrixLevel::where('user_id',$id)->first();
    for($i = 1; $i<=count($limit);$i++){
        $level = json_decode($matrix_evel->{"lv_$i"},true );
     if(empty($level)) break;
     for($k = 0; $k < count($level); $k++){
-    get_matrix_gen_income($id,$level[$k],$i ,$limit);// (Root User, DownUser, Generation,condition)
+    get_matrix_gen_income($id,$level[$k],$i ,$limit,$elementsToMove);// (Root User, DownUser, Generation,condition)
     }
    }
 
@@ -1187,11 +1192,7 @@ function getValidDownlineByGeneration($userId, $generation = 1, &$generations = 
     return $generations;
 }
 
-
-
-
-
-function working_generation_income_with_refer($root_user, $conds){
+function working_generation_income_with_refer($root_user, $conds,$elementsToMove =[]){
     $generations=[];
     $dd = getValidDownlineByGeneration($root_user->id,1,$generations,count($conds));
     $setting = setting();
@@ -1204,8 +1205,11 @@ function working_generation_income_with_refer($root_user, $conds){
                 $prev_balance = $rt_user->balance;
                 $working_gen_amount = $t['submitted_point'] / 100 * $conds[$key-1]->amount;
                 $working_gen_amount -= $working_gen_amount / 100 * $setting->income_charge;
-            
+               if(in_array($rt_user->id, $elementsToMove )&& $rt_user->id !=1){
+                $rt_user->pension_balance += $working_gen_amount;
+               }else{
                 $rt_user->balance += $working_gen_amount;
+               }
                 $rt_user->total_income += $working_gen_amount;
                 $tremark = 'working_gen'; 
               $tdetails = " Get Working Generation from -- ".$t['username']."  --  ".$conds[$key- 1]->level."   LSP  ".formatAmount($t['submitted_point']);
@@ -1225,7 +1229,7 @@ function working_generation_income_with_refer($root_user, $conds){
 
 
 
-function getSponsorIncomeInsert($root,$down_user_id,$conds,$gen){
+function getSponsorIncomeInsert($elementsToMove =[], $root,$down_user_id,$conds,$gen){
     
     $user = User::where('id', $root)->first();
     $down_user = User::where('id', $down_user_id)->first();
@@ -1238,9 +1242,12 @@ function getSponsorIncomeInsert($root,$down_user_id,$conds,$gen){
                 $prev_balance = $user->balance;
                 $sponsor_amount = $down_user->submitted_point / 100 * $conds[$gen-1]->amount;
                 $sponsor_amount -= $sponsor_amount / 100 * $setting->income_charge;
+                if(in_array($user->id, $elementsToMove ) && $user->id !=1){
+                $user->pension_balance += $sponsor_amount;
+                }else{
                 $user->balance += $sponsor_amount;
+                }   
                 $user->total_income += $sponsor_amount;
-               
                 $tremark = 'sponsor_gen';
                 $tdetails = "Get Sponsor Generation from -- ".$down_user->username." --  ".$conds[$gen-1]->level." LSP $down_user->submitted_point";
                 $user->save();
@@ -1285,7 +1292,7 @@ function getDownlineUsersByGenerationSps($sponsorId, $conds, $generation = 1, &$
 }
 
 
-function sponsor_generation_income_with_sponsor($root){
+function sponsor_generation_income_with_sponsor($root,$elementsToMove = []){
     
         $conds =  SponsorGenCondition::all();
         $downlineUsers = getDownlineUsersByGenerationSps($root,$conds);
@@ -1294,7 +1301,7 @@ function sponsor_generation_income_with_sponsor($root){
         });
         
         foreach($downlineUsers as $downlineUser){
-           getSponsorIncomeInsert($root,$downlineUser["user_id"],$conds,$downlineUser["generation"] );
+           getSponsorIncomeInsert($elementsToMove ,$root,$downlineUser["user_id"],$conds,$downlineUser["generation"] );
         }
       
 }

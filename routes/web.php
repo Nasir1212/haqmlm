@@ -504,7 +504,10 @@ Route::controller(PageController::class)->group(function () {
         Route::get('/withdraw-approved', 'Approved')->name('withdraw_approved');
         Route::get('/withdraw-cancel', 'Canceled')->name('withdraw_canceled');
         Route::post('/withdraw-status-changer', 'Status_changer')->name('withdraw_status_changer');
-       
+        //Pension Withdraw Routes
+        Route::get('/Withdraw-pension-form', 'Withdraw_pension_form')->name('Withdraw_pension_form');
+        Route::post('/withdraw-pension-insert', 'Withdraw_pension_insert')->name('Withdraw_pension_insert');
+        Route::post('/Withdraw-form-pension-submit', 'Withdraw_form_pension_submit')->name('Withdraw_form_pension_submit');
        
     });
 
@@ -746,6 +749,92 @@ $exitCode = Artisan::call('optimize');
     // return what you want
 });
 
+Route::get('/get_gen_matrix', function() {
+
+$gsd = global_user_data(); // Fetch global user data
+        $setting = setting(); // Fetch settings
+   
+        $level = $setting->matrix_gen_check;
+        $total_member = $setting->set_gen_member;
+
+        $userIds = UserExtra::pluck('user_id');
+        $userIdsArray = $userIds->toArray();
+
+        $originalArray = $userIdsArray;
+        $elementsToMove = [];
+        
+        $lv = "lv_" . $level;
+
+        foreach ($originalArray as $user) {
+            $check_level = MatrixLevel::where('user_id', $user)->first();
+            if ($check_level) {
+                $check_level->$lv ; 
+                $data = json_decode($check_level->$lv);
+          
+                if (count($data) == $total_member) {
+                    $elementsToMove[] = $user;
+                }
+            }
+        }
+
+       // return $elementsToMove;
+
+       // $users = User::where('distribute_status', 1)->get(); // Fetch users with distribute status = 1
+        $users = User::all(); // Fetch users with distribute status = 1
+        $conds =  WorkingGenCondition::all();
+        
+        foreach ($users as $user) {
+              
+            $dbcs = DirectBonusCondition::all();
+            $ckv = 0;
+            foreach ($dbcs as $dbc) {
+                if ($user->submitted_point >= $dbc->point) {
+                    $ckv++;
+                }
+            }
+           
+
+            if($ckv > 0){
+               
+                 //  Calculate bonus
+                $prevbalance = $user->balance;
+                $dbcm = $user->submitted_point / 100 * $dbcs[$ckv - 1]->commission;
+                $dbcm -= $dbcm / 100 * $setting->income_charge;
+    
+                // Update user balance and income
+
+                if(in_array($user->id, $elementsToMove) && $user->id !=1){
+                $user->pension_balance  += $dbcm;
+                }else{
+                $user->balance += $dbcm;
+                }
+                $user->total_income += $dbcm;
+                $user->save();
+               // Log transaction
+               out_bonus($dbcm);
+               trxCreate($dbcm, $prevbalance, $user->balance, $user->id, 'direct_bonus', 'Direct bonus from LSP '.$user->submitted_point, '+', 'N', 'DBT'); 
+            }
+            working_generation_income_with_refer($user, $conds,$elementsToMove)  ;
+            sponsor_generation_income_with_sponsor($user->id,$elementsToMove);
+            matrix_income($user->id,$elementsToMove);
+
+        
+         }
+
+        // Reset submission checks
+    //     $users = User::where('submit_check', 1)->get();
+    //     foreach ($users as $user) {
+    //         $user->submit_check = 0;
+    //         $user->distribute_status = 0;
+    //         $user->save();
+    //     }
+    //   SendBonusSmsJob::dispatch();
+       // Log success (or you can notify)
+        Log::info('Point Bonus Send Success');
+
+    return "Gen Matrix Income Distributed Successfully!";
+});
+
 
 
 Route::get('check-rank', function () {
@@ -846,6 +935,8 @@ foreach ($my_rank as $rankName => $ids) {
 
     
 })->name('check_rank');
+
+
 
 
 // Route::get('check-rank', function () {

@@ -10,7 +10,6 @@
 			</ol>
 			<!-- Breadcrumb end -->
 
-
 		</div>
 		<!-- Page header end -->
 		<div class="row gutters">
@@ -41,6 +40,7 @@
 								</thead>
 								<tbody>
 									@foreach ($data as $value)
+									
 									<tr>
 									    <td>
 										<span>{{ $value->created_at }}</span>
@@ -65,6 +65,7 @@
 											</td>
 											
 											<td>
+												
 												{{ $value->status }}
 												
 											</td>
@@ -72,7 +73,7 @@
 											<td class="text-center">
 													<form class="d-inline-block" action="{{ route('withdraw_status_changer') }}" method="post">
 													@csrf
-														<input type="hidden" name="action_order" value="approve">
+														<input type="hidden" name="action_order" value="@if($value->status == 'Pending')approve @else pension_approve @endif">
 													    <input type="hidden" name="id" value="{{ $value->id }}">
 													
 												        <button type="submit" class="btn btn-success">Approve</button>

@@ -689,6 +689,8 @@ public function direct_bonus_condition_remove(Request $request){
          $setting->regular_tsp = $request->regular_tsp;
          $setting->irregular_tsp = $request->irregular_tsp;
          $setting->non_working_auto = $request->non_working_auto;
+         $setting->pension_withdraw_amount = $request->pension_withdraw_amount;
+         $setting->lock_point = $request->lock_point;
 
         $setting->save();
         notify()->success('Update Success');

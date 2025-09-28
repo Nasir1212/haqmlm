@@ -64,7 +64,7 @@
 					<span aria-hidden="true">×</span>
 				</button>
 			</div>
-			<form action="{{ route('Withdraw_form_submit')}}" method="post" enctype="multipart/form-data">
+			<form action="{{ request('is_pension') == true ? route('Withdraw_form_pension_submit') : route('Withdraw_form_submit') }}" method="post" enctype="multipart/form-data">
 				@csrf
 			
 			<div class="modal-body">

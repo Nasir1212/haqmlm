@@ -156,7 +156,18 @@
 								</div>
 							</div>
 							
-					
+					<div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12">
+								<div class="info-stats info-stats3">
+									<div class="info-icon warning border">
+										<i class="icon-wallet"></i>
+									</div>
+									<div class="sale-num">
+										<h3>{{ getAmount($user->pension_balance)}}</h3>
+										<p>Pension Balance</p>
+									</div>
+								</div>
+							</div>
+							
 						</div>
 					</div>
 				</div>

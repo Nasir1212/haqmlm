@@ -117,6 +117,13 @@
                                
                             </a>
                         </li>   
+                        <li>
+                            <a href="{{ route('Withdraw_pension_form') }}">
+                                {{-- <i class="icon-call_made"></i> --}}
+                                <span class="menu-text"> Pension request</span>
+                               
+                            </a>
+                        </li>   
                        
                     </ul>
                 </div>
