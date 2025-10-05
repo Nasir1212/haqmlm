@@ -821,6 +821,26 @@ $gsd = global_user_data(); // Fetch global user data
         
          }
 
+         foreach( $elementsToMove as $em){
+            $user = User::find($em);
+            if($user){
+            //Reciver Notification
+                $template = getNotificationTemplate('pension_balance', [
+                '[amount]' => $user->pension_balance,
+                '[lock_point]' => $setting->lock_point,
+                '[withdraw_amount]' =>  $setting->pension_withdraw_amount,
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('user-details/'.$user->username),
+                ];
+                 $user->notify(new UserMessageNotification($data));
+
+            }
+         }
+
         // Reset submission checks
     //     $users = User::where('submit_check', 1)->get();
     //     foreach ($users as $user) {

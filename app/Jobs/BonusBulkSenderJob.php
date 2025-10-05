@@ -13,6 +13,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\SendBonusSmsJob;
+use Illuminate\Notifications\DatabaseNotification;
+use App\Notifications\UserMessageNotification;
+use App\Http\Controllers\NotificationTempController;
+use App\Models\NotificationTemp;
 
 class BonusBulkSenderJob implements ShouldQueue
 {
@@ -52,8 +56,7 @@ $gsd = global_user_data(); // Fetch global user data
 
        // return $elementsToMove;
 
-       // $users = User::where('distribute_status', 1)->get(); // Fetch users with distribute status = 1
-        $users = User::all(); // Fetch users with distribute status = 1
+        $users = User::where('distribute_status', 1)->get(); // Fetch users with distribute status = 1
         $conds =  WorkingGenCondition::all();
         
         foreach ($users as $user) {
@@ -92,6 +95,26 @@ $gsd = global_user_data(); // Fetch global user data
             matrix_income($user->id,$elementsToMove);
 
         
+         }
+
+              foreach( $elementsToMove as $em){
+            $user = User::find($em);
+            if($user){
+            // Notification for Pension Balance
+                $template = getNotificationTemplate('pension_balance', [
+                '[amount]' => $user->pension_balance,
+                '[lock_point]' => $setting->lock_point,
+                '[withdraw_amount]' =>  $setting->pension_withdraw_amount,
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('user-details/'.$user->username),
+                ];
+                 $user->notify(new UserMessageNotification($data));
+
+            }
          }
 
         // Reset submission checks
