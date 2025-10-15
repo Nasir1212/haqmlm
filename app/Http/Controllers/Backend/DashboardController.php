@@ -16,7 +16,9 @@ use App\Models\PointSubmitHistory;
 use App\Models\ReserveCond;
 use App\Models\User;
 use App\Models\UserExtra;
+use App\Models\MatrixLevel;
 use App\Models\Withdraw;
+use App\Models\UserMatrixingDate;
 use App\Models\WithdrawSetting;
 use App\Jobs\CallTreeMakeCommandJob;
 use App\Models\userSelfSubmitPoint;
@@ -254,19 +256,27 @@ public function account_balance_trans_manage(){
             if (Auth::id() == 1){
              
                 
+                // dd(count($userIdsArray));
                 if(isset($request->date)){
+                      [$year, $month] = explode('-', $request->date);
+                        $userIds = UserMatrixingDate::whereMonth('created_at', $month)
+                    ->whereYear('created_at', $year)
+                    ->pluck('user_id'); // UserExtra::pluck('user_id');
+                        $userIdsArray = $userIds->toArray();
                      $now =  Carbon::parse($request->date);
                      $users = User::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->get();
                      
                      $accusers = User::where('status',1)->count();
                      $matrix_ac_users = User::where('status',1)->whereYear('point_submit_date',$now->year)->whereMonth('point_submit_date',$now->month)->where('submitted_point', '>=', 400)->count();
-                     $matrix_inac_users = $accusers - $matrix_ac_users;
+                     $matrix_inac_users = count($userIdsArray);// $accusers - $matrix_ac_users;
                      $total_sale_point = PointSaleHistory::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->where('status',1)->sum('point');
                      $total_submitted_point = PointSubmitHistory::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->latest('id')->sum('point');
 
                      $bonus_delivered = Withdraw::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->where('status','Approve')->sum('amount');
                      $out_point = OutPointHistory::whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
                 }else{
+                    $userIds = $userIds = UserExtra::pluck('user_id');
+                    $userIdsArray = $userIds->toArray();
                     $users = User::all();
                     $total_sale_point = PointSaleHistory::where('status',1)->sum('point');
                     $total_submitted_point = PointSubmitHistory::latest('id')->sum('point');
@@ -274,7 +284,7 @@ public function account_balance_trans_manage(){
                     $out_point = OutPointHistory::sum('amount');
                     $accusers = User::where('status',1)->count();
                     $matrix_ac_users = User::where('status',1)->where('submitted_point', '>=', 400)->count();
-                    $matrix_inac_users = $accusers - $matrix_ac_users;
+                    $matrix_inac_users = count($userIdsArray); //$accusers - $matrix_ac_users;
                 }
                 
    

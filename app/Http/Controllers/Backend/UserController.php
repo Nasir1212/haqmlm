@@ -272,6 +272,8 @@ public function my_down_line_reset(Request $request){
 
         return view('Admin.user.users', compact('users','page_title','gsd'));
     } 
+
+    
     public function Active_User(){
         $gsd = global_user_data();
         $page_title = 'Active Users';

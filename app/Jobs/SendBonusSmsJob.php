@@ -92,6 +92,6 @@ class SendBonusSmsJob implements ShouldQueue
       }
         \Log::info($chcu);
         // Send bulk SMS
-        bulk_msg_sms_send($chcu);
+      //  bulk_msg_sms_send($chcu);
     }
 }

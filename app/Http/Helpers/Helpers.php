@@ -25,6 +25,7 @@ use App\Models\Dealer;
 use App\Models\DealerSelection;
 use App\Models\WorkingGenCondition;
 use App\Models\SponsorGenCondition;
+use App\Models\UserMatrixingDate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\NotificationTemp;
@@ -1338,6 +1339,13 @@ function parent_cap_lv($lv)
 function autoMatrixGenerator($user){
     $user = User::where('id', $user)->first();
     if($user){
+         if(UserMatrixingDate::where('user_id',$user->id)->count() < 1){
+            $umd = new UserMatrixingDate();
+            $umd->user_id = $user->id;
+            $umd->save();   
+            Log::info("Matrixing Date Created for user id ".$user->id);
+        }
+
         if(!isMatrixUserExists($user->id)){
             $parent = UserExtra::where('fill_check',1)->latest('id')->first();
             if(!$parent){

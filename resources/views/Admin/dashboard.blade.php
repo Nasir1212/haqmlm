@@ -77,6 +77,7 @@
 		
 			
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/users')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon success">
 						<i class="icon-users"></i>
@@ -86,36 +87,44 @@
 						<p>Users</p>
 					</div>
 				</div>
+				</a>
 			</div>
 			
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon danger">
 						<i class="icon-users"></i>
 					</div>
+					
 					<div class="sale-num">
 						<h3>{{ $matrix_inac_users }}</h3>
-						<p>Total InActive Paid Member</p>
+						<p>Total Active Member</p>
 					</div>
+					
 				</div>
+				</a>
 			</div>
 		
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+			<a href="{{url('/')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon success">
 						<i class="icon-users"></i>
 					</div>
 					<div class="sale-num">
 						<h3>{{ $matrix_ac_users }}</h3>
-						<p>Total Active Paid Member</p>
+						<p>Total Free Members</p>
 					</div>
 				</div>
+			</a>
 			</div>
 			
 	
 		
 
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/locked-users')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon danger">
 						<i class="icon-lock"></i>
@@ -125,19 +134,11 @@
 						<p>Total Locked Member</p>
 					</div>
 				</div>
+				</a>
 			</div>
-	<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-				<div class="info-stats2">
-					<div class="info-icon success">
-						<i class="icon-users"></i>
-					</div>
-					<div class="sale-num">
-						<h3>{{ $total_active }}</h3>
-						<p>Total Enable Member</p>
-					</div>
-				</div>
-			</div>
+
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/users-band')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon danger">
 						<i class="icon-users"></i>
@@ -147,6 +148,7 @@
 						<p>Total Banned Member</p>
 					</div>
 				</div>
+				</a>
 			</div>
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
 				<div class="info-stats2">

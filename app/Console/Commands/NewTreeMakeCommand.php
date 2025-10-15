@@ -61,7 +61,7 @@ class NewTreeMakeCommand extends Command
         
         if($another_check == 1){
          
-            if ($current_user->submit_check == 0) {
+            if ( $current_user && $current_user->submit_check == 0) {
                 $elementsToMove[] = $user; // Mark users with not submit point  to be moved
              
             }

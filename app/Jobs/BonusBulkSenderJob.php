@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\UserExtra;
 use App\Models\WorkingGenCondition;
 use App\Models\DirectBonusCondition;
+use App\Models\MatrixLevel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
