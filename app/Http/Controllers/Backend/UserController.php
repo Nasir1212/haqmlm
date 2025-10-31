@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\UserChild;
 use App\Models\UserExtra;
 use App\Models\UserNominee;
+use App\Models\UserMatrixingDate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -274,12 +275,49 @@ public function my_down_line_reset(Request $request){
     } 
 
     
-    public function Active_User(){
+    public function Active_User(Request $request){
         $gsd = global_user_data();
         $page_title = 'Active Users';
-        $users = User::where('status',1)->paginate(20);
+
+        if(isset($request->date)){
+                      [$year, $month] = explode('-', $request->date);
+                        $userIds = UserMatrixingDate::whereMonth('created_at', $month)
+                    ->whereYear('created_at', $year)
+                    ->pluck('user_id'); // UserExtra::pluck('user_id');
+                    $userIdsArray = $userIds->toArray();
+                     $matrix_inac_users =  User::whereIn('id',$userIdsArray)->paginate(20);// $accusers - $matrix_ac_users;
+                     
+                }else{
+                    $userIds = $userIds = UserExtra::pluck('user_id');
+                    $userIdsArray = $userIds->toArray();
+                    $matrix_inac_users = User::whereIn('id',$userIdsArray)->paginate(20); //$accusers - $matrix_ac_users;
+                }
+        //$users = User::where('status',1)->paginate(20);
+         $users = $matrix_inac_users;
         return view('Admin.user.users', compact('users','page_title','gsd'));
     } 
+
+    public function free_user(Request $request){
+        $gsd = global_user_data();
+        $page_title = 'Free Users';
+        $userIds = UserMatrixingDate::all()
+        ->pluck('user_id'); // UserExtra::pluck('user_id');
+        $userIdsArray = $userIds->toArray();
+        if(isset($request->date)){
+        [$year, $month] = explode('-', $request->date);
+        $matrix_ac_users =  User::whereNotIn('id',$userIdsArray)
+        ->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year)
+        ->paginate(200);// $accusers - $matrix_ac_users;
+        }else{
+        $matrix_ac_users = User::whereNotIn('id',$userIdsArray)
+        ->paginate(200); //$accusers - $matrix_ac_users;
+        }
+        //$users = User::where('status',1)->paginate(20);
+         $users = $matrix_ac_users;
+
+        return view('Admin.user.users', compact('users','page_title','gsd'));
+    }
     public function Band_User(){
         $gsd = global_user_data();
         $page_title = 'Banned  Users';

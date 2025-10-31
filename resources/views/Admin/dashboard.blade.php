@@ -60,7 +60,11 @@
 							    <button onclick="history.back()" class="btn btn-dark">Go Back</button>
 							    	<a href="{{ route('dashboard_index') }}" class="btn btn-success">All</a>
 							    </div>
-							
+								<div>From</div>
+								<div class="col-md-2 my-1">
+									<input name="date" type="month" class="form-control from-control-lg" value="<?php if(isset($_GET['date'])){ echo $_GET['date'];}else{ echo now()->format('Y-m'); } ?>">
+								</div>
+								<div>To</div>
 								<div class="col-md-2 my-1">
 									<input name="date" type="month" class="form-control from-control-lg" value="<?php if(isset($_GET['date'])){ echo $_GET['date'];}else{ echo now()->format('Y-m'); } ?>">
 								</div>
@@ -91,7 +95,7 @@
 			</div>
 			
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-				<a href="{{url('/')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
+				<a href="{{url('/users-active')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon danger">
 						<i class="icon-users"></i>
@@ -107,7 +111,7 @@
 			</div>
 		
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-			<a href="{{url('/')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
+			<a href="{{url('/free-user')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon success">
 						<i class="icon-users"></i>

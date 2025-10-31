@@ -477,6 +477,7 @@ Route::controller(PageController::class)->group(function () {
           Route::get('/locked-users', 'locked_Users')->name('locked_Users');
         
         Route::get('/users-active', 'Active_User')->name('Active_User');
+        Route::get('/free-user', 'Free_user')->name('Free_user');
         Route::get('/users-band', 'Band_User')->name('Band_User');
         Route::get('/user-details/{username}', 'User_details')->name('user_details');
         Route::get('/user-account-setup/{username}', 'Account_setup')->name('user_account_setup');
