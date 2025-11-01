@@ -96,7 +96,7 @@ class User extends Authenticatable
     // }
 
     public function sponsor(){
-        return $this->hasMany(User::class,'sponsor_id','id');
+        return $this->belongsTo(User::class,'sponsor_id','id');
     }
     
     public function userExtra()

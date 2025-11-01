@@ -287,9 +287,10 @@
 		<h4> Email: {{ $user->email }}</h4>
 	</div>
 	<div class="col-6 text-right">
-		<h4>Sponsor Name: <?php if(!empty($user->sponsor) == false){ echo $user->sponsor->name; } ?></h4>
-		<h4>Sponsor Phone: <?php if(!empty($user->sponsor) == false){ echo $user->sponsor->phone; } ?></h4>
-		<h4>Sponsor Email: <?php if(!empty($user->sponsor) == false){ echo $user->sponsor->email; } ?></h4>
+	
+		<h4>Sponsor Name: <?php  echo $user?->sponsor?->name;  ?></h4>
+		<h4>Sponsor Phone: <?php  echo $user?->sponsor?->phone;  ?></h4>
+		<h4>Sponsor Email: <?php  echo $user?->sponsor?->email;  ?></h4>
 	</div>
 </div>
 @endif
@@ -334,6 +335,18 @@
 			<td>0</td>
 		</tr>
 	</tbody>
+	<tfoot>
+		<tr>
+			<td>
+				<strong>Total</strong>
+			</td>
+			<td>
+				<strong>
+					{{ $monthly_income['DirectBonusTransaction'] + $monthly_income['SpbTransaction'] + $monthly_income['WgbTransaction'] + $monthly_income['NwmtbTransaction'] }}
+				</strong>
+			</td>
+		</tr>
+	</tfoot>
 </table>
 
 @endif

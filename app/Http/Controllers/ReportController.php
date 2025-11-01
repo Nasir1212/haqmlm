@@ -34,7 +34,7 @@ public function Transaction_report_sheet(Request $request){
                     $refer = User::where('id',$user->sponsor_id)->first(['username','id','name']);
                     $now = Carbon::parse($request->date);
                     $ddt = $now->format('F Y');
-                    $now =  $now->addMonth();
+                  //  $now =  $now->addMonth();
                     
                     $pointhistory = PointSubmitHistory::where('user_id',$user->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->first();
                     $DirectBonusTransaction = DirectBonusTransaction::where('user_id',$user->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
@@ -173,6 +173,7 @@ public function Transaction_report_sheet(Request $request){
 
 
     public function Transaction_list(Request $request){
+       
      
        $gsd = global_user_data();
        $trx_cond = $request->remark;
@@ -184,7 +185,8 @@ public function Transaction_report_sheet(Request $request){
 
             if($trx_cond == 'income_filter'){
                 $monthly_income_part = 1;
-                $now = Carbon::parse($request->date)->addMonth();
+                $now = Carbon::parse($request->date);
+              
                 if(isset($request->username)){
                     $user = User::where('username',$request->username)->with('sponsor')->first();
                     if($user){

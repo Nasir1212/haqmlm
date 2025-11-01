@@ -76,10 +76,9 @@ class SendBonusSmsJob implements ShouldQueue
             $date = \DateTime::createFromFormat('m-Y', $month_year);
  
             $formatted = $date->format('F-Y');
-                $msg = "HMS Affiliate Bonus ".$inc."BDT for " . $formatted . ". Charge deducted " . $charge . "BDT. New Balance " . formatAmount($user->balance) . "BDT (" . $user->username . ") \n Haqmultishop.com \n Digital Affiliate System";
+                $msg = "HMS Affiliate Bonus ".$inc."BDT for " . $formatted .  "BDT. New Balance " . formatAmount($user->balance) . "BDT (" . $user->username . ")  \n For more info Please login your account Haqmultishop.com \n Digital Affiliate System";
                 $chcu[] = ['to' => $user->phone, 'message' => $msg];
-            }
-            
+            }          
             
                 $data_bonus = [
                 'body' => $msg,
@@ -92,6 +91,6 @@ class SendBonusSmsJob implements ShouldQueue
       }
         \Log::info($chcu);
         // Send bulk SMS
-      //  bulk_msg_sms_send($chcu);
+        bulk_msg_sms_send($chcu);
     }
 }

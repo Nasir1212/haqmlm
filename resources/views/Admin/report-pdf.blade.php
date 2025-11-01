@@ -158,21 +158,21 @@
                             Cashback Bonus
                         </td>
                         
-                        <td>{{ RgetAmount(($monthly_income['DirectBonusTransaction']/0.90),2)}}</td>
+                        <td>{{ RgetAmount(($monthly_income['DirectBonusTransaction']),2)}}</td>
                     </tr>
                     <tr>
                         <td  style="width:83%">
                             Sponsor  Bonus
                         </td>
                        
-                        <td>{{ RgetAmount(($monthly_income['SpbTransaction']/0.90),2)}}</td>
+                        <td>{{ RgetAmount(($monthly_income['SpbTransaction']),2)}}</td>
                     </tr> 
                     <tr>
                         <td  style="width:60%;">
                             Working  Bonus
                         </td>
                         
-                        <td>{{ RgetAmount(($monthly_income['WgbTransaction']/0.90),2)}}</td>
+                        <td>{{ RgetAmount(($monthly_income['WgbTransaction']),2)}}</td>
                     </tr> 
                     {{-- <tr>
                         <td>
@@ -186,7 +186,7 @@
                             Non Working Bonus
                         </td>
                       
-                        <td>{{ RgetAmount(($monthly_income['NwmtbTransaction']/0.90),2)}}</td>
+                        <td>{{ RgetAmount(($monthly_income['NwmtbTransaction']),2)}}</td>
                     </tr> 
                     <tr>
                         <td  style="width:60%;">
@@ -236,7 +236,7 @@
                        
                         <td><p style="width: 3rem; margin-bottom: 0;">                           
                             <strong style="font-size: 13px;">
-                               {{calculateDiscountedValue(RgetAmount(($monthly_income['DirectBonusTransaction']/0.90),2)+ RgetAmount(($monthly_income['SpbTransaction']/0.90),2)+RgetAmount(($monthly_income['WgbTransaction']/0.90),2)+RgetAmount(($monthly_income['NwmtbTransaction']/0.90),2), setting()->income_charge) }}
+                               {{RgetAmount(($monthly_income['DirectBonusTransaction']),2)+ RgetAmount(($monthly_income['SpbTransaction']),2)+RgetAmount(($monthly_income['WgbTransaction']),2)+RgetAmount(($monthly_income['NwmtbTransaction']),2) }}
                             </strong>
                             </p>
                              </td>

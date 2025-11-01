@@ -257,7 +257,39 @@ public function account_balance_trans_manage(){
              
                 
                 // dd(count($userIdsArray));
-                if(isset($request->date)){
+                if($request->filled(['date', 'e_date'])){
+                    // this is month and year filter
+                    [$start_year, $start_month] = explode('-', $request->date);
+                    [$end_year, $end_month] = explode('-', $request->e_date);
+                    $userIds = UserMatrixingDate::where(function($query) use ($start_month, $start_year, $end_month, $end_year) {
+                        $query->where(function($q) use ($start_month, $start_year) {
+                            $q->whereYear('created_at', '>', $start_year)
+                              ->orWhere(function($q2) use ($start_month, $start_year) {
+                                  $q2->whereYear('created_at', $start_year)
+                                     ->whereMonth('created_at', '>=', $start_month);
+                              });
+                        })->where(function($q) use ($end_month, $end_year) {
+                            $q->whereYear('created_at', '<', $end_year)
+                              ->orWhere(function($q2) use ($end_month, $end_year) {
+                                  $q2->whereYear('created_at', $end_year)
+                                     ->whereMonth('created_at', '<=', $end_month);
+                              });
+                        });
+                    })->pluck('user_id');
+                    $userIdsArray = $userIds->toArray();
+                    $startDate = Carbon::parse($request->date . '-01');
+                    $endDate = Carbon::parse($request->e_date . '-01')->endOfMonth();
+                    $users = User::whereBetween('created_at', [$startDate, $endDate])->get();   
+                    $accusers = User::where('status',1)->count();
+                    $matrix_ac_users =  User::whereNotIn('id',$userIdsArray)->whereBetween('created_at', [$startDate, $endDate])->count();
+                    $matrix_inac_users = count($userIdsArray);// $accusers - $matrix_ac_users;
+                    $total_sale_point = PointSaleHistory::whereBetween('created_at', [$startDate, $endDate])->where('status',1)->sum('point');
+                    $total_submitted_point = PointSubmitHistory::whereBetween('created_at', [$startDate, $endDate])->latest('id')->sum('point');    
+                    $bonus_delivered = Withdraw::whereBetween('created_at', [$startDate, $endDate])->where('status','Approve')->sum('amount');
+                    $out_point = OutPointHistory::whereBetween('created_at', [$startDate, $endDate])->sum('amount');
+                    
+
+                } else if(isset($request->date)){
                       [$year, $month] = explode('-', $request->date);
                         $userIds = UserMatrixingDate::whereMonth('created_at', $month)
                     ->whereYear('created_at', $year)

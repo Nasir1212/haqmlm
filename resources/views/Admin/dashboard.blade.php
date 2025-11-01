@@ -64,9 +64,19 @@
 								<div class="col-md-2 my-1">
 									<input name="date" type="month" class="form-control from-control-lg" value="<?php if(isset($_GET['date'])){ echo $_GET['date'];}else{ echo now()->format('Y-m'); } ?>">
 								</div>
+								<div>
+								{{-- <input onclick="handle_e_date(this)" name="is_to" type="checkbox" class="form-control from-control-lg" > --}}
+									<input 
+									type="checkbox" 
+									id="rangeCheckbox" 
+									name="is_to" 
+									{{ request('e_date') ? 'checked' : '' }}
+									onchange="handle_e_date(this)"
+									>
+								</div>
 								<div>To</div>
-								<div class="col-md-2 my-1">
-									<input name="date" type="month" class="form-control from-control-lg" value="<?php if(isset($_GET['date'])){ echo $_GET['date'];}else{ echo now()->format('Y-m'); } ?>">
+								<div class="col-md-2 my-1" >
+									<input id="e_date" name="{{ request('is_to') ==  'on'? 'e_date' : '' }}" type="month" class="form-control from-control-lg {{ request('e_date') ? '' : 'd-none' }}" value="<?php if(isset($_GET['e_date'])){ echo $_GET['e_date'];}else{ echo now()->addMonths(1)->format('Y-m'); } ?>">
 								</div>
 							
 									<div class="col-md-2 my-1">
@@ -81,7 +91,7 @@
 		
 			
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-				<a href="{{url('/users')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
+				<a href="{{ url('/users') . (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon success">
 						<i class="icon-users"></i>
@@ -95,7 +105,7 @@
 			</div>
 			
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-				<a href="{{url('/users-active')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
+				<a href="{{url('/users-active'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon danger">
 						<i class="icon-users"></i>
@@ -111,7 +121,7 @@
 			</div>
 		
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-			<a href="{{url('/free-user')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
+			<a href="{{url('/free-user'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon success">
 						<i class="icon-users"></i>
@@ -128,7 +138,7 @@
 		
 
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-				<a href="{{url('/locked-users')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
+				<a href="{{url('/locked-users'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon danger">
 						<i class="icon-lock"></i>
@@ -142,7 +152,7 @@
 			</div>
 
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-				<a href="{{url('/users-band')}}{{ request('date') ? '?date=' . request('date') : '' }}" class="link-light menu-text">
+				<a href="{{url('/users-band'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}" class="link-light menu-text">
 				<div class="info-stats2">
 					<div class="info-icon danger">
 						<i class="icon-users"></i>
@@ -323,5 +333,34 @@
 			}
 		}
 	})(jQuery);
+	
+// document.addEventListener("DOMContentLoaded", function () {
+//     const checkbox = document.getElementById("rangeCheckbox");
+//     const toDateWrapper = document.getElementById("toDateWrapper");
+
+//     function toggleToDate() {
+//         if (checkbox.checked) {
+//             toDateWrapper.style.display = "block";
+//         } else {
+//             toDateWrapper.style.display = "none";
+//             // optional: clear e_date value if unchecked
+//             document.querySelector('input[name="e_date"]').value = "";
+//         }
+//     }
+
+//     // initial check (for page reload with query params)
+//     toggleToDate();
+
+//     // change event
+//     checkbox.addEventListener("change", toggleToDate);
+// });
+
+function handle_e_date(checkbox) {
+	const eDateInput = document.querySelector('#e_date');
+    eDateInput.classList.toggle('d-none', !checkbox.checked);
+	eDateInput.name = checkbox.checked ? 'e_date' : '';
+	console.log(eDateInput);
+}
+
 </script>
 @endpush

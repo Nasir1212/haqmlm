@@ -257,7 +257,23 @@ public function my_down_line_reset(Request $request){
     public function Users(Request $request){
         $page_title = 'All Users';
         $gsd = global_user_data();
-        if(isset($request->username)){
+
+        if($request->filled(['date','e_date'])){
+            [$year, $month] = explode('-', $request->date);
+            [$eyear, $emonth] = explode('-', $request->e_date);
+            $users = User::where('id', '!=', 1)->whereMonth('created_at', '>=', $month)
+            ->whereYear('created_at', '>=', $year)
+            ->whereMonth('created_at', '<=', $emonth)
+            ->whereYear('created_at', '<=', $eyear)
+            ->paginate(20);
+        }
+       else if($request->filled('date')){
+            [$year, $month] = explode('-', $request->date);
+            $users = User::where('id', '!=', 1)->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->paginate(20);
+        }
+        else if(isset($request->username)){
             $users = User::where('id', '!=', 1)->where('username',$request->username)->orWhere('phone',$request->username)->orWhere('email',$request->username)->orWhere('name',$request->username)->paginate(20);
         }else{
             $users = User::where('id', '!=', 1)->latest('id')->paginate(20);
@@ -266,11 +282,25 @@ public function my_down_line_reset(Request $request){
         return view('Admin.user.users', compact('users','page_title','gsd'));
     } 
 
-    public function locked_Users(){
+    public function locked_Users(Request $request){
         $gsd = global_user_data();
         $page_title = 'Locked Users';
+        if($request->filled(['date','e_date'])){
+            [$year, $month] = explode('-', $request->date);
+            [$eyear, $emonth] = explode('-', $request->e_date);
+            $users = User::where('lock_status',1)->whereMonth('created_at', '>=', $month)
+            ->whereYear('created_at', '>=', $year)
+            ->whereMonth('created_at', '<=', $emonth)
+            ->whereYear('created_at', '<=', $eyear)
+            ->paginate(20);
+        }else if($request->filled('date')){
+            [$year, $month] = explode('-', $request->date);
+            $users = User::where('lock_status',1)->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->paginate(20);
+        }else{
        $users = User::where('lock_status',1)->paginate(20);
-
+        }
         return view('Admin.user.users', compact('users','page_title','gsd'));
     } 
 
@@ -278,8 +308,19 @@ public function my_down_line_reset(Request $request){
     public function Active_User(Request $request){
         $gsd = global_user_data();
         $page_title = 'Active Users';
-
-        if(isset($request->date)){
+        if($request->filled(['date','e_date'])){
+            [$year, $month] = explode('-', $request->date);
+            [$eyear, $emonth] = explode('-', $request->e_date);
+            $userIds = UserMatrixingDate::whereMonth('created_at', '>=', $month)
+                    ->whereYear('created_at', '>=', $year)
+                    ->whereMonth('created_at', '<=', $emonth)
+                    ->whereYear('created_at', '<=', $eyear)
+                    ->pluck('user_id'); // UserExtra::pluck('user_id');
+                    $userIdsArray = $userIds->toArray();
+                     $matrix_inac_users =  User::whereIn('id',$userIdsArray)->paginate(20);// $accusers - $matrix_ac_users;
+ 
+        }
+       else if(isset($request->date)){
                       [$year, $month] = explode('-', $request->date);
                         $userIds = UserMatrixingDate::whereMonth('created_at', $month)
                     ->whereYear('created_at', $year)
@@ -303,7 +344,18 @@ public function my_down_line_reset(Request $request){
         $userIds = UserMatrixingDate::all()
         ->pluck('user_id'); // UserExtra::pluck('user_id');
         $userIdsArray = $userIds->toArray();
-        if(isset($request->date)){
+        if($request->filled(['date','e_date'])){
+        [$year, $month] = explode('-', $request->date);
+        [$eyear, $emonth] = explode('-', $request->e_date);
+        $matrix_ac_users =  User::whereNotIn('id',$userIdsArray)
+        ->whereMonth('created_at', '>=', $month)
+        ->whereYear('created_at', '>=', $year)
+        ->whereMonth('created_at', '<=', $emonth)
+        ->whereYear('created_at', '<=', $eyear)
+        ->paginate(200);// $accusers - $matrix_ac_users;
+
+          
+        }else if(isset($request->date)){
         [$year, $month] = explode('-', $request->date);
         $matrix_ac_users =  User::whereNotIn('id',$userIdsArray)
         ->whereMonth('created_at', $month)
@@ -318,10 +370,25 @@ public function my_down_line_reset(Request $request){
 
         return view('Admin.user.users', compact('users','page_title','gsd'));
     }
-    public function Band_User(){
+    public function Band_User(Request $request){
         $gsd = global_user_data();
         $page_title = 'Banned  Users';
+        if($request->filled(['date','e_date'])){
+            [$year, $month] = explode('-', $request->date);
+            [$eyear, $emonth] = explode('-', $request->e_date);
+            $users = User::where('status',3)->whereMonth('created_at', '>=', $month)
+            ->whereYear('created_at', '>=', $year)
+            ->whereMonth('created_at', '<=', $emonth)
+            ->whereYear('created_at', '<=', $eyear)
+            ->paginate(20);
+        }else if($request->filled('date')){
+            [$year, $month] = explode('-', $request->date);
+            $users = User::where('status',3)->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->paginate(20);
+        }else{
         $users = User::where('status',3)->paginate(20);
+        }
         return view('Admin.user.users', compact('users','page_title','gsd'));
 
     }
