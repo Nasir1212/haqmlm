@@ -14,6 +14,10 @@ use App\Models\UserChild;
 use App\Models\UserExtra;
 use App\Models\UserNominee;
 use App\Models\UserMatrixingDate;
+use App\Models\PointSaleHistory;
+use App\Models\OutPointHistory;
+use App\Models\CountTotalSubmittedPoint;
+use App\Models\Withdraw;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -392,7 +396,139 @@ public function my_down_line_reset(Request $request){
         return view('Admin.user.users', compact('users','page_title','gsd'));
 
     }
+
+    public function total_point_sale(Request $request){
+
+        $gsd = global_user_data();
+        $page_title = 'Total Point Sale';
+        if($request->filled(['date','e_date'])){
+            [$year, $month] = explode('-', $request->date);
+            [$eyear, $emonth] = explode('-', $request->e_date);
+            $deposits = PointSaleHistory::with('user')
+            ->whereMonth('created_at', '>=', $month)
+            ->whereYear('created_at', '>=', $year)
+            ->whereMonth('created_at', '<=', $emonth)
+            ->whereYear('created_at', '<=', $eyear)
+            ->where('status',1)
+            ->paginate(20)
+            ->appends(request()->query());
+        }else if($request->filled('date')){
+            [$year, $month] = explode('-', $request->date);
+            $deposits = PointSaleHistory::with('user')
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->where('status',1)
+            ->paginate(20)
+            ->appends(request()->query());
+        }else{
+            $deposits = PointSaleHistory::with('user')
+            ->where('status',1)->paginate(20)
+            ->appends(request()->query());
+        }
+    //    return $deposits;
+        return view('Admin.user.total-point-sale', compact('deposits','page_title','gsd'));
+    }
+
+    public function out_bonus_history(Request $request){
+        $gsd = global_user_data();
+        $page_title = 'Total Point Out History';
+        if($request->filled(['date','e_date'])){
+            [$year, $month] = explode('-', $request->date);
+            [$eyear, $emonth] = explode('-', $request->e_date);
+            $deposits = OutPointHistory::with('user')
+            ->whereMonth('created_at', '>=', $month)
+            ->whereYear('created_at', '>=', $year)
+            ->whereMonth('created_at', '<=', $emonth)
+            ->whereYear('created_at', '<=', $eyear)
+            
+            ->paginate(20)
+            ->appends(request()->query());
+
+            
+
+        }else if($request->filled('date')){
+            [$year, $month] = explode('-', $request->date);
+    $deposits = OutPointHistory::with('user')
+            ->whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+           
+            ->paginate(20)
+            ->appends(request()->query());
+        }else{
+        $deposits = OutPointHistory::with('user')
+                    ->paginate(20)
+                ->appends(request()->query());
+        }
+       // return $deposits;  
+        return view('Admin.user.out-bonus-history', compact('deposits','page_title','gsd'));
+    }
     
+    public function total_submitted_point_sale(Request $request){
+            $gsd = global_user_data();
+            $page_title = 'Total Submitted Point Sale';
+            if($request->filled(['date','e_date'])){
+            [$year, $month] = explode('-', $request->date);
+            [$eyear, $emonth] = explode('-', $request->e_date);
+            $records = CountTotalSubmittedPoint::whereMonth('created_at', '>=', $month)
+            ->whereYear('created_at', '>=', $year)
+            ->whereMonth('created_at', '<=', $emonth)
+            ->whereYear('created_at', '<=', $eyear)
+            ->paginate(20)
+            ->appends(request()->query());
+            }else if($request->filled('date')){
+            [$year, $month] = explode('-', $request->date);
+            $records = CountTotalSubmittedPoint::whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->paginate(20)
+            ->appends(request()->query());
+            }else{
+            $records = PointSubmitHistory::latest('id')->paginate(20);
+            }
+            // return $records;
+      return view('Admin.user.total-submitted-point-sale', compact('records','page_title','gsd'));
+
+
+}
+
+public function delivered_bonus_history(Request $request){
+    $gsd = global_user_data();
+    $page_title = 'Delivered Bonus History';
+    if($request->filled(['date','e_date'])){
+        [$year, $month] = explode('-', $request->date);
+        [$eyear, $emonth] = explode('-', $request->e_date);
+        $deposits = Withdraw::with('user')
+        ->where('status','Approve')
+        ->whereMonth('created_at', '>=', $month)
+        ->whereYear('created_at', '>=', $year)
+        ->whereMonth('created_at', '<=', $emonth)
+        ->whereYear('created_at', '<=', $eyear)
+        ->paginate(20)
+        ->appends(request()->query());
+
+        
+
+    }else if($request->filled('date')){
+        [$year, $month] = explode('-', $request->date);
+        $deposits = Withdraw::with('user')
+        ->where('status','Approve')
+        ->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year)
+       
+        ->paginate(20)
+        ->appends(request()->query());
+    }else{
+    $deposits = Withdraw::with('user')
+            ->where('status','Approve')
+            ->paginate(20)
+            ->appends(request()->query());
+    }
+ //   return $deposits;  
+    return view('Admin.user.delivered-bonus-history', compact('deposits','page_title','gsd'));
+
+
+
+}
+
     public function my_refer(Request $request)
 {
     $gsd = global_user_data();
@@ -440,6 +576,9 @@ public function my_down_line_reset(Request $request){
     ];
     return view('Admin.user.my-refer', compact('users', 'empty_message', 'gsd', 'tuc', 'paid', 'free', 'monthYear','sponsors_info'));
 }
+
+
+
 
 // Recursive function to get all referred user IDs
 private function getAllReferredUserIds($id)

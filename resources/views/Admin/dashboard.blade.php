@@ -165,6 +165,7 @@
 				</a>
 			</div>
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/total-point-sale'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}">
 				<div class="info-stats2">
 					<div class="info-icon primary border">
 						<i class="icon-shopping_cart"></i>
@@ -174,8 +175,10 @@
 						<p>Total Point Sale</p>
 					</div>
 				</div>
+				</a>
 			</div>
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/total-submitted-point-sale'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}">
 				<div class="info-stats2">
 					<div class="info-icon primary border">
 						<i class="icon-shopping_cart"></i>
@@ -183,7 +186,20 @@
 				
 					<div class="sale-num">
 						<h3>
-							 @if (Auth::id() == 1 && request('date') != null)
+							@if(Auth::id() == 1 && request('date') && request('e_date'))
+							 @php
+							[$year, $month] = explode('-', request('date'));
+							[$eyear, $emonth] = explode('-', request('e_date'));
+							$records = CountTotalSubmittedPoint::whereMonth('created_at', '>=', $month)
+							->whereYear('created_at', '>=', $year)
+							->whereMonth('created_at', '<=', $emonth)
+							->whereYear('created_at', '<=', $eyear)
+							->sum('point');
+							 @endphp
+								{{ $records }}
+							
+
+							@elseif (Auth::id() == 1 && request('date') != null)
 							 @php
 							[$year, $month] = explode('-', request('date'));
 
@@ -201,8 +217,10 @@
 						<p>Total Submitted Point</p>
 					</div>
 				</div>
+				</a>
 			</div>
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/out-bonus-history'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}">
 				<div class="info-stats2">
 					<div class="info-icon info">
 						<i class="icon-gift"></i>
@@ -212,8 +230,10 @@
 						<p>Total Bonus Out</p>
 					</div>
 				</div>
+				</a>
 			</div>
 			<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+				<a href="{{url('/delivered-bonus-history'). (request()->only(['date', 'e_date']) ? '?' . http_build_query(request()->only(['date', 'e_date'])) : '') }}">
 				<div class="info-stats2">
 					<div class="info-icon info">
 						<i class="icon-gift"></i>
@@ -223,6 +243,7 @@
 						<p>Total Bonus Delivered</p>
 					</div>
 				</div>
+				</a>
 			</div>
 		</div>
 		<!-- Row end -->

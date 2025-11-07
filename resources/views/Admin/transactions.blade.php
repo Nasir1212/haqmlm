@@ -242,7 +242,7 @@
 </table>
 {{ $pointHistory->links() }}
 @else
-<h2>You can filter income report with month and year</h2>
+<h2 class="tra_title">You can filter income report with month and year</h2>
 <?php if(!isset($dwnhidden)) { ?>
 <form action="{{ route('Transaction_report_sheet') }}" method="post" class="d-inline-block mr-3">
 	@csrf
@@ -277,16 +277,16 @@
 <hr>
 @if ($userinfo == 1)
 <div class="row">
-	<div class="col-12">
+	<div class="col-12 tran tran_left_side_info">
 		<h3 class="text-center">Username -- {{$user->username}}</h3>
 		<hr>
 	</div>
-	<div class="col-6">
+	<div class="col-6 tran_left_side_info">
 		<h4> Name: {{ $user->name }}</h4>
 		<h4> Phone: {{ $user->phone }}</h4>
 		<h4> Email: {{ $user->email }}</h4>
 	</div>
-	<div class="col-6 text-right">
+	<div class="col-6 text-right tran_right_side_info">
 	
 		<h4>Sponsor Name: <?php  echo $user?->sponsor?->name;  ?></h4>
 		<h4>Sponsor Phone: <?php  echo $user?->sponsor?->phone;  ?></h4>

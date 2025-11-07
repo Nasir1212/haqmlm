@@ -58,6 +58,12 @@
 			top: 17px;
 			left: 5rem;
 			}
+			.tra_title{
+				font-size: 16px;
+			}
+			.tran_left_side_info h4, .tran_left_side_info h3, .tran_right_side_info h4{
+				font-size: 14px;
+			}
 }
 
 

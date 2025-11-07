@@ -479,6 +479,10 @@ Route::controller(PageController::class)->group(function () {
         Route::get('/users-active', 'Active_User')->name('Active_User');
         Route::get('/free-user', 'Free_user')->name('Free_user');
         Route::get('/users-band', 'Band_User')->name('Band_User');
+        Route::get('/total-point-sale', 'total_point_sale')->name('total_point_sale');
+        Route::get('/out-bonus-history', 'out_bonus_history')->name('out_bonus_history');
+        Route::get('/delivered-bonus-history', 'delivered_bonus_history')->name('delivered_bonus_history');
+        Route::get('/total-submitted-point-sale', 'total_submitted_point_sale')->name('total_submitted_point_sale');
         Route::get('/user-details/{username}', 'User_details')->name('user_details');
         Route::get('/user-account-setup/{username}', 'Account_setup')->name('user_account_setup');
         Route::get('/user-edit', 'User_edit')->name('User_edit');
@@ -744,8 +748,8 @@ Route::get('/clear-all', function() {
     $exitCode = Artisan::call('view:clear');
     $exitCode = Artisan::call('route:clear');
     $exitCode = Artisan::call('config:clear');
-$exitCode = Artisan::call('optimize:clear');
-$exitCode = Artisan::call('optimize');
+    $exitCode = Artisan::call('optimize:clear');
+    $exitCode = Artisan::call('optimize');
     echo "clear";
     // return what you want
 });
