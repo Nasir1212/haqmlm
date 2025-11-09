@@ -59,7 +59,7 @@ public function username__check(Request $request){
     
      $user = User::where('username', $request->username)->first();
      if($user){
-            $notice = "<h4 style='color:red;padding:10px'>".$request->username." <strong> is Not Available!</h4>";
+            $notice = "<h4 style='color:red;padding:10px'>".$request->username." <strong>  already exists. try another name!</h4>";
      }else{
             $notice = "<h4 style='color:green;padding:10px'>".$request->username." <strong> is Available!</h4>";
      }

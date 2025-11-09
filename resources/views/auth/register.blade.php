@@ -24,7 +24,7 @@
         </div>
         <!-- Ref Username -->
         <div>
-            <x-input-label for="ref_username" :value="__('Ref Username for Working Team')" />
+            <x-input-label for="ref_username" :value="__('Username for Working Team')" />
             
             <input id="ref_username" class="block mt-1 w-full" type="text" name="ref_username" value="@if(isset($_GET['ref'])) {{ $_GET['ref'] }} @endif" @if(isset($_GET['ref'])) readonly @endif  required />
             <x-input-error :messages="$errors->get('ref_username')" class="mt-2" />
