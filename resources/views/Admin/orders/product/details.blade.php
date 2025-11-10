@@ -472,7 +472,7 @@
                         
                         });
                                 setTimeout(() => {
-                     //   window.location.reload();
+                        window.location.reload();
                     }, 1000); // Delay of 1 second
                             
                         
@@ -518,7 +518,7 @@
                         
                         });
                                 setTimeout(() => {
-                     //   window.location.reload();
+                        window.location.reload();
                     }, 1000); // Delay of 1 second
 
                     },
