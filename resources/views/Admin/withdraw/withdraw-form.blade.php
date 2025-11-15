@@ -21,6 +21,7 @@
 			<h5 class="card-header text-center">{{ $pay_account->gateway->name }}
 			</h5>
 			<div class="card-body card-body-Withdraw">
+				{{-- @dd($pay_account->gateway->image_path.$pay_account->gateway->image_name) --}}
 				<img src="{{ asset($pay_account->gateway->image_path.$pay_account->gateway->image_name)}}" class="card-img-top depo" alt="Bkash">
 			</div>
 			<div class="card-footer">

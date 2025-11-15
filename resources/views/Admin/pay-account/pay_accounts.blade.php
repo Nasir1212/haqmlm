@@ -36,9 +36,9 @@
 									@foreach ( $pay_accounts as $key => $pay_account)
 									<tr>
 										<td>{{ $key + 1 }}</td>
-										<td>{{ $pay_account->gateway->name }}</td>
-										<td>{{ $pay_account->charge }}</td>
-										<td>{{ $pay_account->account }}</td>
+										<td>{{ $pay_account?->gateway?->name }}</td>
+										<td>{{ $pay_account?->charge }}</td>
+										<td>{{ $pay_account?->account }}</td>
 										<td>
 											@if($pay_account->status == 1)
 											<span class="badge badge-success btn btn-lg">ACTIVE </span>

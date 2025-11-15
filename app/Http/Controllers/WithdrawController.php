@@ -55,7 +55,6 @@ class WithdrawController extends Controller
         $user_id = $withdraw->user_id;
         $user = User::find($user_id);
         $withdraw_current_status = $withdraw->status;
-
      
             if( $ac_order == 'pension_approve' || $ac_order == 'approve'){
                 
@@ -66,10 +65,8 @@ class WithdrawController extends Controller
                  notify()->error('Already Cancel, So Do not Try again!');
                  return back();
             }else{
-                 $status  = $ac_order == 'approve'?'Approved':'Pension Widthdrow approved';
-                
-                $withdraw->status = $status;
-                        
+                 $status  = $ac_order == 'approve'?'Approve':'Pension Widthdrow approved';
+                $withdraw->status = $status;         
                 $withdraw->save();
 
                
@@ -233,18 +230,6 @@ class WithdrawController extends Controller
            
             $withdraw = new Withdraw();
             $withdraw->payment_r_ac =  $request->account_number;
-    
-            // if($request->hasFile('account_qr_code')){
-            //     $dt = Carbon::now();
-            //     $micro = $dt->micro;
-            //     $image_obj = $request->file('account_qr_code');
-            //     $orpath = storage_path('app/public/uploads/withdraw-account-qr/');
-            //     $image_name = $micro.$image_obj->getClientOriginalName();
-            //     $public_path = 'storage/uploads/withdraw-account-qr/';
-            //     Image::make($image_obj)->save($orpath.'/'.$image_name);
-            //     $withdraw->payment_r_ac_qr =  $request->account_qr_code;
-            // }
-
             if ($request->hasFile('account_qr_code')) {
             $image_obj = $request->file('account_qr_code');
 
@@ -275,6 +260,23 @@ class WithdrawController extends Controller
             $withdraw->user_id =  $gsd->id;
             $withdraw->status = 'Pending';
             $withdraw->save();
+
+            //Send Notification to Admin
+            $admin = User::where('id', 1)->first();
+            $template = getNotificationTemplate('new_withdraw_request', [
+                '[amount]' =>number_format($request->amount,2),
+                '[receiver_name]' => $user->username,
+                '[method]' => $payAccount->gateway->name,
+                '[after_blance]' => $user->balance,
+
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('withdraw-pending'),
+                ];
+                $admin->notify(new UserMessageNotification($data));
             notify()->success('Your withdraw successfull submitted !');
             return redirect()->route('withdraw_pending');
             

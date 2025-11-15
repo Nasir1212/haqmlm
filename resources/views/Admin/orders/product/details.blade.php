@@ -52,6 +52,7 @@
                         <?php $allptotal = 0;
                         $totalp = 0;
                         ?>
+                        {{-- @dd($order->order_detail) --}}
                         @foreach ($order->order_detail as $key => $odd)
                             
                      
@@ -311,6 +312,7 @@
     </div>
 </div>
 @endif
+
 @if(  $order->payment_status =='Unpaid')
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -329,7 +331,7 @@
             </div>
             <div>
                 <div class="row">
-                 
+                    @if(!empty($odd) )
                     @foreach ($products as $product)
                     @if($odd->product_id !=$product->id )
                     <div class="col-lg-4 col-md-6 col-sm-12">
@@ -337,7 +339,7 @@
                             <div class="card-body">
                                 <div>
                                     <img style="width: 200px;height:150px" src="{{ $product->img_name}}" alt="">
-                                    {{-- <img style="width: 150px;height:150px " src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/primary/ProductShowcasesampleimages/JPEG/Product+Showcase-1.jpg" alt=""> --}}
+                                  
                                 </div>
                                 <p style="font-size: 12px;font-weight:bold">{{$product->name}}</p>
                                 <h6>Price : <Strong>{{$product->main_price}} </Strong></h6>
@@ -347,6 +349,7 @@
                     @endif
                
                     @endforeach
+                    @endif
                 </div>
             </div>
         </div>

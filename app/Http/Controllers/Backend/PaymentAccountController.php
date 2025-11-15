@@ -334,6 +334,7 @@ class PaymentAccountController extends Controller
     } 
     
     public function payaccount_update_account(Request $request){
+       
         $gsd = global_user_data();
          if (Auth::id() == 1 || permission_checker($gsd->role_info,'account_manage') == 1){
         $payAccount = PayAccounts::where('id',$request->id)->first();

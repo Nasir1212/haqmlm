@@ -66,6 +66,15 @@
 			}
 }
 
+  @media screen and (max-width: 375px) { 
+		.extra_logo{
+       
+		width: 10rem;
+		}
+
+
+   }
+
 
     /* #notificationDropdown {
         display: none;

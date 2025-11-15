@@ -17,7 +17,8 @@ use App\Models\BillingAddress;
 use Illuminate\Support\Str;
 use App\Models\DealerSelection;
 use App\Models\Withdraw;
-
+use App\Models\User;
+use App\Notifications\UserMessageNotification;
 class PurchaseController extends Controller
 {
     public function productOrder(Request $request)
@@ -57,8 +58,7 @@ class PurchaseController extends Controller
     public function productConfirmOrder(Request $request)
     {
          $gsd = global_user_data();
-        
-        
+       
           $selected_dealer = DealerSelection::where('user_id', $gsd->id)->with('dealer')->first();
     
               if(!$selected_dealer){
@@ -232,12 +232,23 @@ class PurchaseController extends Controller
 
             $gsd->save();
             
-            
-                    
-           
-    
-            
-            
+              //Send Notification to Admin
+            $admin = User::where('id', 1)->first();
+            $template = getNotificationTemplate('new_order', [
+                '[amount]' =>number_format($final_price,2),
+                '[order_by_name]' => $gsd->username,
+                '[method]' => $request->paymentMethod ,
+                '[points]' => $order_detail->total_point,
+
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('product-orders'),
+                ];
+                $admin->notify(new UserMessageNotification($data));
+                        
             notify()->success('Order Creating success!');
             return back();
             

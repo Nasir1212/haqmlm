@@ -149,30 +149,41 @@
                                     <th>Product Name</th>
                                     <th>Qty</th>
                                      <th>Point</th>
+                                     <th>Price</th>
                                      <th>Total Point</th>
-                                    <th>Price</th>
+                                    
                                     <th>Total Price</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php $gps = 0; ?>
+                                <?php 
+                                $gps = 0; 
+                                $g_total_point = 0;
+                                ?>
                                 @foreach ($cart_datas as $key => $cart_data )
                                 <tr>
                                     <td>{{$cart_data->product->name }}</td>
                                     <td id="pqty{{ $key }}">{{$cart_data->qty}}</td>
                                     <td id="ppoint{{ $key }}">{{$cart_data->product->point}}</td>
+                                     <td id="pprice{{$key}}">{{ $cart_data->product->main_price}}</td>
                                     <td id="product_total_point{{ $key }}">{{$cart_data->point}}</td>
-                                    <td id="pprice{{$key}}">{{ $cart_data->product->main_price}}</td>
+                                   
                                     <td id="product_total_price{{$key}}">{{ $cart_data->price}}</td>
                                 </tr>
-                                <?php $gps += $cart_data->price; ?>
+                                <?php 
+                                $gps += $cart_data->price;
+                                $g_total_point += $cart_data->point;
+                                ?>
                                 @endforeach
                                 <tr id="shipping_cost_data">
                                     <td colspan="5" class="text-right">Shipping Charge</td>
                                     <td id="sp_cp">0</td>
                                 </tr>
+                              
                                 <tr class="border-t">
-                                    <td colspan="5" class="text-right">Gross Price = </td>
+                                    <td colspan="" class="text-right">Gross Point  = </td>
+                                    <td id="Gross_price">{{$g_total_point}}</td>
+                                    <td colspan="3" class="text-right">Gross Price = </td>
                                     <td id="Gross_price">{{$gps}}</td>
                                 </tr>
                             </tbody>

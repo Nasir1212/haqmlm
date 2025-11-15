@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Image;
+use Illuminate\Support\Str;
 
 class GatewayController extends Controller
 {
@@ -32,42 +33,76 @@ class GatewayController extends Controller
         }
         } 
         
-        public function gateway_store(Request $request){
-            $gsd = global_user_data();
-             if (Auth::id() == 1 || permission_checker($gsd->role_info,'gateway_manage') == 1){
-            $gateway = new Gateway();
+        // public function gateway_store(Request $request){
+        //     $gsd = global_user_data();
+        //      if (Auth::id() == 1 || permission_checker($gsd->role_info,'gateway_manage') == 1){
+        //     $gateway = new Gateway();
     
-            if($request->hasFile('image')){
-                $dt = Carbon::now();
-                $micro = $dt->micro;
-                $image_obj = $request->file('image');
-                $orpath = storage_path('app/public/uploads/gateways/');
-                $image_name = $micro.$image_obj->getClientOriginalName();
-                $public_path = 'storage/uploads/gateways/';
-                Image::make($image_obj)->save($orpath.'/'.$image_name);
-                $gateway->image_path = $public_path;
-                $gateway->image_name = $image_name;
-            }
+        //     if($request->hasFile('image')){
+        //         $dt = Carbon::now();
+        //         $micro = $dt->micro;
+        //         $image_obj = $request->file('image');
+        //         $orpath = storage_path('app/public/uploads/gateways/');
+        //         $image_name = $micro.$image_obj->getClientOriginalName();
+        //         $public_path = 'storage/uploads/gateways/';
+        //         Image::make($image_obj)->save($orpath.'/'.$image_name);
+        //         $gateway->image_path = $public_path;
+        //         $gateway->image_name = $image_name;
+        //     }
     
           
-            $gateway->name = $request->name;
-            $gateway->code =  getTrx(5);
+        //     $gateway->name = $request->name;
+        //     $gateway->code =  getTrx(5);
      
-            $gateway->description = $request->g_details;
+        //     $gateway->description = $request->g_details;
         
-            $gateway->status = $request->gateway_status;
+        //     $gateway->status = $request->gateway_status;
            
-            $gateway->save();
+        //     $gateway->save();
     
-            notify()->success('Created Successfull');
-           return redirect()->route('gateways');
-             }else{
+        //     notify()->success('Created Successfull');
+        //    return redirect()->route('gateways');
+        //      }else{
             
-           notify()->error('Permission Not Allow !');
-           return back();
-        }
+        //    notify()->error('Permission Not Allow !');
+        //    return back();
+        // }
           
-        } 
+        // } 
+
+        public function gateway_store(Request $request)
+{
+    $gsd = global_user_data();
+
+    if (Auth::id() != 1 && permission_checker($gsd->role_info, 'gateway_manage') != 1) {
+        notify()->error('Permission Not Allow !');
+        return back();
+    }
+
+    $gateway = new Gateway();
+
+    if ($request->hasFile('image')) {
+
+        $image = $request->file('image');
+        $dt = Carbon::now()->format('Ymd_His_u');
+        $image_name = $dt . '_' . Str::random(10) . '.' . $image->getClientOriginalExtension();
+        $folder_path = 'uploads/gateways/';
+        $image_resized = Image::make($image)->encode();
+        Storage::disk('img_disk')->put($folder_path . $image_name, $image_resized->__toString());
+        $gateway->image_path = 'https://img.haqmultishop.com/' . $folder_path;
+        $gateway->image_name = $image_name;
+    }
+    $gateway->name = $request->name;
+    $gateway->code = getTrx(5);
+    $gateway->description = $request->g_details;
+    $gateway->status = $request->gateway_status;
+
+    $gateway->save();
+
+    notify()->success('Created Successfully');
+    return redirect()->route('gateways');
+}
+
     
     
         public function edit_gateway(){
