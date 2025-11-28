@@ -18,7 +18,7 @@
 	@foreach ( $pay_accounts as $pay_account )
 	<div class="col-lg-3 col-md-3 mb-4">
 		<div class="card card-Withdraw">
-			<h5 class="card-header text-center">{{ $pay_account->gateway->name }}
+			<h5 class="card-header text-center">{{ $pay_account?->gateway?->name }}
 			</h5>
 			<div class="card-body card-body-Withdraw">
 				{{-- @dd($pay_account->gateway->image_path.$pay_account->gateway->image_name) --}}

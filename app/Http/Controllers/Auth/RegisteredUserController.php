@@ -21,6 +21,7 @@ use App\Models\Setting;
 use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Notifications\UserMessageNotification;
+use Illuminate\Support\Facades\Artisan;
 
 
 class RegisteredUserController extends Controller
