@@ -29,7 +29,7 @@
                     P- {{ $product->point }}
                 </div>
                  <div class="stock_status_bar">
-                        Stock {{ $product->stock   }}
+                        Stock {{ $product->owner_qty   }}
                 </div>
                 <div class="product_order_option btn-group">
                     @auth

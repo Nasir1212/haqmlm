@@ -177,6 +177,7 @@ $latest_products = Product::select('products.*', 'product_owners.qty as owner_qt
 
     if (!$selected_dealer) {
       $dealerId = 1;
+      
     $products = Product::select('products.*', 'product_owners.qty as owner_qty')
     ->join('product_owners', 'products.id', '=', 'product_owners.product_id')
     ->where('product_owners.dealer_id', $dealerId)

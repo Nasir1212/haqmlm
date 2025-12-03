@@ -54,114 +54,259 @@ if($product){
         return view('Frontend.product.details', compact('related_products','product','gsd','c_products','wsp_products'));
 
     }
- public function Brand_product(Request $request){
+//  public function Brand_product(Request $request){
       
-        $selected_dealer = '';
-        $gsd = '';
-            $Brand = ProductBrand::where('slug',$request->slug)->first();
-        if (Auth::check()) {
-           $gsd = global_user_data();
+//         $selected_dealer = '';
+//         $gsd = '';
+//             $Brand = ProductBrand::where('slug',$request->slug)->first();
+//         if (Auth::check()) {
+//            $gsd = global_user_data();
            
-           $selected_dealer = DealerSelection::where('user_id', $gsd->id)->first();
-           if(!$selected_dealer){
-               $selected_dealer = new DealerSelection();
-               $selected_dealer->user_id = $gsd->id;
-               $selected_dealer->dealer_id = 1;
-               $selected_dealer->save();
-           }
-        }
+//            $selected_dealer = DealerSelection::where('user_id', $gsd->id)->first();
+//            if(!$selected_dealer){
+//                $selected_dealer = new DealerSelection();
+//                $selected_dealer->user_id = $gsd->id;
+//                $selected_dealer->dealer_id = 1;
+//                $selected_dealer->save();
+//            }
+//         }
         
-        if (Auth::check()) {
-        if (!$selected_dealer) {
+//         if (Auth::check()) {
+//         if (!$selected_dealer) {
       
-            // Fetch products with eager loading for related models
-            $products = Product::where('brand_id',$Brand->id)->where('status', 1)
-                            ->latest('id')
-                            ->paginate(24);
-        } else{
-                // Fetch product IDs for the selected dealer with available quantity
-                $productIds = ProductOwner::where('dealer_id', $selected_dealer->dealer_id)
+//             // Fetch products with eager loading for related models
+//             $products = Product::where('brand_id',$Brand->id)->where('status', 1)
+//                             ->latest('id')
+//                             ->paginate(24);
+//                             $products = Product::select('products.*', 'product_owners.qty as owner_qty')
+//     ->join('product_owners', 'products.id', '=', 'product_owners.product_id')
+//     ->where('product_owners.dealer_id', $dealerId)
+//     ->latest('products.id')
+//     ->paginate(24);
+    
+//         } else{
+//                 // Fetch product IDs for the selected dealer with available quantity
+//                 $productIds = ProductOwner::where('dealer_id', $selected_dealer->dealer_id)
                                
-                                ->pluck('product_id');
+//                                 ->pluck('product_id');
     
-                // Fetch products with eager loading for related models
-                $products = Product::where('brand_id',$Brand->id)->whereIn('id', $productIds)
-                                ->where('status', 1)
-                                ->latest('id')
-                                ->paginate(24);
+//                 // Fetch products with eager loading for related models
+//                 $products = Product::where('brand_id',$Brand->id)->whereIn('id', $productIds)
+//                                 ->where('status', 1)
+//                                 ->latest('id')
+//                                 ->paginate(24);
     
-        } 
+//         } 
             
-        } else{
+//         } else{
             
-        $products = Product::where('brand_id',$Brand->id)->where('status', 1)
-        ->latest('id')
-        ->paginate(24);
-    }          
+//         $products = Product::where('brand_id',$Brand->id)->where('status', 1)
+//         ->latest('id')
+//         ->paginate(24);
+//     }          
         
         
         
         
-        $c_products = cart_counter();
-        $wsp_products = wishlist_counter();
+//         $c_products = cart_counter();
+//         $wsp_products = wishlist_counter();
     
         
 
-        return view('Frontend.product.brand-product', compact('products','Brand','gsd','c_products','wsp_products'));
+//         return view('Frontend.product.brand-product', compact('products','Brand','gsd','c_products','wsp_products'));
 
+//     }
+
+public function Brand_product(Request $request)
+{
+    $gsd = '';
+    $selected_dealer = null;
+
+    // Select Brand
+    $Brand = ProductBrand::where('slug', $request->slug)->first();
+
+    // If logged in, load user & dealer selection
+    if (Auth::check()) {
+        $gsd = global_user_data();
+
+        // Load selected dealer or create default dealer (ID = 1)
+        $selected_dealer = DealerSelection::firstOrCreate(
+            ['user_id' => $gsd->id],
+            ['dealer_id' => 1]
+        );
     }
 
- public function Category_product(Request $request){
-        $selected_dealer = '';
-        $gsd = '';
-        $Category = ProductCategory::where('slug',$request->slug)->first();
-        if (Auth::check()) {
-           $gsd = global_user_data();
-           $selected_dealer = DealerSelection::where('user_id', $gsd->id)->first();
-           if(!$selected_dealer){
-               $selected_dealer = new DealerSelection();
-               $selected_dealer->user_id = $gsd->id;
-               $selected_dealer->dealer_id = 1;
-               $selected_dealer->save();
-           }
-        }
+    // ------------------------------------------
+    // CASE 1: USER NOT LOGGED IN
+    // ------------------------------------------
+    if (!Auth::check()) {
+
+        $products = Product::where('brand_id', $Brand->id)
+            ->where('status', 1)
+            ->latest('id')
+            ->paginate(24);
+
+    } else {
+
+        // User is logged in → Fetch dealer_id
+        $dealerId = $selected_dealer->dealer_id;
+
+        // Fetch productIds for this dealer
+        $productIds = ProductOwner::where('dealer_id', $dealerId)
+            ->pluck('product_id');
+
+        // ------------------------------------------
+        // CASE 2: USER LOGGED IN → Fetch brand products WITH qty
+        // ------------------------------------------
+        $products = Product::select(
+                'products.*',
+                \DB::raw('COALESCE(product_owners.qty, 0) AS owner_qty')
+            )
+            ->leftJoin('product_owners', function ($join) use ($dealerId) {
+                $join->on('products.id', '=', 'product_owners.product_id')
+                     ->where('product_owners.dealer_id', $dealerId);
+            })
+            ->where('products.brand_id', $Brand->id)
+            ->where('products.status', 1)
+            ->whereIn('products.id', $productIds)
+            ->latest('products.id')
+            ->paginate(24);
+    }
+
+    // Cart + Wishlist counters
+    $c_products = cart_counter();
+    $wsp_products = wishlist_counter();
+
+    return view('Frontend.product.brand-product', compact(
+        'products',
+        'Brand',
+        'gsd',
+        'c_products',
+        'wsp_products'
+    ));
+}
+
+
+//  public function Category_product(Request $request){
+//         $selected_dealer = '';
+//         $gsd = '';
+//         $Category = ProductCategory::where('slug',$request->slug)->first();
+//         if (Auth::check()) {
+//            $gsd = global_user_data();
+//            $selected_dealer = DealerSelection::where('user_id', $gsd->id)->first();
+//            if(!$selected_dealer){
+//                $selected_dealer = new DealerSelection();
+//                $selected_dealer->user_id = $gsd->id;
+//                $selected_dealer->dealer_id = 1;
+//                $selected_dealer->save();
+//            }
+//         }
         
-        if (Auth::check()) {
-        if (!$selected_dealer) {
+//         if (Auth::check()) {
+//         if (!$selected_dealer) {
       
-            // Fetch products with eager loading for related models
-            $products = Product::where('category_id',$Category->id)->where('status', 1)
-                            ->latest('id')
-                            ->paginate(24);
-        } else{
-                // Fetch product IDs for the selected dealer with available quantity
-                $productIds = ProductOwner::where('dealer_id', $selected_dealer->dealer_id)
+//             // Fetch products with eager loading for related models
+//             $products = Product::where('category_id',$Category->id)->where('status', 1)
+//                             ->latest('id')
+//                             ->paginate(24);
+//         } else{
+//                 // Fetch product IDs for the selected dealer with available quantity
+//                 $productIds = ProductOwner::where('dealer_id', $selected_dealer->dealer_id)
                                
-                                ->pluck('product_id');
+//                                 ->pluck('product_id');
     
-                // Fetch products with eager loading for related models
-                $products = Product::where('category_id',$Category->id)->whereIn('id', $productIds)
-                                ->where('status', 1)
-                                ->latest('id')
-                                ->paginate(24);
+//                 // Fetch products with eager loading for related models
+//                 $products = Product::where('category_id',$Category->id)->whereIn('id', $productIds)
+//                                 ->where('status', 1)
+//                                 ->latest('id')
+//                                 ->paginate(24);
     
-        } 
+//         } 
              
-        } else{
-        $products = Product::where('category_id',$Category->id)->where('status', 1)
-        ->latest('id')
-        ->paginate(24);
-    }          
+//         } else{
+//         $products = Product::where('category_id',$Category->id)->where('status', 1)
+//         ->latest('id')
+//         ->paginate(24);
+//     }          
         
-        $c_products = cart_counter();
-        $wsp_products = wishlist_counter();
+//         $c_products = cart_counter();
+//         $wsp_products = wishlist_counter();
        
         
-        return view('Frontend.product.category-product', compact('products','Category','gsd','c_products','wsp_products'));
+//         return view('Frontend.product.category-product', compact('products','Category','gsd','c_products','wsp_products'));
 
+//     }
+
+
+public function Category_product(Request $request)
+{
+    $gsd = '';
+    $selected_dealer = null;
+
+    // Load Category Information
+    $Category = ProductCategory::where('slug', $request->slug)->first();
+
+    // If logged in → prepare dealer data
+    if (Auth::check()) {
+
+        $gsd = global_user_data();
+
+        // Load selected dealer or create default
+        $selected_dealer = DealerSelection::firstOrCreate(
+            ['user_id' => $gsd->id],
+            ['dealer_id' => 1]
+        );
     }
 
+    // ------------------------------------------
+    // CASE 1: USER NOT LOGGED IN
+    // ------------------------------------------
+    if (!Auth::check()) {
 
+        $products = Product::where('category_id', $Category->id)
+            ->where('status', 1)
+            ->latest('id')
+            ->paginate(24);
+
+    } else {
+
+        // Logged in → fetch dealer id
+        $dealerId = $selected_dealer->dealer_id;
+
+        // Get product IDs which this dealer owns
+        $productIds = ProductOwner::where('dealer_id', $dealerId)
+            ->pluck('product_id');
+
+        // ------------------------------------------
+        // CASE 2: USER LOGGED IN → FETCH PRODUCT + QTY
+        // ------------------------------------------
+        $products = Product::select(
+                'products.*',
+                \DB::raw('COALESCE(product_owners.qty, 0) AS owner_qty')
+            )
+            ->leftJoin('product_owners', function ($join) use ($dealerId) {
+                $join->on('products.id', '=', 'product_owners.product_id')
+                     ->where('product_owners.dealer_id', $dealerId);
+            })
+            ->where('products.category_id', $Category->id)
+            ->where('products.status', 1)
+            ->whereIn('products.id', $productIds)
+            ->latest('products.id')
+            ->paginate(24);
+    }
+
+    // Counters
+    $c_products = cart_counter();
+    $wsp_products = wishlist_counter();
+
+    return view('Frontend.product.category-product', compact(
+        'products',
+        'Category',
+        'gsd',
+        'c_products',
+        'wsp_products'
+    ));
+}
 
 
 
