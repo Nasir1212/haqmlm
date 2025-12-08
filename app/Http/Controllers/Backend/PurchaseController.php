@@ -375,6 +375,10 @@ class PurchaseController extends Controller
 
        
         if($quantity <=0){
+            if(count($orderIds) <=1){
+                notify()->error('At least one product required in an order');
+                return back();
+            }
          OrderDetail::where('id', $orderDetailsId)->delete();
         }else{
 
