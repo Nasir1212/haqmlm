@@ -42,7 +42,7 @@
     <div class="photobanner" style="width:<?php echo count($highlight_products)*130; ?>px">
         @foreach ($highlight_products as $data)
         
-        <img src="{{$data->product->img_name}}" style="width:100px" class="img-fluid">
+        <img src="{{$data?->product?->img_name}}" style="width:100px" class="img-fluid">
         @endforeach
        
    

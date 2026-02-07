@@ -69,9 +69,10 @@
 		<hr>
 	</div>
 	<div class="col-6">
-		<h4> Name: {{ $user->name }}</h4>
-		<h4> Phone: {{ $user->phone }}</h4>
-		<h4> Email: {{ $user->email }}</h4>
+		
+		<h4> Name: {{ $user?->name }}</h4>
+		<h4> Phone: {{ $user?->phone }}</h4>
+		<h4> Email: {{ $user?->email }}</h4>
 	</div>
 
 	<div class="col-6 text-right">
