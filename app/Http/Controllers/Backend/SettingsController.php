@@ -63,6 +63,7 @@ class SettingsController extends Controller
 
 
     public function auto_pv_collection_action(Request $request){
+       
          $runing_count_point = 0;
          $gsd = global_user_data();
           $runing_count_point= 0;
@@ -100,9 +101,9 @@ class SettingsController extends Controller
         
         }
            
-        // CountTotalSubmittedPoint::create([
-        // 'point' => $runing_count_point
-        // ]);
+        CountTotalSubmittedPoint::create([
+        'point' => $runing_count_point
+        ]);
 
        userSelfSubmitPoint::truncate();
         notify()->success('Self Sub Point Collection Complete');
