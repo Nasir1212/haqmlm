@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\DirectBonusCondition;
 use App\Models\PointSubmitHistory;
 use App\Models\User;
@@ -62,115 +62,218 @@ class SettingsController extends Controller
     }    
 
 
-    public function auto_pv_collection_action(Request $request){
+    // public function auto_pv_collection_action(Request $request){
        
-         $runing_count_point = 0;
-         $gsd = global_user_data();
-          $runing_count_point= 0;
-        if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){     
-            $point = $request->point;
-       // $now = Carbon::today();
-       if($request->point_type == 'Normal'){
-        $users = User::where('point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
-       }elseif($request->point_type == 'Lock'){
-        $users = User::where('lock_point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
-       }else{
+    //      $runing_count_point = 0;
+    //      $gsd = global_user_data();
+    //       $runing_count_point= 0;
+    //     if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){     
+    //         $point = $request->point;
+    //    // $now = Carbon::today();
+    //    if($request->point_type == 'Normal'){
+    //     $users = User::where('point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
+    //    }elseif($request->point_type == 'Lock'){
+    //     $users = User::where('lock_point', '>=', $point)->where('distribute_status',0)->where('submit_check',0)->get();
+    //    }else{
       
-        $user_submitted_points  = userSelfSubmitPoint::all();
+    //     $user_submitted_points  = userSelfSubmitPoint::all();
        
-        foreach($user_submitted_points as $user_submitted_point){
-            $gsd = User::where('id',$user_submitted_point->user_id)->first();
-            if($gsd->submit_check == 1){
-                $gsd->submitted_point += $user_submitted_point->point;
-            }else{
-               $gsd->submitted_point = $user_submitted_point->point;
-            }
-            $runing_count_point +=  $user_submitted_point->point;
-            $gsd->total_submitted_point  += $user_submitted_point->point;
-            $gsd->distribute_status = 1;
-            $gsd->submit_check = 1; 
-            $gsd->point_submit_date = date('Y-m-d H:i:s'); 
-            $gsd->save();
+    //     foreach($user_submitted_points as $user_submitted_point){
+    //         $gsd = User::where('id',$user_submitted_point->user_id)->first();
+    //         if($gsd->submit_check == 1){
+    //             $gsd->submitted_point += $user_submitted_point->point;
+    //         }else{
+    //            $gsd->submitted_point = $user_submitted_point->point;
+    //         }
+    //         $runing_count_point +=  $user_submitted_point->point;
+    //         $gsd->total_submitted_point  += $user_submitted_point->point;
+    //         $gsd->distribute_status = 1;
+    //         $gsd->submit_check = 1; 
+    //         $gsd->point_submit_date = date('Y-m-d H:i:s'); 
+    //         $gsd->save();
            
 
-         $trns = Transaction::where('user_id',$user_submitted_point->user_id)->where('created_at',$user_submitted_point->created_at)->where('admin_recollect_date',null)->first(); 
-            if($trns != null){
-                $trns->admin_recollect_date = Carbon::now();
-                $trns->save();
-            }
+    //      $trns = Transaction::where('user_id',$user_submitted_point->user_id)->where('created_at',$user_submitted_point->created_at)->where('admin_recollect_date',null)->first(); 
+    //         if($trns != null){
+    //             $trns->admin_recollect_date = Carbon::now();
+    //             $trns->save();
+    //         }
         
-        }
+    //     }
            
-        CountTotalSubmittedPoint::create([
-        'point' => $runing_count_point
-        ]);
+    //     // CountTotalSubmittedPoint::create([
+    //     // 'point' => $runing_count_point
+    //     // ]);
 
-       userSelfSubmitPoint::truncate();
-        notify()->success('Self Sub Point Collection Complete');
-        return back();
+    //    userSelfSubmitPoint::truncate();
+    //     notify()->success('Self Sub Point Collection Complete');
+    //     return back();
 
-       }
+    //    }
      
-            if($point == ''){
-                notify()->error('Collection point not set !');
-                return back();
-            }
-            if($point == 0){
-                notify()->error('Collection point 0 not allow !');
-                return back();
-            }
-       if($request->point_type == ''){
-        notify()->error('Collection point type not set !');
-        return back();
-    }
-     $today = Carbon::today();
-        $amount = $point;
+    //         if($point == ''){
+    //             notify()->error('Collection point not set !');
+    //             return back();
+    //         }
+    //         if($point == 0){
+    //             notify()->error('Collection point 0 not allow !');
+    //             return back();
+    //         }
+    //    if($request->point_type == ''){
+    //     notify()->error('Collection point type not set !');
+    //     return back();
+    // }
+    //  $today = Carbon::today();
+    //     $amount = $point;
 
-        foreach ($users as $key => $user) {
-            if($request->point_type == 'Normal'){
-            $runing_count_point+=$request->point;
-            $prev_point = $user->point;
-            $user->point -= $point;
-            $dd = 'admin action normal point';
-            $ph = new PointSubmitHistory();
-            $ph->point = $request->point;
-            $ph->user_id = $user->id;
-           $ph->save();
-             }else if($request->point_type == 'Lock'){
-              $runing_count_point+=$request->point;
-              $prev_point = $user->lock_point;
-              $user->lock_point -= $point;
-              $dd = 'admin action lock point';
-               $ph = new PointSubmitHistory();
-            $ph->point = $request->point;
-            $ph->user_id = $user->id;
-           $ph->save();
-             }
+    //     foreach ($users as $key => $user) {
+    //         if($request->point_type == 'Normal'){
+    //         $runing_count_point+=$request->point;
+    //         $prev_point = $user->point;
+    //         $user->point -= $point;
+    //         $dd = 'admin action normal point';
+    //         $ph = new PointSubmitHistory();
+    //         $ph->point = $request->point;
+    //         $ph->user_id = $user->id;
+    //        $ph->save();
+    //          }else if($request->point_type == 'Lock'){
+    //           $runing_count_point+=$request->point;
+    //           $prev_point = $user->lock_point;
+    //           $user->lock_point -= $point;
+    //           $dd = 'admin action lock point';
+    //            $ph = new PointSubmitHistory();
+    //         $ph->point = $request->point;
+    //         $ph->user_id = $user->id;
+    //        $ph->save();
+    //          }
             
-            $user->submitted_point = $point;
-            $user->total_submitted_point += $point;
-            $user->point_submit_date = $today;
-            $user->distribute_status = 1;
-            $user->submit_check = 1;
-           $user->save();
+    //         $user->submitted_point = $point;
+    //         $user->total_submitted_point += $point;
+    //         $user->point_submit_date = $today;
+    //         $user->distribute_status = 1;
+    //         $user->submit_check = 1;
+    //        $user->save();
             
-            trxCreate($amount,$prev_point,$user->point,$user->id,'auto_pv_submit',$dd,'-','N',"M");
-        }
-         CountTotalSubmittedPoint::create([
-        'point' => $runing_count_point
-        ]);
+    //         trxCreate($amount,$prev_point,$user->point,$user->id,'auto_pv_submit',$dd,'-','N',"M");
+    //     }
+    //      CountTotalSubmittedPoint::create([
+    //     'point' => $runing_count_point
+    //     ]);
        
-        notify()->success('Collection Complete');
+    //     notify()->success('Collection Complete');
+    //     return back();
+    //   }else {
+    //     notify()->error('Permission Not Allow!');
+    //     return back();
+    //   }
+    // }
+    
+
+public function auto_pv_collection_action(Request $request)
+{
+    $gsd = global_user_data();
+
+    if (Auth::id() != 1 && permission_checker($gsd->role_info, 'setting_manage') != 1) {
+        notify()->error('Permission Not Allowed!');
         return back();
-      }else {
-        notify()->error('Permission Not Allow!');
-        return back();
-      }
     }
-    
-    
-    
-    
+
+    $point = $request->point;
+    $pointType = $request->point_type;
+    $today = Carbon::now();
+    $runningCountPoint = 0;
+
+    if (in_array($pointType, ['Normal', 'Lock']) && (empty($point) || $point <= 0)) {
+        notify()->error('A valid collection point is required!');
+        return back();
+    }
+
+    try {
+        if (in_array($pointType, ['Normal', 'Lock'])) {
+            $column = ($pointType === 'Normal') ? 'point' : 'lock_point';
+            $description = "admin action " . strtolower($pointType) . " point";
+
+            // Process users one by one to avoid transaction locks/timeouts
+            $users = User::where($column, '>=', $point)
+                ->where('distribute_status', 0)
+                ->where('submit_check', 0)
+                ->get();
+
+            foreach ($users as $user) {
+                try {
+                    $prevPoint = $user->$column;
+                    
+                    // Update user
+                    $user->$column -= $point;
+                    $user->submitted_point = $point;
+                    $user->total_submitted_point += $point;
+                    $user->point_submit_date = $today;
+                    $user->distribute_status = 1;
+                    $user->submit_check = 1;
+                    $user->save();
+
+                    PointSubmitHistory::create([
+                        'point' => $point,
+                        'user_id' => $user->id,
+                        'remark_type' => strtoupper($pointType)
+                    ]);
+
+                    // Call trxCreate - wrapped in its own try-catch just in case
+                    trxCreate($point, $prevPoint, $user->$column, $user->id, 'auto_pv_submit', $description, '-', 'N', "M");
+
+                    $runningCountPoint += $point;
+                } catch (\Exception $e) {
+                    \Log::warning("Skipped User ID {$user->id} due to error: " . $e->getMessage());
+                    continue; 
+                }
+            }
+
+            if ($runningCountPoint > 0) {
+                CountTotalSubmittedPoint::create(['point' => $runningCountPoint]);
+            }
+
+        } else {
+            // Self Submit Logic
+            $submittedRecords = userSelfSubmitPoint::all();
+            
+            foreach ($submittedRecords as $record) {
+                $user = User::find($record->user_id);
+                if (!$user) continue;
+
+                $user->submitted_point = ($user->submit_check == 1) ? ($user->submitted_point + $record->point) : $record->point;
+                $user->total_submitted_point += $record->point;
+                $user->distribute_status = 1;
+                $user->submit_check = 1;
+                $user->point_submit_date = $today;
+                $user->save();
+
+                PointSubmitHistory::create([
+                    'point' => $record->point,
+                    'user_id' => $user->id,
+                    'remark_type' => 'SELF_SUBMIT'
+                ]);
+
+                $runningCountPoint += $record->point;
+
+                Transaction::where('user_id', $record->user_id)
+                    ->where('created_at', $record->created_at)
+                    ->whereNull('admin_recollect_date')
+                    ->update(['admin_recollect_date' => $today]);
+            }
+
+            userSelfSubmitPoint::truncate();
+        }
+
+        notify()->success('Collection Processed Successfully');
+        return back();
+
+    } catch (\Throwable $e) {
+        \Log::error("PV Collection Global Error: " . $e->getMessage());
+        notify()->error('Error: ' . $e->getMessage());
+        return back();
+    }
+}
+
     public function auto_pv_collection_back_action(Request $request){
          $gsd = global_user_data();
         if (Auth::id() == 1 || permission_checker($gsd->role_info,'setting_manage') == 1){

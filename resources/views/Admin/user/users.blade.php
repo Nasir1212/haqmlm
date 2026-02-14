@@ -43,7 +43,11 @@
 											Balance - {{ getAmount($user->balance,2) }}
 											<br> 
 												Point - {{ getAmount($user->point,2) }}
-										@endif</td>
+										@endif
+										<br>
+										
+										<a class="btn btn-info" href="{{ route('impersonate', $user->id) }}"> <i class="fa fa-user-secret"></i> Login as User</a>
+									</td>
 										<td>{{ $user->email }} <br> {{ $user->phone }}</td>
 										<td>{{ $user->created_at }}</td>
 									
@@ -71,7 +75,6 @@
 											 <div>
 										        @if($user->matrix_activation_status == 1)
 											<span class="badge badge-success btn btn-lg"> <span class="icon-check"></span> Paid </span>
-										
 											@else
 											<span class="badge badge-danger btn btn-lg"> Free </span>
 											@endif
@@ -128,4 +131,13 @@
 			</div>
 		</div>
     </div>
+
+	<script>
+
+	function loginAsUser(url) {
+	window.open(url, '_blank',"width=1200,height=800,resizable=yes,scrollbars=yes");
+	}
+
+	</script>
+
 @endsection

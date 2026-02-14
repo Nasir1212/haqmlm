@@ -383,6 +383,8 @@ function permission_checker($Role_info,$data){
         }
    
     }
+
+    
 function is_dealer($dealer_id){
    return $dealer = Dealer::where("user_id", $dealer_id)->exists();
 }

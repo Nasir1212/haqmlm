@@ -114,7 +114,7 @@
                                 @foreach ($cart_datas as $cart_data )
                                     <li class="list-group-item d-flex justify-content-between lh-condensed">
                                         <div>
-                                            <h6 class="my-0">{{ $cart_data->product->name }} <span >Qty --- <span class="qty">{{ $cart_data->qty }}</span></span></h6>
+                                            <h6 class="my-0">{{ $cart_data?->product?->name }} <span >Qty --- <span class="qty">{{ $cart_data->qty }}</span></span></h6>
                                         </div>
                                         <span class="text-muted p_price">{{ $cart_data->product->main_price}}</span>
                                     </li>

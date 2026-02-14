@@ -53,3 +53,10 @@ ALTER TABLE users ADD COLUMN pension_balance VARCHAR(250) NULL;
 
 ALTER TABLE withdraws 
 ADD COLUMN payment_r_ac_qr VARCHAR(255) NULL AFTER payment_r_ac;
+
+
+ALTER TABLE point_submit_histories 
+ADD COLUMN remark_type VARCHAR(255) NULL AFTER point;
+
+ALTER TABLE point_sale_histories 
+ADD COLUMN remark_type VARCHAR(255) NULL AFTER point;

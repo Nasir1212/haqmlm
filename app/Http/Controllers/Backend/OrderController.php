@@ -12,9 +12,11 @@ use App\Models\Package;
 use App\Models\User;
 use App\Models\Dealer;
 use App\Models\UserActivation;
+use App\Models\PointSubmitHistory;
 use Illuminate\Http\Request;
 use Mpdf\Mpdf;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Notifications\UserMessageNotification;
 
@@ -273,6 +275,7 @@ class OrderController extends Controller
            $PointSaleHistory->user_id = $user->id;
            $PointSaleHistory->point = $total_point;
            $PointSaleHistory->status = 1;
+           $PointSaleHistory->remark_type = "Product";
            $PointSaleHistory->save();
            
        }
@@ -340,75 +343,100 @@ public function package_order_status_change(Request $request){
            return back();
         }
 }
-public function package_order_payment_status_change(Request $request){
-     $setting = setting();
+
+public function package_order_payment_status_change(Request $request)
+{
+    $setting = setting(); // Assumes static cache fix applied
     $gsd = global_user_data();
-    if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){
 
-    $order = Order::where('id',$request->id)->with('order_detail')->first();
-    $order->payment_status = $request->payment_status;
-    $order->save();
+    // 1. Permission Check
+    $hasPermission = (auth()->id() == 1 || 
+                      permission_checker($gsd->role_info, 'order_manage') == 1 || 
+                      is_dealer(auth()->id()));
 
-    if($request->payment_status == 'Paid'){
-        $user = User::where('id',$order->user_id)->first();
-        if($order->order_type == 'package'){
-            $total_point = 0;
-            foreach ($order->order_detail as $key => $value) {
-               $pd = Package::where('id',$value->package_id)->first();
-               if ($pd) {
-                $user->point += $value->total_point;
-                $user->save();
-                $total_point += $value->total_point;
-               }
-            } 
-
-
-                $chkm = $setting->check_point;
-                    if($user->point >= $chkm && $user->distribute_status == 0){
-                        $prev_point = $user->point;
-                        $today = Carbon::today();
-                        $user->point -= $chkm;
-                        $user->submitted_point = $chkm;
-                        $user->total_submitted_point += $chkm;
-                        if($user->new_submited_point_status == 0){
-                            $user->new_submited_point_status = 2;
-                        }
-                    
-                        $user->point_submit_date = $today;
-                        $user->distribute_status = 1;
-                        $user->submit_check = 1;
-                        $user->save();
-                        
-                        referralComission($user->id);
-                        
-                        trxCreate($chkm,$prev_point,$user->point,$user->id,'auto_pv_submit','action purchase','+','N',"M");
-                    }
-
-                   if($user->new_submited_point_status == 2){
-                     autoMatrixGenerator($user->id);
-                   }
-
-
-
-            $PointSaleHistory = new PointSaleHistory();
-            $PointSaleHistory->user_id = $user->id;
-            $PointSaleHistory->point = $total_point;
-            $PointSaleHistory->status = 1;
-            $PointSaleHistory->save();
-            
-        }else {
-            # code... package
-        }
+    if (!$hasPermission) {
+        notify()->error('Permission Not Allowed!');
+        return back();
     }
 
-    return response()->json(['success'=>'Status Chage Successfully!']);
-    
-}else{
+    // 2. Wrap everything in a transaction to ensure data integrity
+    return DB::transaction(function () use ($request, $setting) {
+        $order = Order::where('id', $request->id)->with('order_detail')->first();
+        if (!$order) return response()->json(['error' => 'Order not found'], 404);
+
+        $order->payment_status = $request->payment_status;
+        $order->save();
+
+        if ($request->payment_status == 'Paid' && $order->order_type == 'package') {
+            $user = User::lockForUpdate()->find($order->user_id); // Lock user row to prevent race conditions
             
-           notify()->error('Permission Not Allow !');
-           return back();
+            $total_point = 0;
+            $package_ids = $order->order_detail->pluck('package_id')->unique();
+            $existing_packages = Package::whereIn('id', $package_ids)->pluck('id')->toArray();
+
+            // Calculate total points first - DO NOT save user inside this loop
+            foreach ($order->order_detail as $value) {
+                if (in_array($value->package_id, $existing_packages)) {
+                    $total_point += $value->total_point;
+                }
+            }
+
+            if ($total_point > 0) {
+                $user->point += $total_point;
+                // We will save $user later after all logic is done to minimize DB hits
+            }
+
+            $chkm = $setting->check_point;
+            if ($user->point >= $chkm && $user->distribute_status == 0) {
+                $prev_point = $user->point;
+                
+                $user->point -= $chkm;
+                $user->submitted_point = $chkm;
+                $user->total_submitted_point += $chkm;
+                
+                if ($user->new_submited_point_status == 0) {
+                    $user->new_submited_point_status = 2;
+                }
+
+                $user->point_submit_date = now();
+                $user->distribute_status = 1;
+                $user->submit_check = 1;
+
+                // Commission and Transactions (Call before final save if they rely on fresh data)
+                referralComission($user->id);
+                trxCreate($chkm, $prev_point, $user->point, $user->id, 'auto_pv_submit', 'action purchase', '+', 'N', "M");
+            }
+
+            // Final User Save (One connection hit instead of many)
+            $user->save();
+
+            if ($user->new_submited_point_status == 2) {
+                autoMatrixGenerator($user->id);
+            }
+
+            // Create History Records
+            PointSaleHistory::create([
+                'user_id' => $user->id,
+                'point' => $total_point,
+                'remark_type' => "Package",
+                'status' => 1
+            ]);
+
+            \Log::info(" Remark Type Package User ID {$user->id} awarded {$total_point} points for Package Order ID {$order->id}");
+
+            PointSubmitHistory::create([
+                'point' => $total_point,
+                'user_id' => $user->id,
+                'remark_type' => "Package"
+            ]);
         }
-}  
+
+        return response()->json(['success' => 'Status Changed Successfully!']);
+    });
+}
+
+
+
 public function package_order_shipping_cost_change(Request $request){
       $gsd = global_user_data();
       if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true){

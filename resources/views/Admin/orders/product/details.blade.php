@@ -60,11 +60,11 @@
                             <td>{{ $key+1 }}</td>
                             <td>
                                 <div class="media align-items-center gap-10">
-                                    <img class="avatar avatar-60 rounded" src="{{ asset($odd->product->img_name)}}" alt="{{$odd->product->name}}"/>
+                                    <img class="avatar avatar-60 rounded" src="{{ asset($odd->product?->img_name ?? '')}}" alt="{{$odd->product?->name ?? 'No Name'}}"/>
                                     <div>
-                                        <h6 class="title-color">{{$odd->product->name}}</h6>
+                                        <h6 class="title-color">{{$odd->product?->name}}</h6>
                                         <div><strong>Price :</strong> {{$odd->price}}/- TK</div>
-                                        <div><strong>Point :</strong> {{ $odd->product->point}}</div>
+                                        <div><strong>Point :</strong> {{ $odd->product?->point ?? 0}}</div>
                                         @if(!is_null(request()->query('edit')) &&  $order->payment_status =='Unpaid')
                                         <input type="hidden" name="prev_qty[]" value="{{$odd->qty}}">
                                         <input type="hidden" name="order_details_id[]" value="{{$odd->id}}">
@@ -86,10 +86,10 @@
                    
                             <td>0/- TK</td>
                             <td>0/- TK</td>
-                            <td>{{ $odd->product->point * $odd->qty }}</td>
+                            <td>{{ $odd->product?->point * $odd->qty }}</td>
                             <td>
                                 <?php  
-                                    $totalp += $odd->product->point * $odd->qty;
+                                    $totalp += $odd->product?->point * $odd->qty;
                                     $allptotal += $odd->price * $odd->qty; ?>
                                 {{ $odd->price * $odd->qty }}/- TK
                             </td>

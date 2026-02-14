@@ -26,11 +26,7 @@ class AddToCartController extends Controller
             ->with('product')
             ->get();
         $c_products = count($cart_products); 
-        $wsp_products = wishlist_counter();
-        
-     //   dd($wsp_products);
-        
-        
+        $wsp_products = wishlist_counter();        
         return view('Frontend.product.cart', compact('cart_products', 'gsd','c_products','wsp_products'));
     }
 
@@ -61,7 +57,7 @@ class AddToCartController extends Controller
             $product = Product::where('id', $request->id)->first();
             $cart->product_id = $request->id;
             $cart->user_id = $gsd->id;
-              $cart->dealer_id = $selected_dealer->dealer_id;
+            $cart->dealer_id = $selected_dealer->dealer_id;
             $cart->qty = $request->qty;
             $cart->price = $request->qty * $product->main_price;
             $cart->point = $request->qty * $product->point;

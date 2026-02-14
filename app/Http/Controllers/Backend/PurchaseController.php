@@ -18,6 +18,8 @@ use Illuminate\Support\Str;
 use App\Models\DealerSelection;
 use App\Models\Withdraw;
 use App\Models\User;
+use App\Models\PointSubmitHistory;
+use Illuminate\Support\Facades\DB;
 use App\Notifications\UserMessageNotification;
 class PurchaseController extends Controller
 {
@@ -160,28 +162,29 @@ class PurchaseController extends Controller
                     $withdraw->created_at = Carbon::now();
                     $withdraw->updated_at = Carbon::now();
                     $withdraw->save();
-                    // $chkm = $setting->check_point;
+                    $chkm = $setting->check_point;
 
-                    // $PointSaleHistory = new PointSaleHistory();
-                    // $PointSaleHistory->user_id = $gsd->id;
-                    // $PointSaleHistory->point = $total_point;
-                    // $PointSaleHistory->status = 1;
-                    // $PointSaleHistory->save();
+                    $PointSaleHistory = new PointSaleHistory();
+                    $PointSaleHistory->user_id = $gsd->id;
+                    $PointSaleHistory->point = $total_point;
+                    $PointSaleHistory->remark_type = "Product";
+                    $PointSaleHistory->status = 1;
+                    $PointSaleHistory->save();
 
-                    // if($gsd->point >= $chkm && $gsd->distribute_status == 0){
-                    //     $prev_point = $gsd->point;
-                    //     $today = Carbon::today();
-                    //     $gsd->point -= $chkm;
-                    //     $gsd->submitted_point = $chkm;
+                    if($gsd->point >= $chkm && $gsd->distribute_status == 0){
+                        $prev_point = $gsd->point;
+                        $today = Carbon::today();
+                        $gsd->point -= $chkm;
+                        $gsd->submitted_point = $chkm;
                           
                     
-                    //     $gsd->point_submit_date = $today;
-                    //     $gsd->distribute_status = 1;
-                    //     $gsd->submit_check = 1;
-                    //     $gsd->save();
+                        $gsd->point_submit_date = $today;
+                        $gsd->distribute_status = 1;
+                        $gsd->submit_check = 1;
+                        $gsd->save();
                 
-                    //     trxCreate($chkm,$prev_point,$gsd->point,$gsd->id,'auto_pv_submit','admin action','+','N',"M");
-                    // }
+                        trxCreate($chkm,$prev_point,$gsd->point,$gsd->id,'auto_pv_submit','admin action','+','N',"M");
+                    }
 
 
                 }
@@ -416,6 +419,8 @@ class PurchaseController extends Controller
     }
 
 // package confirm
+
+
     public function packageConfirmOrder(Request $request)
      {
         $gsd = global_user_data();
@@ -426,7 +431,6 @@ class PurchaseController extends Controller
          $selected_dealer->user_id = $gsd->id;
          $selected_dealer->dealer_id = 1;
          $selected_dealer->save();
-  
       }
 
         $gsd = global_user_data();
@@ -493,7 +497,16 @@ class PurchaseController extends Controller
                         $PointSaleHistory->user_id = $gsd->id;
                         $PointSaleHistory->point = $total_point;
                         $PointSaleHistory->status = 1;
+                        $PointSaleHistory->remark_type = "Package";
+
                         $PointSaleHistory->save();
+
+                        $ph = new PointSubmitHistory();
+                        $ph->point = $total_point;
+                        $ph->user_id = $gsd->id;
+                        $ph->remark_type ="Package";
+                        $ph->save();
+                    
 
                     }
                 }
@@ -538,35 +551,31 @@ class PurchaseController extends Controller
                 $gsd->save();
                 if ($request->paymentMethod == "Wallet") {
                    $chkm =$setting->check_point;
-                    
                 if($gsd->point >= $chkm && $gsd->distribute_status == 0){
                     $prev_point = $gsd->point;
                     $today = Carbon::today();
                     $gsd->point -= $chkm;
-                    
                     if($gsd->new_submited_point_status == 0){
                         $gsd->new_submited_point_status = 2;
                     }
-                    
                     $gsd->submitted_point = $chkm;
                     $gsd->point_submit_date = $today;
                     $gsd->distribute_status = 1;
                     $gsd->submit_check = 1;
-                    $gsd->save();
-                    
-                    
-                    $ph = new PointSubmitHistory();
-                    $ph->point = $chkm;
-                    $ph->user_id = $gsd->id;
-                    $ph->created_at = $today;
-                    $ph->updated_at = $today;
-                    $ph->save();
-                    
-                    $PointSaleHistory = new PointSaleHistory();
-                    $PointSaleHistory->user_id = $gsd->id;
-                    $PointSaleHistory->point = $total_point;
-                    $PointSaleHistory->status = 1;
-                    $PointSaleHistory->save();
+                    $gsd->save();   
+
+                    // $ph = new PointSubmitHistory();
+                    // $ph->point = $chkm;
+                    // $ph->user_id = $gsd->id;
+                    // $ph->remark_type ="Package";
+                    // $ph->created_at = $today;
+                    // $ph->updated_at = $today;
+                    // $ph->save();
+                    // $PointSaleHistory = new PointSaleHistory();
+                    // $PointSaleHistory->user_id = $gsd->id;
+                    // $PointSaleHistory->point = $total_point;
+                    // $PointSaleHistory->status = 1;
+                    // $PointSaleHistory->save();
                     
                     referralComission($gsd->id);
                     trxCreate($chkm,$prev_point,$gsd->point,$gsd->id,'auto_pv_submit','admin action purchase','+','N',"M");
@@ -581,4 +590,9 @@ class PurchaseController extends Controller
         notify()->success('Package order  success!');
         return back(); 
     }
+
+
+
+
+
 }

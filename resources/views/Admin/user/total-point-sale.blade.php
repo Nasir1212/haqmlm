@@ -28,7 +28,7 @@
 									<tr>
 										<th>User</th>
                                         <th>Point</th>
-										<th>Email-phone</th>
+										<th>Remark</th>
 										<th>date</th>
 								
 
@@ -37,18 +37,16 @@
 								<tbody>
 									@foreach ( $deposits as $deposit)
 									<tr>
-                                        <td>{{ $deposit->user->name }} <br> {{ $deposit->user->username }} @if ($gsd->id == 1)
-                                            - {{ $deposit->user->id }}
-                                            <br>
-                                            Balance - {{ getAmount($deposit->user->balance,2) }}
-                                          
-                                        @endif
+                                        <td>
+											
+											<a class="btn btn-info" href="{{ route('userdt',$deposit->user->username) }}">{{ $deposit->user->username }}</a>
+											<br>
                                         <td>
                                               {{ getAmount($deposit->point,2) }}
                                         </td>
                                     </td>
-                                        <td>{{ $deposit->user->email }} <br> 
-                                            {{ $deposit->user->phone }}</td>
+										<td>{{ $deposit->remark_type }}</td>
+                                   
                                         <td>{{ $deposit->created_at }}</td>
                                         
                                    

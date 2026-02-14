@@ -186,7 +186,7 @@
 				
 					<div class="sale-num">
 						<h3>
-							@if(Auth::id() == 1 && request('date') && request('e_date'))
+							{{-- @if(Auth::id() == 1 && request('date') && request('e_date'))
 							 @php
 							[$year, $month] = explode('-', request('date'));
 							[$eyear, $emonth] = explode('-', request('e_date'));
@@ -198,7 +198,6 @@
 							 @endphp
 								{{ $records }}
 							
-
 							@elseif (Auth::id() == 1 && request('date') != null)
 							 @php
 							[$year, $month] = explode('-', request('date'));
@@ -211,8 +210,8 @@
 								{{ $records }}
 							 @else
 							{{ getAmount($total_submitted_point,2) }}
-							@endif
-
+							@endif --}}
+							{{ getAmount($total_submitted_point,2) }}
 						</h3>
 						<p>Total Submitted Point</p>
 					</div>

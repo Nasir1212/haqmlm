@@ -98,10 +98,7 @@ class BalanceTransferController extends Controller
                 'subject' => $template['subject'],
                 'url' => url('balance-transfer-records'),
                 ];
-                 $target_user->notify(new UserMessageNotification($data));
-
-                
-                    
+                 $target_user->notify(new UserMessageNotification($data));                    
                     notify()->success('Balance Transfer success in Main Wallet!');
                 }else{
                     notify()->error('Insufficient Balance!');
@@ -244,6 +241,7 @@ class BalanceTransferController extends Controller
                     $PointSaleHistory->user_id = $target_user->id;
                     $PointSaleHistory->point = $request->amount;
                     $PointSaleHistory->status = 1;
+                    $PointSaleHistory->remark_type = "Admin Added";
                     $PointSaleHistory->save();
                     
                     notify()->success('Balance Added in Point Wallet!');

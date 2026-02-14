@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use App\Mail\DepositMail;
 use App\Models\CompanyAccount;
 use App\Models\Deposit;
@@ -410,6 +411,7 @@ public function my_down_line_reset(Request $request){
             ->whereMonth('created_at', '<=', $emonth)
             ->whereYear('created_at', '<=', $eyear)
             ->where('status',1)
+            ->latest('id')
             ->paginate(20)
             ->appends(request()->query());
         }else if($request->filled('date')){
@@ -418,11 +420,14 @@ public function my_down_line_reset(Request $request){
             ->whereMonth('created_at', $month)
             ->whereYear('created_at', $year)
             ->where('status',1)
+            ->latest('id')
             ->paginate(20)
             ->appends(request()->query());
         }else{
             $deposits = PointSaleHistory::with('user')
-            ->where('status',1)->paginate(20)
+            ->where('status',1)
+            ->latest('id')
+            ->paginate(20)
             ->appends(request()->query());
         }
     //    return $deposits;
@@ -464,27 +469,30 @@ public function my_down_line_reset(Request $request){
     }
     
     public function total_submitted_point_sale(Request $request){
+       
             $gsd = global_user_data();
             $page_title = 'Total Submitted Point Sale';
             if($request->filled(['date','e_date'])){
             [$year, $month] = explode('-', $request->date);
             [$eyear, $emonth] = explode('-', $request->e_date);
-            $records = CountTotalSubmittedPoint::whereMonth('created_at', '>=', $month)
+            $records = PointSubmitHistory::whereMonth('created_at', '>=', $month)
             ->whereYear('created_at', '>=', $year)
             ->whereMonth('created_at', '<=', $emonth)
             ->whereYear('created_at', '<=', $eyear)
+            ->latest('id')
             ->paginate(20)
             ->appends(request()->query());
             }else if($request->filled('date')){
             [$year, $month] = explode('-', $request->date);
-            $records = CountTotalSubmittedPoint::whereYear('created_at', $year)
+            $records = PointSubmitHistory::whereYear('created_at', $year)
             ->whereMonth('created_at', $month)
+            ->latest('id')
             ->paginate(20)
             ->appends(request()->query());
             }else{
             $records = PointSubmitHistory::latest('id')->paginate(20);
             }
-            // return $records;
+        
       return view('Admin.user.total-submitted-point-sale', compact('records','page_title','gsd'));
 
 
@@ -914,25 +922,36 @@ public function account_approve_action(Request $request){
 
 
 
-public function user_tree_jump(Request $request){
+public function user_tree_jump(Request $request)
+{
+    // Remove dd() when you're ready to test
+    // dd($request->all());
+
     $gsd = global_user_data();
-    if($request->username != ''){
-         if(Auth::id() == 1){
-         
-         return redirect()->route('user_tree', ['id'=>$request->username]);
-           
-    }else{
-       notify()->error('Sorry Not Allow');
+
+    if ($request->filled('username')) {
+        // Only Admin (ID 1) is allowed to "jump" trees in your current logic
+        if (Auth::id() == 1) {
+            
+            // 1. Find the user by username to get their ID
+            $targetUser = User::where('username', $request->username)->first();
+
+            if ($targetUser) {
+                // 2. Redirect using the actual numeric ID
+                return redirect()->route('user_tree', ['id' => $targetUser->username]);
+            } else {
+                notify()->error('User not found!');
                 return back();
+            }
+            
+        } else {
+            notify()->error('Sorry, action not allowed.');
+            return back();
+        }
+    } else {
+        notify()->error('Please provide a Username');
+        return back();
     }
-  
-    }else{
-         notify()->error('Please Provide Username');
-                return back();
-    }
-  
-   
-   
 }
 
 public function user_unilevel_tree_jump(Request $request){
@@ -1047,31 +1066,7 @@ public function  user_unilevel_tree(Request $request, $id){
     ])
     ->first();
 
-    // $tree = $tree->toArray();
-//   dd($tree['childrenn']);    
-    // $tcd = ['total_child'=>count($userss->childrenn)];
-    //  $ptp = ['team_point'=>$userss->downlineTotalPoints($current)];
-    //  $ucd = [];
-    // foreach($userss->childrenn as $child){ 
-        
-    //     $usercself = User::where('username',$child->username)->with(['childrenn'])->first();
-    //     $usf = count($usercself->childrenn);
-    //   $totalPoints = $child->downlineTotalPoints($current);
-    //   $ucd[] = array_merge($child->toArray(), ['team_point'=>$totalPoints,'total_child'=>$usf]);
-      
-    //   unset($ucd['childrenn']);
-    // };
-   
-    
-    // $ucdr = ['children'=>$ucd];
-    // $mergedData = array_merge($userss->toArray(), $ucdr);
-    // $mergedData = array_merge($mergedData, $ptp);
-    // $mergedData = array_merge($mergedData, $tcd);
-    
-    // unset($mergedData['childrenn']);
-
-    
-    //  $tree = json_encode($mergedData);
+ 
      
      
     return view('Admin.user.unilevel-tree',compact('company_name','tree','gsd'));
@@ -1135,6 +1130,8 @@ private function calculateTTP($user)
      $curl =  url()->current();
         return view('Admin.user.unilevel-gen-tree',compact('gsd','curl','gdata'));
     }
+
+    
     public function user_tree(Request $request, $id){
         
      

@@ -81,16 +81,16 @@
                 <div class="product_single_wrap">
                     <div class="row">
                           <div class="col-12">
-                           <h4 class="pname">{{ $data->product->name }}</h4>
+                           <h4 class="pname">{{ $data?->product?->name }}</h4>
                            
                         </div>
                         <div class="col-12 col-md-4">
-                            <img src="{{ asset($data->product->img_name) }}" class="img-fluid" alt="{{ $data->product->name}}">
+                            <img src="{{ asset($data?->product?->img_name) }}" class="img-fluid" alt="{{ $data?->product?->name}}">
                         </div>
                         <div class="col-12 col-md-4">
-                            <div class="">Price : {{ $data->product->main_price }} Tk/-</div>
-                            <div class="">Point : {{ $data->product->point }}</div>
-                            <div class="">Brand : {{ $data->product?->brand?->name }}</div>
+                            <div class="">Price : {{ $data?->product?->main_price }} Tk/-</div>
+                            <div class="">Point : {{ $data?->product?->point }}</div>
+                            <div class="">Brand : {{ $data?->product?->brand?->name }}</div>
                             <div class="">Category : {{ $data->product?->category?->name }}</div>
                         </div>
                         <div class="col-12 col-md-4 text-right">
@@ -102,7 +102,7 @@
                                 <input type="text" id="qty{{ $data->id }}" value="{{ $data->qty }}" class="border "  style="width:69px;padding:0px 5px">
                                 <button type="button"  data-target="{{ $data->id }}" class="subQty btn btn-sm btn-danger"><i class="fa-solid fa-circle-minus"></i></button>
                             </div>
-                            <a href="{{ route('frontend.product_details', ['slug'=>$data->product->slug])}}" class="details_link btn btn-xs btn-primary mt-2"><i class="fa-solid fa-eye"></i> Details</a>
+                            <a href="{{ route('frontend.product_details', ['slug'=>$data?->product?->slug ?? 'unknown'])}}" class="details_link btn btn-xs btn-primary mt-2"><i class="fa-solid fa-eye"></i> Details</a>
                             <button type="button" class="btn btn-danger mt-2 cart_remover" data-product_id="{{ $data->id }}" ><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>

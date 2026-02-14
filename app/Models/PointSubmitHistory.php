@@ -15,5 +15,6 @@ class PointSubmitHistory extends Model
     protected $fillable = [
     'point',
     'user_id',
+    'remark_type',
 ];
 }
