@@ -171,15 +171,6 @@ class PurchaseController extends Controller
                     $PointSaleHistory->status = 1;
                     $PointSaleHistory->save();
                     
-
-                    $ph = new PointSubmitHistory();
-                    $ph->point = $total_point;
-                    $ph->user_id = $gsd->id;
-                    $ph->remark_type ="Product";
-                    $ph->save();
-                    
-
-
                     if($gsd->point >= $chkm && $gsd->distribute_status == 0){
                         $prev_point = $gsd->point;
                         $today = Carbon::today();
