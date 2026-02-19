@@ -643,6 +643,17 @@
                     </a>
                 </li>
                 @endif
+                @if(session()->has('impersonate_admin_id'))
+                <li>
+    <div style="background: #ffc107; color: #000; padding: 10px; text-align: center; font-weight: bold;">
+      You are currently logged in as <strong>{{ auth()->user()->name }}</strong>
+        <a href="{{ route('impersonate.back') }}" style="color: blue; text-decoration: underline; margin-left: 10px;">
+            Back to Admin Panel
+        </a>
+        
+    </div>
+    </li>
+@endif
             </ul>
             <br>
             <br>

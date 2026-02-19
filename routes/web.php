@@ -1,4 +1,7 @@
 <?php
+
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\DirectBonusCondition;
@@ -665,28 +668,63 @@ Route::get('/queuework', function () {
 
 
 Route::get('/notification', function () {
-//   DatabaseNotification::create([
-//     'type' => 'App\Notifications\UserMessageNotification',
-//     'notifiable_type' => 'App\Models\User',
-//     'notifiable_id' => 1,
-//     'data' => ['message' => 'This is a test notification'],
-// ]);
+
 $user = auth()->user();
   $user->notify(new UserMessageNotification('This is a test notification'));
   return "Notification sent successfully!";
-    //return view('Admin.NoticeBoard.notification');
-
-
 });
     
 Route::get('/notification-read', function () {
  $user = auth()->user();
-
-// সব নটিফিকেশন
-//  dd($user->unreadNotifications->markAsRead());
  dd($user->unreadNotifications);
 });
+
+
+
+Route::get('/impersonate/generate-link/{user}', function (Request $request,$userId) {
+
+  if (!Auth::check() || Auth::user()->access_id != 1) {
+        return response()->json(['error' => 'Unauthorized. Only Super Admin can do this.'], 403);
+    }
+    $adminId = Auth::id();
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    session()->put('impersonate_admin_id', $adminId);
+
+    $signedUrl = URL::temporarySignedRoute(
+        'impersonate.login', 
+        now()->addMinutes(5), 
+        ['user' => $userId]
+    );
+
+    return response()->json(['url' => $signedUrl]);
+})->name('impersonate.generate-link');
     
+
+Route::get('/impersonate/login/{user}', function (Request $request, $user) {
+    if (! $request->hasValidSignature()) {
+        abort(401, 'Link expired or invalid.');
+    }
+  
+    $userToLogin = User::findOrFail($user);
+    Auth::login($userToLogin);
+    session(['check_auth_id' => Auth::id()]);
+  
+    return redirect('/dashboard'); 
+})->name('impersonate.login');
+
+Route::get('/impersonate/back-to-admin', function () {
+    $adminId = session()->get('impersonate_admin_id');
+    if ($adminId) {
+        $adminUser = User::find($adminId);
+        Auth::login($adminUser);
+        session()->forget('impersonate_admin_id');
+        return redirect('/users'); 
+    }
+
+    return redirect('/login');
+})->name('impersonate.back');
 
 Route::get('/auto-active', function () {
 // যেসব ইউজার 3000 পয়েন্ট জমা দিয়েছে এবং যাদের matrix_activation_status ০ তাদের নিয়ে আসুন

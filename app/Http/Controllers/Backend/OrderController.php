@@ -284,7 +284,9 @@ class OrderController extends Controller
        
          return response()->json(['error' => 'Permission Not Allow !']);
    }
-    }  
+    }
+    
+    
     public function product_order_shipping_cost_change(Request $request){
          $gsd = global_user_data();
          if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true)

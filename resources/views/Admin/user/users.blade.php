@@ -1,5 +1,6 @@
 @extends('layouts.Back.app')
 @section('content')
+{{-- @dd(auth()->user()) --}}
 	<div class="main-container">
         	<!-- Page header start -->
 		<div class="page-header">
@@ -37,6 +38,7 @@
 								<tbody>
 									@foreach ( $users as $user)
 									<tr>
+										
 										<td>{{ $user->name }} <br> {{ $user->username }} @if ($gsd->id == 1)
 											- {{ $user->id }}
 											<br>
@@ -45,8 +47,9 @@
 												Point - {{ getAmount($user->point,2) }}
 										@endif
 										<br>
-										
-										<a class="btn btn-info" href="{{ route('impersonate', $user->id) }}"> <i class="fa fa-user-secret"></i> Login as User</a>
+										@if(Auth::check() == true && Auth::user()->access_id == 1)
+										<a class="btn btn-info" onclick="loginAsUser('{{ route('impersonate.generate-link', $user->id) }}')"> <i class="fa fa-user-secret"></i> Login as User</a>
+											@endif
 									</td>
 										<td>{{ $user->email }} <br> {{ $user->phone }}</td>
 										<td>{{ $user->created_at }}</td>
@@ -134,10 +137,22 @@
 
 	<script>
 
-	function loginAsUser(url) {
-	window.open(url, '_blank',"width=1200,height=800,resizable=yes,scrollbars=yes");
-	}
 
+function loginAsUser(url) {
+    // প্রথমে আমরা সিগনেচারসহ লিঙ্কটি সার্ভার থেকে চেয়ে নেব
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.url) {
+                // এখন সিগনেচারসহ সঠিক URL টি নতুন উইন্ডোতে ওপেন হবে
+              //  window.open(data.url);
+			  window.location.href = data.url;
+            } else {
+                alert("Error: " + (data.error || "Could not generate link"));
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
 	</script>
 
 @endsection
