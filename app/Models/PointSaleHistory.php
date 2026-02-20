@@ -13,7 +13,8 @@ class PointSaleHistory extends Model
         'user_id',
         'point',
         'status',
-         'remark_type',
+        'remark_type',
+        'url'
     ];
 
     public function user()

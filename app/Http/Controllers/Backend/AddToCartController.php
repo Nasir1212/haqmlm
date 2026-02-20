@@ -13,8 +13,11 @@ use App\Models\OrderDetail;
 use App\Models\ProductOwner;
 use App\Models\ShippingAddress;
 use App\Models\BillingAddress;
+use App\Models\User;
 use Illuminate\Support\Str;
 use App\Models\DealerSelection;
+use Illuminate\Support\Facades\DB;
+use App\Notifications\UserMessageNotification;
 
 class AddToCartController extends Controller
 {
@@ -146,8 +149,8 @@ public function carts_info(Request $request){
 
     public function CartCheckOutConfirm(Request $request)
     {
-        // dd($request->all());
         
+
         $gsd = global_user_data();
         
               $selected_dealer = DealerSelection::where('user_id', $gsd->id)->with('dealer')->first();
@@ -182,12 +185,9 @@ public function carts_info(Request $request){
                 return back();
             }
 
-        if ($product->stock < $dt->qty) {
-            notify()->error("This Product " . $dt->product->name . " Stock Out");
-            return back();
-        }
-        
+  
    
+        
    
 
         $owner = ProductOwner::where('dealer_id', $selected_dealer->dealer_id)
@@ -199,7 +199,8 @@ public function carts_info(Request $request){
             return back();
         }
         
-             $aptp += $dt->qty * $dt->product->main_price;
+              $aptp += $dt->qty * $dt->product->main_price;
+              $gpoint += $dt->qty * $dt->product->point;
     }
 
 
@@ -240,19 +241,16 @@ public function carts_info(Request $request){
     
                
         }
-        
-        // foreach ($cart_products as $key => $dt) {
-        //     $aptp += $dt->qty * $dt->product->main_price;
-        //     $gpoint += $dt->qty * $dt->product->point;
 
-        // }
 
-      
-        // dd($aptp);
+    
+
             if($request->paymentMethod == "Cash"){
 
             }else {
+               
                 if ($aptp > $gsd->balance) {
+                   
                     if ($gsd->balance == 0) {
                         notify()->error('Sorry your  Balance is Empty');
                         return back();
@@ -260,6 +258,7 @@ public function carts_info(Request $request){
                         notify()->error('Sorry your  Balance insufficient');
                         return back();
                     }
+
                 } else {
                     if ($request->paymentMethod == "Wallet") {
                         $gsd->balance -= $aptp;
@@ -294,8 +293,6 @@ public function carts_info(Request $request){
             $order->status = "Pending";
             $order->save();
 
-            $total_point = 0;
-      
             foreach ($cart_products as $key => $data) {
                 $order_detail = new OrderDetail();
                 $order_detail->order_type = 'product';
@@ -307,9 +304,18 @@ public function carts_info(Request $request){
                 $order_detail->point = $data->product->point;
                 $order_detail->total_point = $data->qty * $data->product->point;
                 $order_detail->save();
-
-                $total_point += $data->qty * $data->product->point;
-
+                Cart::destroy('id', $data->id);
+            }
+            if ($request->paymentMethod == "Wallet") {
+                
+                $PointSaleHistory = new PointSaleHistory();
+                $PointSaleHistory->user_id = $gsd->id;
+                $PointSaleHistory->point =  $gpoint;
+                $PointSaleHistory->remark_type = "Cart Product" ;
+                $PointSaleHistory->url = url("product-order-details/ $order->id");
+                $PointSaleHistory->status = 1;
+                $PointSaleHistory->save();
+        
                 $product_q = Product::find($data->product->id);
                 $product_q->stock -= $data->qty;
                 $product_q->save();
@@ -321,35 +327,24 @@ public function carts_info(Request $request){
                     $owner->qty -= $data->qty;
                     $owner->save();
                 }
-
-
-
-                Cart::destroy('id', $data->id);
-            }
-            if ($request->paymentMethod == "Wallet") {
-                
-                // $PointSaleHistory = new PointSaleHistory();
-                // $PointSaleHistory->user_id = $gsd->id;
-                // $PointSaleHistory->point = $total_point;
-                // $PointSaleHistory->status = 1;
-                // $PointSaleHistory->save();
-                // $chkm = $setting->check_point;
-
-                // if($gsd->point >= $chkm && $gsd->distribute_status == 0){
-                //     $prev_point = $gsd->point;
-                //     $today = Carbon::today();
-                //     $gsd->point -= $chkm;
-                //     $gsd->submitted_point = $chkm;
-                //     $gsd->point_submit_date = $today;
-                //     $gsd->distribute_status = 1;
-                //     $gsd->submit_check = 1;
-                //     $gsd->save();
-                //     trxCreate($chkm,$prev_point,$gsd->point,$gsd->id,'auto_pv_submit','admin action addtocart','+','N',"M");
-                // }
-
             }
 
-  
+       //Send Notification to Admin
+            $admin = User::where('id', 1)->first();
+            $template = getNotificationTemplate('new_order', [
+                '[amount]' =>number_format($aptp,2),
+                '[order_by_name]' => $gsd->username,
+                '[method]' => $request->paymentMethod ,
+                '[points]' =>  $gpoint,
+
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('product-orders'),
+                ];
+                $admin->notify(new UserMessageNotification($data));
 
             notify()->success('Order Creating success!');
             return back();

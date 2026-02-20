@@ -164,28 +164,7 @@ class PurchaseController extends Controller
                     $withdraw->save();
                     $chkm = $setting->check_point;
 
-                    $PointSaleHistory = new PointSaleHistory();
-                    $PointSaleHistory->user_id = $gsd->id;
-                    $PointSaleHistory->point = $total_point;
-                    $PointSaleHistory->remark_type = "Product";
-                    $PointSaleHistory->status = 1;
-                    $PointSaleHistory->save();
-                    
-                    if($gsd->point >= $chkm && $gsd->distribute_status == 0){
-                        $prev_point = $gsd->point;
-                        $today = Carbon::today();
-                        $gsd->point -= $chkm;
-                        $gsd->submitted_point = $chkm;
-                          
-                    
-                        $gsd->point_submit_date = $today;
-                        $gsd->distribute_status = 1;
-                        $gsd->submit_check = 1;
-                        $gsd->save();
-                
-                        trxCreate($chkm,$prev_point,$gsd->point,$gsd->id,'auto_pv_submit','admin action','+','N',"M");
-                    }
-
+                   
 
                 }
             }
@@ -212,12 +191,26 @@ class PurchaseController extends Controller
                 $product->stock -= $request->product_qty;
                 $product->save();
                 $order->payment_method = "Wallet";
+
+               
+                    
             } elseif ($request->paymentMethod == "Cash") {
                 $order->payment_status = "Unpaid";
                 $order->payment_method = "Cash";
             }
             $order->status = "Pending";
             $order->save();
+
+              if ($request->paymentMethod == "Wallet") {
+                $PointSaleHistory = new PointSaleHistory();
+                $PointSaleHistory->user_id = $gsd->id;
+                $PointSaleHistory->point = $total_point;
+                $PointSaleHistory->remark_type = "Product";
+                $PointSaleHistory->url = url("product-order-details/$order->id");
+                $PointSaleHistory->status = 1;
+                $PointSaleHistory->save();
+
+              }
 
             // order detail
             $order_detail = new OrderDetail();
@@ -276,7 +269,7 @@ class PurchaseController extends Controller
             $dealerId = $dealer_ids[$index];
             $quantity = $qtys[$index];
             $orderId = $order_id[$index];
-        // dd($request->all());
+       
          $gsd = global_user_data();
         
     
@@ -290,10 +283,7 @@ class PurchaseController extends Controller
             ->where('product_id', $productId)
             ->first();
     
-        // if (!$owner || $owner->qty < $quantity) {
-        //     notify()->error('Stock limit or dealer not available');
-        //     return back();
-        // }
+        
         
     
         $final_price = $product->main_price * $quantity;
@@ -313,15 +303,7 @@ class PurchaseController extends Controller
             $order_detail->product_id = $product->id;
             $order_detail->save();
 
-            // $gsd->save();
             
-            
-                    
-                // $owner->qty -= $quantity;
-                // $owner->save();
-            
-                // $product->stock -= $quantity;
-                // $product->save();
         }
             
             
@@ -368,13 +350,6 @@ class PurchaseController extends Controller
             ->where('product_id', $productId)
             ->first();
     
-      
-        
-        // $owner->qty +=array_sum($prevQty);
-        // $owner->save();
-    
-        // $product->stock += array_sum($prevQty);
-        // $product->save();
 
        
         if($quantity <=0){
@@ -385,10 +360,8 @@ class PurchaseController extends Controller
          OrderDetail::where('id', $orderDetailsId)->delete();
         }else{
 
-            // if (!$owner || $owner->qty < $quantity) {
-            //     notify()->error('Stock limit or dealer not available');
-            //     return back();
-            // }
+           
+
             $final_price = $product->main_price * $quantity;
             $total_point = $quantity * $product->point;
         $order_detail = OrderDetail::where('id', $orderDetailsId)->first();
@@ -493,13 +466,7 @@ class PurchaseController extends Controller
 
                         $gsd->save();
 
-                        $PointSaleHistory = new PointSaleHistory();
-                        $PointSaleHistory->user_id = $gsd->id;
-                        $PointSaleHistory->point = $total_point;
-                        $PointSaleHistory->status = 1;
-                        $PointSaleHistory->remark_type = "Package";
-
-                        $PointSaleHistory->save();
+                       
 
                         $ph = new PointSubmitHistory();
                         $ph->point = $total_point;
@@ -528,13 +495,22 @@ class PurchaseController extends Controller
             if ($request->paymentMethod == "Wallet") {
                 $order->payment_status = "Paid";
                 $order->payment_method = "Wallet";
+                
             } elseif ($request->paymentMethod == "Cash") {
                 $order->payment_status = "Unpaid";
                 $order->payment_method = "Cash";
             }
                 $order->status = "Pending";
                 $order->save();
-
+                if ($request->paymentMethod == "Wallet") {
+                $PointSaleHistory = new PointSaleHistory();
+                $PointSaleHistory->user_id = $gsd->id;
+                $PointSaleHistory->point = $total_point;
+                $PointSaleHistory->status = 1;
+                $PointSaleHistory->url = url("package-order-details/$order->id");
+                $PointSaleHistory->remark_type = "Package";
+                $PointSaleHistory->save();
+                }
                 // order detail
                 $order_detail = new OrderDetail();
                 $order_detail->order_id = $order->id;
@@ -564,18 +540,6 @@ class PurchaseController extends Controller
                     $gsd->submit_check = 1;
                     $gsd->save();   
 
-                    // $ph = new PointSubmitHistory();
-                    // $ph->point = $chkm;
-                    // $ph->user_id = $gsd->id;
-                    // $ph->remark_type ="Package";
-                    // $ph->created_at = $today;
-                    // $ph->updated_at = $today;
-                    // $ph->save();
-                    // $PointSaleHistory = new PointSaleHistory();
-                    // $PointSaleHistory->user_id = $gsd->id;
-                    // $PointSaleHistory->point = $total_point;
-                    // $PointSaleHistory->status = 1;
-                    // $PointSaleHistory->save();
                     
                     referralComission($gsd->id);
                     trxCreate($chkm,$prev_point,$gsd->point,$gsd->id,'auto_pv_submit','admin action purchase','+','N',"M");
@@ -586,6 +550,24 @@ class PurchaseController extends Controller
                 }
                       
             }
+
+             //Send Notification to Admin
+            $admin = User::where('id', 1)->first();
+            $template = getNotificationTemplate('new_package_order', [
+                '[amount]' =>number_format($final_price,2),
+                '[order_by_name]' => $gsd->username,
+                '[method]' => $request->paymentMethod ,
+                '[points]' => $order_detail->total_point,
+
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('package-orders'),
+                ];
+                $admin->notify(new UserMessageNotification($data));
+                        
 
         notify()->success('Package order  success!');
         return back(); 

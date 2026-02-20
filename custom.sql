@@ -60,3 +60,6 @@ ADD COLUMN remark_type VARCHAR(255) NULL AFTER point;
 
 ALTER TABLE point_sale_histories 
 ADD COLUMN remark_type VARCHAR(255) NULL AFTER point;
+
+ALTER TABLE point_sale_histories 
+ADD COLUMN url VARCHAR(255) NULL AFTER remark_type;

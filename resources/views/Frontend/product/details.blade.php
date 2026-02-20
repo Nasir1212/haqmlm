@@ -10,9 +10,9 @@
                 </div>
                 <div class="col-12 col-md-6">
                     <div class="prp">
-                        <h3 class="text-info">{{ $product->name }}</h3>
-                        <div>Brand Name : {{$product->brand->name}}</div>
-                        <div>Category Name : {{$product->category->name}}</div>
+                        <h3 class="text-info">{{ $product?->name }}</h3>
+                        <div>Brand Name : {{$product?->brand?->name}}</div>
+                        <div>Category Name : {{$product?->category?->name}}</div>
                         <div>Regular Price : <span class="text-danger"> {{ getAmount($product->regular_price) }}</span></div>
                         <div>Member Price : <strong class="text-success">{{ getAmount($product->main_price) }}</strong></div>
                         <div>Product Point : <strong class="text-success">{{ getAmount($product->point) }}</strong></div>

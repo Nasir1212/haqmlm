@@ -93,7 +93,7 @@
 											<td>{{ $value->balance_type }}</td>
 											
 											<td>
-												<span class="text-success">	
+												<span class="text-success" style="color:#28a745 !important;">	
 													@if($value->receiver->id == $auth_id) 
 												{{ getAmount($value?->prev_blance ) }}
 												@else
@@ -109,11 +109,11 @@
 											</td>
 											
 											<td>
-												<span class="text-success">	
+												<span class="text-success" style="color:#28a745 !important;">	
 												@if($value->receiver->id == $auth_id) 
-												+ {{ getAmount($value?->after_blance ) }}
+												 {{ getAmount($value?->after_blance ) }}
 												@else
-												- {{ getAmount($value?->sender_after_blance ) }}
+												 {{ getAmount($value?->sender_after_blance ) }}
 												@endif
 												
 											 </span>

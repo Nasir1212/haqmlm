@@ -254,28 +254,13 @@ class OrderController extends Controller
            } 
 
 
-               // $chkm = $setting->check_point;
-               // if($user->point >= $chkm && $user->distribute_status == 0){
-               //     $prev_point = $user->point;
-               //     $today = Carbon::today();
-               //     $user->point -= $chkm;
-               //     $user->submitted_point = $chkm;
-                     
-               //     $user->total_submitted_point += $chkm;
-               //     $user->point_submit_date = $today;
-               //     $user->distribute_status = 1;
-               //     $user->submit_check = 1;
-               //     $user->save();
-           
-               //     trxCreate($chkm,$prev_point,$user->point,$user->id,'auto_pv_submit','admin action','+','N',"M");
-               // }
-
 
            $PointSaleHistory = new PointSaleHistory();
            $PointSaleHistory->user_id = $user->id;
            $PointSaleHistory->point = $total_point;
            $PointSaleHistory->status = 1;
            $PointSaleHistory->remark_type = "Product";
+           $PointSaleHistory->url = url("product-order-details/$order->id");
            $PointSaleHistory->save();
            
        }
@@ -421,6 +406,7 @@ public function package_order_payment_status_change(Request $request)
                 'user_id' => $user->id,
                 'point' => $total_point,
                 'remark_type' => "Package",
+                'url'=>url("package-order-details/$order->id"),
                 'status' => 1
             ]);
 

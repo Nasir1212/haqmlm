@@ -242,6 +242,7 @@ class BalanceTransferController extends Controller
                     $PointSaleHistory->point = $request->amount;
                     $PointSaleHistory->status = 1;
                     $PointSaleHistory->remark_type = "Admin Added";
+                    $PointSaleHistory->url = url("balance-transfer-records");
                     $PointSaleHistory->save();
                     
                     notify()->success('Balance Added in Point Wallet!');

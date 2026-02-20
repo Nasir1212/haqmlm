@@ -40,12 +40,17 @@
                                         <td>
 											
 											<a class="btn btn-info" href="{{ route('userdt',$deposit->user->username) }}">{{ $deposit->user->username }}</a>
-											<br>
+										
+											 </td>
                                         <td>
                                               {{ getAmount($deposit->point,2) }}
-                                        </td>
+                                       
                                     </td>
-										<td>{{ $deposit->remark_type }}</td>
+										<td>
+											<a style="color: blue;cursor: pointer;text-decoration: underline;" href="{{  $deposit->url }} ">{{ $deposit->remark_type }}</a>
+											
+
+										</td>
                                    
                                         <td>{{ $deposit->created_at }}</td>
                                         
