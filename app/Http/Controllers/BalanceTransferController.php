@@ -244,6 +244,32 @@ class BalanceTransferController extends Controller
                     $PointSaleHistory->remark_type = "Admin Added";
                     $PointSaleHistory->url = url("balance-transfer-records");
                     $PointSaleHistory->save();
+
+                     $template = getNotificationTemplate('points_transfer', [
+                '[amount]' => $request->amount,
+                '[receiver_name]' => $request->username,
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('balance-transfer-records'),
+                ];
+                $sender_ac->notify(new UserMessageNotification($data));
+
+                //Reciver Notification
+                $template = getNotificationTemplate('point_recive', [
+                '[amount]' => $request->amount,
+                '[sender_name]' =>  $sender_ac->username,
+                ]);
+                $data = [
+                'body' => $template['body'],
+                'type' => $template['type'],
+                'subject' => $template['subject'],
+                'url' => url('balance-transfer-records'),
+                ];
+                 $target_user->notify(new UserMessageNotification($data));
+
                     
                     notify()->success('Balance Added in Point Wallet!');
                 }

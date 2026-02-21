@@ -33,10 +33,17 @@
                     </div>
                 <div class="product_order_option btn-group">
                     @auth
+                    @if($product->owner_qty > 0)
                     <a href="{{ route('product_order', ['slug'=>$product->slug])}}" target="_blank" class="details_link btn btn-success">Order Now</a>
+                  
                     <button type="button" class="add_to_cart btn btn-xs btn-info" data-product_id="{{ $product->id }}">
                         <i class="fa-solid fa-cart-arrow-down"></i>
                     </button>
+                      @else
+                    <button  type="button" class="btn btn-xs btn-warning">
+                    Stock Out
+                    </button>
+                    @endif
                     @else
                     <a href="{{ route('login') }}" target="_blank" class="details_link btn btn-success">Order Now</a>
                     @endauth

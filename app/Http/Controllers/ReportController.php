@@ -409,7 +409,6 @@ public function Transaction_report_sheet(Request $request){
                  
                     $monthly_income_part = 2;
                    $pointHistory = PointSubmitHistory::where('user_id',$gsd->id)->latest('id')->paginate(20);
-                 dd(Transaction::where('remark','point_history')->get());
                    $pointHistory->appends(['remark' => $trx_cond]);
                    
                    return view('Admin.transactions',compact('pointHistory','gsd','monthly_income_part','userinfo','user'));

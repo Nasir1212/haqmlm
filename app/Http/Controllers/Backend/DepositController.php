@@ -9,6 +9,8 @@ use App\Models\PayAccounts;
 use App\Models\User;
 use App\Notifications\UserMessageNotification;
 use Illuminate\Support\Facades\Auth;
+use App\Models\NotificationTemp;
+
 
 
 
@@ -29,7 +31,7 @@ class DepositController extends Controller
     // Approved data Catcher
     public function Approved(){
        $gsd = global_user_data();
-        $page_title = 'Approve Balance Request';
+        $page_title = 'Approved Balance Request';
         if(Auth::id() == 1 || permission_checker($gsd->role_info,'deposit_manage') == 1){
         $data =  Deposit::where('status', 'Approve')->with('userdata')->latest('id')->get();
         }else{
@@ -62,8 +64,9 @@ class DepositController extends Controller
     } 
     
     public function Deposit_form_submit(Request $request){
+       
         $gsd = global_user_data();
-
+        
          $payAccount = PayAccounts::where('id', $request->pay_account)->with('gateway')->first();
             $gtrx = getTrx();
             
@@ -83,6 +86,19 @@ class DepositController extends Controller
 
             $gsd->deposit += $request->amount;
             $gsd->save();
+           
+            $template = getNotificationTemplate('deposit_request', [
+            '[amount]' =>$request->amount . ($request->blc_type == 'point_balance' ? " points " : " TK ") ,
+            '[user]' =>  $gsd->username,
+            ]);
+            $data = [
+            'body' => $template['body'],
+            'type' => $template['type'],
+            'subject' => $template['subject'],
+            'url' => url('deposit-pending'),
+            ];
+            $admin = User::find(1);
+            $admin->notify(new UserMessageNotification($data));                    
             notify()->success('Your Deposit successfull submitted !');
         
             return redirect()->route('deposit_pending');

@@ -57,13 +57,13 @@
                                 No Action
                             @endif
                         </td>
-                        <td>{{ $transfer_history->product->name }}</td>
-                        <td>{{ $transfer_history->sender->name }}</td>
-                        <td>{{ $transfer_history->receiver->name }}</td>
-                        <td>{{ $transfer_history->qty }}</td>
-                        <td>{{ $transfer_history->status }}</td>
-                        <td>{{ $transfer_history->creator->name }}</td>
-                        <td>{{ $transfer_history->created_at }}</td>
+                        <td>{{ $transfer_history?->product?->name }}</td>
+                        <td>{{ $transfer_history?->sender?->name }}</td>
+                        <td>{{ $transfer_history?->receiver?->name }}</td>
+                        <td>{{ $transfer_history?->qty }}</td>
+                        <td>{{ $transfer_history?->status }}</td>
+                        <td>{{ $transfer_history?->creator?->name }}</td>
+                        <td>{{ $transfer_history?->created_at }}</td>
                     </tr> 
                 @endforeach
             </tbody>

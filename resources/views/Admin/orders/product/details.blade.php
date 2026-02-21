@@ -1,5 +1,7 @@
 @extends('layouts.Back.app')
 @section('content')
+@use('App\Models\Product')
+@use('App\Models\ProductOwner')
 <div class="main-container">
     <!-- Page header start -->
     <div class="page-header">
@@ -49,19 +51,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $allptotal = 0;
+                        <?php 
+                        $allptotal = 0;
                         $totalp = 0;
+                        $stock_out_item_count = 0;
                         ?>
-                        {{-- @dd($order->order_detail) --}}
                         @foreach ($order->order_detail as $key => $odd)
-                            
-                     
+                          
+                     @php 
+                $product =  Product::where('id',$odd?->product_id)->first();           
+                if (!$product) {
+                notify()->error('Product not found');
+                }
+                $owner = ProductOwner::where('dealer_id', $order->dealer_id)
+                ->where('product_id', $odd?->product_id)
+                ->first();
+                if($owner->qty <=0){
+                $stock_out_item_count ++;
+                }
+                     @endphp
                         <tr>
                             <td>{{ $key+1 }}</td>
                             <td>
                                 <div class="media align-items-center gap-10">
                                     <img class="avatar avatar-60 rounded" src="{{ asset($odd->product?->img_name ?? '')}}" alt="{{$odd->product?->name ?? 'No Name'}}"/>
                                     <div>
+                                       
                                         <h6 class="title-color">{{$odd->product?->name}}</h6>
                                         <div><strong>Price :</strong> {{$odd->price}}/- TK</div>
                                         <div><strong>Point :</strong> {{ $odd->product?->point ?? 0}}</div>
@@ -71,10 +86,11 @@
                                         <input type="hidden" name="order_id[]" value="{{$odd->order_id}}">
                                         <input type="hidden" name="product_id[]" value="{{$odd->product_id}}">
                                         <input type="hidden" name="dealer_id[]" value="{{$order->dealer->user_id}}">
-                                       
                                         <div><strong>Qty :</strong> <input type="text" class="form-control" name="qty[]" value="{{ $odd->qty }}"></div>
+                                        <div class="{{ $owner->qty <= 0?'text-danger':'text-success' }}"><strong >Stock :</strong> {{ $owner->qty <= 0?'Stock Out':$owner->qty }}</div>
                                     @else
                                         <div><strong>Qty :</strong> {{ $odd->qty }}</div>
+                                        <div class="{{ $owner->qty <= 0?'text-danger':'text-success' }}"><strong >Stock :</strong> {{ $owner->qty <= 0?'Stock Out':$owner->qty }}</div>
                                     @endif
                                        
                                     </div>
@@ -141,7 +157,7 @@
                     </div>
                     @endif
                 </div>
-<hr style="color: white;background:white">
+                <hr style="color: white;background:white">
                 <div class="row">
                     <form action="{{route('product_order_reconfirm')}}" method="POST">
                         <div id="selected_product_rebuy">
@@ -156,6 +172,7 @@
        
         <div class="col-12 col-md-4">
             <div class="card h-100 w-100 p-2">
+                @if($stock_out_item_count <=0 )
                 @if (auth()->user()->id == 1 || permission_checker($gsd->role_info,'order_manage') == 1|| is_dealer(auth()->user()->id) == true  )
                 @if(get_dealer_id($order->user_id) == null && get_dealer_id(auth()->user()->id)?->id != get_dealer_id($order->user_id)?->id || (auth()->user()->id == 1 ))
                 <div class="card">
@@ -193,7 +210,7 @@
                 </div>
                 @endif
                 @endif
-
+                @endif
                 <div class="card">
 
                     <div class="card-body">

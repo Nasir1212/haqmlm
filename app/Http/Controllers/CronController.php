@@ -56,11 +56,11 @@ class CronController extends Controller
         $now = Carbon::now();
        
         $user = User::where('username',$request->username)->with('child')->first();
-dd($user);
+
     //  $child_users = User::whereIn('id',json_decode($user->child->downline_total_user))->whereYear('point_submit_date',$now->year)->whereMonth('point_submit_date',$now->month)->sum('submitted_point');
         $child_users = User::whereIn('id',json_decode($user->child->downline_total_user))->whereYear('point_submit_date',$now->year)->whereMonth('point_submit_date',$now->month)->get();
         
-    dd($child_users);
+    
     }
     
     
@@ -377,7 +377,7 @@ $treechild = collection::make([count($left_store_users),count($middle_store_user
             $args = $gdata;
         }
 
-        dd($gdata);
+       
         
      }
 

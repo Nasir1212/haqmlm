@@ -376,12 +376,6 @@ class PurchaseController extends Controller
             $order_detail->save();
         }
                      
-                    
-                $owner->qty -= $quantity;
-                $owner->save();
-            
-                $product->stock -= $quantity;
-                $product->save();
         }
     }
             

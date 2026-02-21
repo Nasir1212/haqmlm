@@ -53,13 +53,13 @@
 										    
 										    <td>
 										        {{ $value->userdata->name }}
-<br>
-{{ $value->userdata->phone }}
-<br>
-{{ $value->userdata->email }}
-<br>
-<strong style="color:green;font-size:20px;font-weight:bold">{{ $value->userdata->username }}</strong>
-										        
+										<br>
+										{{ $value->userdata->phone }}
+										<br>
+										{{ $value->userdata->email }}
+										<br>
+										<strong style="color:green;font-size:20px;font-weight:bold">{{ $value->userdata->username }}</strong>
+																						
 										    </td>
 										    
 											<td>{{ $value->method_code }}</td>

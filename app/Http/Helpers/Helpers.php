@@ -1135,7 +1135,7 @@ function referralComission($user_id)
         return false;
     }
     
-    $refer = User::where('id',$user->ref_id)->where('lock_status', 0)->first();
+    $refer = User::where('id',$user->sponsor_id)->where('lock_status', 0)->first();
     if ($refer) {
       
             $amount =  $setting->refer_com;

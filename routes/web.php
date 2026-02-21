@@ -676,7 +676,7 @@ $user = auth()->user();
     
 Route::get('/notification-read', function () {
  $user = auth()->user();
- dd($user->unreadNotifications);
+
 });
 
 
