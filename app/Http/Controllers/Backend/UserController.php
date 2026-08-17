@@ -26,6 +26,14 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Image;
+use App\Models\Transaction;
+use App\Models\WgbTransaction;
+use App\Models\SpbTransaction;
+use App\Models\NwmtgTransaction;
+use App\Models\NwmtbTransaction;
+use App\Models\ReferBonusTransaction;
+use App\Models\DirectBonusTransaction;
+
 
 class UserController extends Controller
 {
@@ -399,6 +407,7 @@ public function my_down_line_reset(Request $request){
     }
 
     public function total_point_sale(Request $request){
+        
 
         $gsd = global_user_data();
         $page_title = 'Total Point Sale';
@@ -437,6 +446,7 @@ public function my_down_line_reset(Request $request){
     public function out_bonus_history(Request $request){
         $gsd = global_user_data();
         $page_title = 'Total Point Out History';
+
         if($request->filled(['date','e_date'])){
             [$year, $month] = explode('-', $request->date);
             [$eyear, $emonth] = explode('-', $request->e_date);
@@ -464,7 +474,9 @@ public function my_down_line_reset(Request $request){
                     ->paginate(20)
                 ->appends(request()->query());
         }
-       // return $deposits;  
+
+
+        
         return view('Admin.user.out-bonus-history', compact('deposits','page_title','gsd'));
     }
     

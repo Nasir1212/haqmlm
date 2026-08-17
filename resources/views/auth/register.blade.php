@@ -44,14 +44,26 @@
         </div>
 
           <!-- Username -->
-        <div>
-            <x-input-label for="username" :value="__('Username')" />
-            <x-text-input id="username" min="4" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('username')" class="mt-2" />
-             <div class="realtime_username_msg" for="username"></div>
-            
-        </div>
-
+  <div>
+    <x-input-label for="username" :value="__('Username')" />
+    
+    <x-text-input 
+        id="username" 
+        minlength="1" 
+        maxlength="12" 
+        class="block mt-1 w-full lowercase" 
+        type="text" 
+        name="username" 
+        :value="old('username')" 
+        required 
+        autofocus 
+        autocomplete="username" 
+        onkeyup="this.value = this.value.toLowerCase().slice(0, 12)" 
+    />
+    
+    <x-input-error :messages="$errors->get('username')" class="mt-2" />
+    <div class="realtime_username_msg" for="username"></div>
+</div>
       
 
   <!-- Phone -->

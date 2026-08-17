@@ -11,6 +11,7 @@ use App\Models\NwmtgTransaction;
 use App\Models\NwmtbTransaction;
 use App\Models\ReferBonusTransaction;
 use App\Models\DirectBonusTransaction;
+
 use App\Models\User;
 use App\Models\BalanceTransferRecord;
 use App\Models\AdminBalanceSendRecord;
@@ -44,32 +45,11 @@ public function Transaction_report_sheet(Request $request){
                     $WgbTransaction = WgbTransaction::where('user_id',$user->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
                     $SpbTransaction = SpbTransaction::where('user_id',$user->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
                     $monthly_income = ['SpbTransaction'=>$SpbTransaction,'DirectBonusTransaction'=>$DirectBonusTransaction,'ReferBonusTransaction'=>$ReferBonusTransaction,'NwmtbTransaction'=>$NwmtbTransaction,'NwmtgTransaction'=>$NwmtgTransaction,'WgbTransaction'=>$WgbTransaction];
-                    // $pdf = PDF::loadView('Admin.report-pdf',compact('monthly_income','setting','ddt','user','refer','pointhistory'))->setOptions([ 'mode'=>'UTF-8',
-                    //     'format' => 'A4','dpi' => 150,'images' => true, "isJavascriptEnabled"=>true, "enable_php" => true, 'isHtml5ParserEnabled', true ]);
-                   // return $pdf->stream('product.pdf');
+                  
                return     $html = view('Admin.report-pdf',compact('monthly_income','setting','ddt','user','refer','pointhistory'))->render();
                     
                           
-        //             $mpdf = new Mpdf([
-        //     'mode' => 'utf-8', // Enable UTF-8
-        //     'format' => 'A4',
-        //     'default_font' => 'dejavusans', // Default font, for English
-        // ]);
-     // Use the custom Bangla font in the HTML content
-      //  $mpdf->WriteHTML($html);
-    
-        // Return the PDF as a download response
-        // return response()->stream(
-        //     function () use ($mpdf) {
-        //         $mpdf->Output();
-        //     },
-        //     200,
-        //     [
-        //         'Content-Type' => 'application/pdf',
-        //         'Content-Disposition' => 'attachment; filename="invoice.pdf"',
-        //     ]
-        // );
-                    
+          
                     
                     
                 }else{
@@ -96,9 +76,7 @@ public function Transaction_report_sheet(Request $request){
             $WgbTransaction = WgbTransaction::where('user_id',$gsd->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
              $SpbTransaction = SpbTransaction::where('user_id',$gsd->id)->whereYear('created_at',$now->year)->whereMonth('created_at',$now->month)->sum('amount');
             $monthly_income = ['SpbTransaction'=>$SpbTransaction,'DirectBonusTransaction'=>$DirectBonusTransaction,'ReferBonusTransaction'=>$ReferBonusTransaction,'NwmtbTransaction'=>$NwmtbTransaction,'NwmtgTransaction'=>$NwmtgTransaction,'WgbTransaction'=>$WgbTransaction];
-            // $pdf = PDF::loadView('Admin.report-pdf',compact('monthly_income','setting','ddt','user','refer','pointhistory'))->setOptions([ 'mode'=>'UTF-8',
-            //     'format' => 'A4','dpi' => 150,'images' => true, "isJavascriptEnabled"=>true, "enable_php" => true, 'isHtml5ParserEnabled', true ]);
-           // return $pdf->stream('product.pdf');
+          
             
            return  $html = view('Admin.report-pdf',compact('monthly_income','setting','ddt','user','refer','pointhistory'))->render();
             
@@ -140,10 +118,6 @@ public function Transaction_report_sheet(Request $request){
         $monthly_income = ['SpbTransaction'=>$SpbTransaction,'DirectBonusTransaction'=>$DirectBonusTransaction,'ReferBonusTransaction'=>$ReferBonusTransaction,'NwmtbTransaction'=>$NwmtbTransaction,'NwmtgTransaction'=>$NwmtgTransaction,'WgbTransaction'=>$WgbTransaction];
     
     
-        // $pdf = PDF::loadView('Admin.report-pdf',compact('monthly_income','setting','ddt','refer','user','pointhistory'))->setOptions([ 'mode'=>'UTF-8',
-        //     'format' => 'A4','dpi' => 150,'images' => true, "isJavascriptEnabled"=>true, "enable_php" => true, 'isHtml5ParserEnabled', true ]);
-           
-         //  return $pdf->stream('product.pdf');
            
       return     $html = view('Admin.report-pdf',compact('monthly_income','setting','ddt','refer','user','pointhistory'))->render();
               
@@ -299,6 +273,7 @@ public function Transaction_report_sheet(Request $request){
 
                 if($trx_cond == 'refer_bonus'){
                     $transactions = ReferBonusTransaction::with('userdata')->latest('id')->paginate(20);
+                   
                 }
                 if($trx_cond == 'direct_bonus'){
                     $transactions = DirectBonusTransaction::with('userdata')->latest('id')->paginate(20);
@@ -395,6 +370,7 @@ public function Transaction_report_sheet(Request $request){
                 }
                 if($trx_cond == 'refer_bonus'){
                     $transactions = ReferBonusTransaction::where('user_id',$gsd->id)->with('userdata')->latest('id')->paginate(20);
+                   
                 }
                 if($trx_cond == 'direct_bonus'){
                     $transactions = DirectBonusTransaction::where('user_id',$gsd->id)->with('userdata')->latest('id')->paginate(20);

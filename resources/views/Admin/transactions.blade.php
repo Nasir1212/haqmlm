@@ -256,6 +256,7 @@
 	
 	<button type="submit" class="btn btn-info">Bonus Sheet </button>
 </form>
+
 <?php } ?>
 <form action="{{ route('Transaction_list')}}" method="get" class="d-inline-block">
 	@csrf

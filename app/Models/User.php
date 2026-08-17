@@ -184,5 +184,24 @@ protected static function booted()
     });
 }
 
+public static function getTotalMonthlyIncome($userId, $date = null)
+{
+
+
+    $targetDate = $date ? Carbon::parse($date) : Carbon::now();
+
+    $year  = $targetDate->year;
+    $month = $targetDate->month;
+
+    $spb         = SpbTransaction::where('user_id', $userId)->whereYear('created_at', $year)->whereMonth('created_at', $month)->sum('amount') ?? 0;
+    $direct      = DirectBonusTransaction::where('user_id', $userId)->whereYear('created_at', $year)->whereMonth('created_at', $month)->sum('amount') ?? 0;
+    $refer       = ReferBonusTransaction::where('user_id', $userId)->whereYear('created_at', $year)->whereMonth('created_at', $month)->sum('amount') ?? 0;
+    $nwmtb       = NwmtbTransaction::where('user_id', $userId)->whereYear('created_at', $year)->whereMonth('created_at', $month)->sum('amount') ?? 0;
+    $nwmtg       = NwmtgTransaction::where('user_id', $userId)->whereYear('created_at', $year)->whereMonth('created_at', $month)->sum('amount') ?? 0;
+    $wgb         = WgbTransaction::where('user_id', $userId)->whereYear('created_at', $year)->whereMonth('created_at', $month)->sum('amount') ?? 0;
+   
+    return $spb + $direct + $refer + $nwmtb + $nwmtg + $wgb;
+}
+
 }
 

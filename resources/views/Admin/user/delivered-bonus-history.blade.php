@@ -21,8 +21,10 @@
     <thead>
         <tr>
             <th>User</th>
-            <th>Details</th>
-            <th>Email & Phone</th>
+            <th>Amount</th>
+            <th>Remark</th>
+            <th>Note</th>
+           
             <th>Date</th>
         </tr>
     </thead>
@@ -30,20 +32,25 @@
         @foreach ($deposits as $deposit)
             <tr>
                 <td>
-                    {{ $deposit->user->name }} <br>
-                    {{ $deposit->user->username }}
+                   
+                  
+            <a class="btn btn-info" href="{{ route('userdt',['username'=>$deposit->user->username])}}">{{ $deposit->user->username }}</a> 
+
                 </td>
                 <td>
-                    Details : {{ $deposit->detail }} <br>
-                    Amount : {{ getAmount($deposit->amount,2) }} <br>
+                     {{ getAmount($deposit->amount,2) }} <br>
+
+                </td>
+                <td>
+                    
                     Payment : {{ $deposit->payment_r_ac }} <br>
                     Method : {{ $deposit->method_code }} <br>
-                    Status : {{ $deposit->status }}
+                 
                 </td>
                 <td>
-                    {{ $deposit->user->email }} <br>
-                    {{ $deposit->user->phone }}
+                     {{ $deposit->detail }}
                 </td>
+               
                 <td>
                     {{ $deposit->created_at->format('d M Y, h:i A') }}
                 </td>
